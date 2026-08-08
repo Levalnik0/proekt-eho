@@ -1,0 +1,1497 @@
+/* ── Каркас ───────────────────────────────────────────────────────── */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg);
+  position: relative;
+}
+
+.app__body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen {
+  padding: calc(var(--safe-top) + 18px) var(--pad-x) 24px;
+  animation: screen-in 0.22s ease-out;
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ── Шапка главного экрана ────────────────────────────────────────── */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0 22px;
+}
+
+.echo-app-icon {
+  display: grid;
+  place-items: center;
+  background: var(--surface);
+  box-shadow: var(--sh-logo);
+}
+
+.hero__title {
+  margin: 16px 0 0;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.hero__subtitle {
+  margin: 7px 0 0;
+  font-size: 15px;
+  color: var(--ink-muted);
+}
+
+/* ── Меню-«пилюли» ────────────────────────────────────────────────── */
+
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 66px;
+  padding: 9px 16px 9px 9px;
+  background: var(--surface);
+  border-radius: var(--r-pill);
+  box-shadow: var(--sh-pill);
+  text-align: left;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.menu-item:active {
+  transform: scale(0.985);
+  box-shadow: var(--sh-pill-active);
+}
+
+.menu-item__badge {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.menu-item__badge--gradient {
+  background: var(--grad-icon);
+  color: #fff;
+  /* Прорези в глифе геймпада красим в цвет подложки */
+  --icon-glyph-bg: #5a94a5;
+  box-shadow: 0 3px 8px rgba(30, 63, 104, 0.22);
+}
+
+.menu-item__badge--outline {
+  background: var(--surface);
+  color: var(--echo-teal);
+  box-shadow: inset 0 0 0 1px rgba(69, 169, 168, 0.18);
+}
+
+.menu-item__labels {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.menu-item__overline {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  letter-spacing: 0.1px;
+}
+
+.menu-item__title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.menu-item__chevron {
+  flex: 0 0 auto;
+  color: var(--ink-faint);
+  opacity: 0.55;
+}
+
+/* ── Верхняя панель внутренних экранов ────────────────────────────── */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 -4px 18px;
+}
+
+.topbar--plain {
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.topbar__back {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--sh-pill);
+}
+
+.topbar__title {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.topbar__spacer {
+  width: 40px;
+}
+
+/* ── Экран раздела ────────────────────────────────────────────────── */
+
+.section-hero {
+  width: 76px;
+  height: 76px;
+  margin: 4px auto 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.section-hero--gradient {
+  background: var(--grad-icon);
+  color: #fff;
+  --icon-glyph-bg: #5a94a5;
+  box-shadow: 0 6px 16px rgba(30, 63, 104, 0.22);
+}
+
+.section-hero--outline {
+  background: var(--surface);
+  color: var(--echo-teal);
+  box-shadow: var(--sh-pill);
+}
+
+.section-lead {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.section-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-points li {
+  position: relative;
+  padding: 14px 16px 14px 38px;
+  background: var(--surface);
+  border-radius: 18px;
+  box-shadow: var(--sh-pill);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.section-points li::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--echo-teal);
+}
+
+/* ── Профиль и настройки ──────────────────────────────────────────── */
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: 22px;
+  box-shadow: var(--sh-pill);
+  margin-bottom: 16px;
+}
+
+.profile-card__avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--grad-icon);
+  color: #fff;
+}
+
+.profile-card__name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-card__role {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+.panel {
+  background: var(--surface);
+  border-radius: 22px;
+  box-shadow: var(--sh-pill);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.panel__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+  font-size: 15px;
+}
+
+.panel__row + .panel__row {
+  border-top: 1px solid rgba(30, 63, 104, 0.07);
+}
+
+.panel__row b {
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.stub-note {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* ── Кнопки ───────────────────────────────────────────────────────── */
+
+.btn {
+  padding: 14px 20px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.btn:active {
+  transform: scale(0.985);
+  box-shadow: var(--sh-pill-active);
+}
+
+.btn--primary {
+  background: var(--grad-icon);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(30, 63, 104, 0.24);
+}
+
+.btn--wide {
+  display: block;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+/* ── Квест: переписка ─────────────────────────────────────────────── */
+
+.quest {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg);
+}
+
+.quest__bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(var(--safe-top) + 12px) 16px 12px;
+  background: var(--surface-bar);
+  box-shadow: 0 2px 12px rgba(30, 63, 104, 0.07);
+  position: relative;
+  z-index: 1;
+}
+
+.quest__contact {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.quest__name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quest__note {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+.quest__restart {
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: var(--ink-muted);
+  padding: 8px;
+}
+
+.quest__feed {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px var(--pad-x);
+}
+
+.bubble {
+  max-width: 82%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-size: 15.5px;
+  line-height: 1.4;
+  animation: bubble-in 0.2s ease-out;
+  white-space: pre-wrap;
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.bubble--them {
+  align-self: flex-start;
+  background: var(--surface);
+  color: var(--ink);
+  border-bottom-left-radius: 7px;
+  box-shadow: var(--sh-pill);
+}
+
+.bubble--me {
+  align-self: flex-end;
+  background: var(--grad-icon);
+  color: #fff;
+  border-bottom-right-radius: 7px;
+  box-shadow: 0 3px 10px rgba(30, 63, 104, 0.2);
+}
+
+/* Пояснение от игры — не реплика, а голос за кадром */
+.bubble--note {
+  align-self: center;
+  max-width: 100%;
+  text-align: center;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-muted);
+  font-size: 13.5px;
+  padding: 4px 8px;
+}
+
+.bubble--typing {
+  display: flex;
+  gap: 5px;
+  padding: 16px;
+}
+
+.bubble--typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  animation: typing 1.1s infinite ease-in-out;
+}
+
+.bubble--typing i:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.bubble--typing i:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* ── Квест: выборы и финал ────────────────────────────────────────── */
+
+.quest__actions {
+  flex: 0 0 auto;
+  padding: 12px var(--pad-x) calc(var(--safe-bottom) + 14px);
+  background: var(--bg-soft);
+  box-shadow: var(--sh-bar);
+}
+
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.choice {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  font-size: 15.5px;
+  color: var(--ink);
+  animation: bubble-in 0.22s ease-out;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.choice:active {
+  transform: scale(0.985);
+  box-shadow: var(--sh-pill-active);
+}
+
+.ending {
+  align-self: stretch;
+  margin-top: 8px;
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  text-align: center;
+  border-top: 4px solid var(--echo-teal);
+  animation: bubble-in 0.28s ease-out;
+}
+
+.ending--hard {
+  border-top-color: #d9a441;
+}
+
+.ending__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ending__power {
+  margin-top: 8px;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--echo-teal);
+}
+
+.ending__text {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+.debrief {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.debrief__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  margin-top: 6px;
+}
+
+.debrief__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+}
+
+.debrief__item b {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.debrief__item span {
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+.quest__final {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.quest__final-row {
+  display: flex;
+  gap: 9px;
+}
+
+.quest__final-row .btn {
+  flex: 1;
+}
+
+/* ── Медали ───────────────────────────────────────────────────────── */
+
+.switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: rgba(30, 63, 104, 0.06);
+  margin-bottom: 18px;
+}
+
+.switch__item {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--r-pill);
+  font-size: 15px;
+  color: var(--ink-muted);
+  transition:
+    background 0.16s ease,
+    color 0.16s ease;
+}
+
+.switch__item.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(30, 63, 104, 0.1);
+}
+
+.progress-line {
+  margin-bottom: 18px;
+}
+
+.progress-line__head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  margin-bottom: 7px;
+}
+
+.progress-line__hint {
+  color: var(--ink-faint);
+}
+
+.progress-line__track {
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(30, 63, 104, 0.09);
+  overflow: hidden;
+}
+
+.progress-line__track i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--grad-icon);
+  transition: width 0.4s ease;
+}
+
+.medals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+
+.medal {
+  width: 100%;
+  height: 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 8px;
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  text-align: center;
+}
+
+.medal:disabled,
+.medal--secret {
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: none;
+  border: 1px dashed rgba(30, 63, 104, 0.14);
+}
+
+.medal__emoji {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.medal:disabled .medal__emoji,
+.medal--secret .medal__emoji {
+  font-size: 22px;
+  color: var(--ink-faint);
+}
+
+.medal__title {
+  font-size: 12.5px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.medal:disabled .medal__title,
+.medal--secret .medal__title {
+  color: var(--ink-faint);
+}
+
+.medal.is-got:active {
+  transform: scale(0.97);
+}
+
+/* ── Карточка медали ──────────────────────────────────────────────── */
+
+.badge-pop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 34, 48, 0.42);
+  backdrop-filter: blur(3px);
+  animation: fade-in 0.18s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.badge-pop__card {
+  width: 100%;
+  max-width: 340px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 26px 22px 22px;
+  border-radius: 28px;
+  background: var(--surface);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(20, 34, 48, 0.3);
+  animation: pop-in 0.26s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+}
+
+.badge-pop__label {
+  font-size: 12.5px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--echo-teal);
+  font-weight: 600;
+}
+
+.badge-pop__emoji {
+  font-size: 54px;
+  line-height: 1;
+  margin: 12px 0 10px;
+}
+
+.badge-pop__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.badge-pop__reason {
+  margin: 8px 0 16px;
+  font-size: 14.5px;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+.badge-pop__block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--bg-soft);
+  margin-bottom: 10px;
+}
+
+.badge-pop__block b {
+  font-size: 13px;
+  color: var(--echo-navy);
+}
+
+.badge-pop__block span {
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* «Можно попробовать» — тёплый, а не тревожный акцент */
+.badge-pop__block--try {
+  background: rgba(69, 169, 168, 0.09);
+}
+
+.badge-pop__block--try b {
+  color: var(--echo-teal);
+}
+
+/* ── «Зеркало»: угадай ответ ребёнка ──────────────────────────────── */
+
+.mirror-intro {
+  padding: 8px 2px 0;
+  text-align: center;
+}
+
+.mirror-intro__kicker {
+  font-size: 12.5px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--echo-teal);
+  font-weight: 600;
+}
+
+.mirror-intro__title {
+  margin: 10px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.mirror-intro__text {
+  margin: 12px 0 0;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.mirror-intro__note {
+  margin: 18px 0 22px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(69, 169, 168, 0.09);
+  font-size: 14.5px;
+  color: var(--echo-navy);
+}
+
+.situation {
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.mirror-ask {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.choice:disabled {
+  opacity: 0.55;
+}
+
+/* Ответ ребёнка подсвечиваем всегда — важен он, а не «правильность» */
+.choice.is-kid {
+  opacity: 1;
+  background: rgba(69, 169, 168, 0.12);
+  box-shadow: inset 0 0 0 1.5px var(--echo-teal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.choice.is-chosen {
+  opacity: 1;
+  box-shadow: inset 0 0 0 1.5px rgba(30, 63, 104, 0.22);
+}
+
+.choice__tag {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--echo-teal);
+  font-weight: 600;
+}
+
+.reveal {
+  margin-top: 18px;
+  animation: bubble-in 0.24s ease-out;
+}
+
+.reveal__verdict {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.reveal__verdict.is-hit {
+  color: var(--echo-teal);
+}
+
+.reveal__quote {
+  margin: 12px 0;
+  padding: 14px 18px;
+  border-radius: 20px;
+  border-bottom-left-radius: 7px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  font-size: 15.5px;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.reveal__insight {
+  margin: 0 0 16px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.mirror-result {
+  text-align: center;
+  padding-top: 4px;
+}
+
+.mirror-result__score {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--echo-teal);
+  font-weight: 600;
+}
+
+.mirror-result__style {
+  margin: 10px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.mirror-result__text {
+  margin: 12px 0 20px;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.result-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  padding: 16px 18px;
+}
+
+.result-block + .result-block {
+  border-top: 1px solid rgba(30, 63, 104, 0.07);
+}
+
+.result-block b {
+  font-size: 13px;
+  color: var(--echo-navy);
+}
+
+.result-block--try b {
+  color: var(--echo-teal);
+}
+
+.result-block span {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.mirror-result .panel {
+  margin-bottom: 18px;
+}
+
+/* ── Словарик: сленг в тексте ─────────────────────────────────────── */
+
+.gloss {
+  display: inline;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  border-radius: 4px;
+  /* Пунктир снизу — приглашение, а не ошибка. Никаких красных подчёркиваний */
+  border-bottom: 1.5px dashed rgba(69, 169, 168, 0.75);
+  transition: background 0.14s ease;
+}
+
+.gloss:active {
+  background: rgba(69, 169, 168, 0.16);
+}
+
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(20, 34, 48, 0.36);
+  backdrop-filter: blur(2px);
+  animation: fade-in 0.16s ease-out;
+}
+
+.sheet__card {
+  width: 100%;
+  max-width: 480px;
+  max-height: 82%;
+  overflow-y: auto;
+  padding: 10px 22px calc(var(--safe-bottom) + 20px);
+  border-radius: 28px 28px 0 0;
+  background: var(--surface);
+  box-shadow: 0 -12px 40px rgba(20, 34, 48, 0.24);
+  animation: sheet-up 0.24s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.sheet__grip {
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 16px;
+  border-radius: 99px;
+  background: rgba(30, 63, 104, 0.16);
+}
+
+.sheet__title {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sheet__text {
+  margin: 8px 0 0;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* Строка «а вот что это значит для вас» — то, ради чего словарик и нужен */
+.sheet__note {
+  margin: 14px 0 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(69, 169, 168, 0.09);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--echo-navy);
+}
+
+/* ── Выбор роли ───────────────────────────────────────────────────── */
+
+.role-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: calc(var(--safe-top) + 48px);
+}
+
+.role-screen__title {
+  margin: 20px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.role-screen__text {
+  margin: 10px 0 26px;
+  font-size: 15px;
+  color: var(--ink-muted);
+}
+
+.role-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  text-align: left;
+}
+
+.role-card:active {
+  transform: scale(0.985);
+}
+
+.role-card__badge {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--grad-icon);
+  color: #fff;
+  --icon-glyph-bg: #5a94a5;
+}
+
+.role-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.role-card__body b {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.role-card__body span {
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+/* ── Список активностей в разделе ─────────────────────────────────── */
+
+.activities {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.activity {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 15px 76px 15px 18px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  text-align: left;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.activity:active {
+  transform: scale(0.985);
+  box-shadow: var(--sh-pill-active);
+}
+
+.activity__kind {
+  font-size: 11.5px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--echo-teal);
+}
+
+.activity__label {
+  font-size: 16.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.activity__hint {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+}
+
+.activity__done {
+  position: absolute;
+  top: 15px;
+  right: 16px;
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: rgba(69, 169, 168, 0.13);
+  color: var(--echo-teal);
+  font-weight: 600;
+}
+
+.link-btn {
+  font-size: 15px;
+  color: var(--echo-teal);
+  font-weight: 500;
+}
+
+/* ── Кооп-квест ───────────────────────────────────────────────────── */
+
+.handoff {
+  text-align: center;
+  padding: 40px 4px 0;
+}
+
+.handoff__icon {
+  font-size: 54px;
+}
+
+.handoff__title {
+  margin-top: 14px;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.handoff__text {
+  margin: 10px 0 26px;
+  font-size: 15px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+.step-title {
+  font-size: 12.5px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--echo-teal);
+  margin-bottom: 10px;
+}
+
+.pair {
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  overflow: hidden;
+}
+
+.pair__row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 18px;
+}
+
+.pair__row + .pair__row {
+  border-top: 1px solid rgba(30, 63, 104, 0.07);
+}
+
+.pair__row b {
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.pair__row span {
+  font-size: 15.5px;
+  color: var(--ink);
+}
+
+.verdict {
+  margin: 14px 0 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.verdict.is-together {
+  color: var(--echo-teal);
+}
+
+.coop-consequence {
+  margin: 0 0 16px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* Пауза — единственное место, где приложение просит отложить телефон */
+.pause-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-radius: 20px;
+  background: rgba(69, 169, 168, 0.1);
+  border: 1px dashed rgba(69, 169, 168, 0.5);
+}
+
+.pause-card b {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--echo-teal);
+}
+
+.pause-card span {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* ── Карта решений ────────────────────────────────────────────────── */
+
+.map {
+  margin: 4px 0 20px;
+  text-align: left;
+}
+
+.map__legend {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+
+.map__key {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map__key::before {
+  content: '';
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.map__key--teen::before {
+  background: var(--echo-teal);
+}
+
+.map__key--adult::before {
+  background: var(--echo-navy);
+}
+
+.map__body {
+  display: flex;
+  gap: 8px;
+}
+
+.map__svg {
+  flex: 0 0 auto;
+}
+
+.map__steps {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.map__steps li {
+  height: 92px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 2px;
+}
+
+.map__steps b {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+
+.map__mark {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--ink-faint);
+}
+
+.map__steps li.is-together .map__mark {
+  color: var(--echo-teal);
+}
+
+.map__choice {
+  font-size: 13px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.map__choice--teen {
+  color: var(--echo-teal);
+}
+
+.map__choice--adult {
+  color: var(--echo-navy);
+}
+
+/* ── Программа офлайн-встречи ─────────────────────────────────────── */
+
+.program {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.program li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 15px 18px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+}
+
+.program__time {
+  font-size: 11.5px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--echo-teal);
+}
+
+.program__title {
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.program__text {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+/* Заголовок раздела внутри экрана — с воздухом сверху, чтобы не липнул к списку */
+.section-title {
+  margin: 30px 0 14px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── Нижняя навигация ─────────────────────────────────────────────── */
+
+.tabbar {
+  flex: 0 0 auto;
+  display: flex;
+  background: var(--surface-bar);
+  box-shadow: var(--sh-bar);
+  padding: 6px 8px calc(var(--safe-bottom) + 6px);
+}
+
+.tabbar__item {
+  flex: 1;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: var(--ink-faint);
+  transition: color 0.15s ease;
+}
+
+.tabbar__item.is-active {
+  color: var(--echo-navy);
+}
+
+.tabbar__item:active {
+  background: rgba(30, 63, 104, 0.05);
+}

@@ -1,0 +1,87 @@
+/* ── Дизайн-токены «Эхо» ─────────────────────────────────────────────
+   Значения сняты пипеткой с макетов (IMG_9228 / IMG_9230).
+   Меняем цвет/скругление/тень только здесь — весь интерфейс подхватит.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* Фирменные цвета */
+  --echo-teal: #45a9a8;
+  --echo-teal-light: #7ec0bf;
+  --echo-navy: #1e3f68;
+  --echo-navy-deep: #152f4a;
+
+  /* Поверхности */
+  --bg: #e8e9eb;
+  --bg-soft: #eff0f2;
+  --surface: #ffffff;
+  --surface-bar: #f7f7f7;
+
+  /* Текст */
+  --ink: #232a32;
+  --ink-muted: #6e7a86;
+  --ink-faint: #98a3ad;
+
+  /* Градиент круглых иконок в меню */
+  --grad-icon: linear-gradient(145deg, #6fb3b8 0%, #4a7f92 100%);
+
+  /* Скругления */
+  --r-pill: 999px;
+  --r-card: 28px;
+  --r-icon: 22%;
+
+  /* Тени — мягкий «неоморфизм» из макета */
+  --sh-pill: 0 2px 6px rgba(30, 63, 104, 0.06), 0 8px 20px rgba(30, 63, 104, 0.09);
+  --sh-pill-active: 0 1px 3px rgba(30, 63, 104, 0.1), 0 3px 8px rgba(30, 63, 104, 0.08);
+  --sh-logo: 0 4px 14px rgba(30, 63, 104, 0.12);
+  --sh-bar: 0 -2px 14px rgba(30, 63, 104, 0.07);
+
+  /* Ритм */
+  --gap: 14px;
+  --pad-x: 20px;
+
+  /* Безопасные зоны iPhone */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Уважаем системную настройку «уменьшить движение» */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
