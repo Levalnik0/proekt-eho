@@ -10,6 +10,31 @@
   position: relative;
 }
 
+/* На большом экране приложение показываем как экран телефона.
+   Без этого нижняя панель зависает посреди пустой страницы
+   и выглядит как обрезанный сайт, а не как приложение. */
+@media (min-width: 720px) {
+  body {
+    background: #d7dbe0;
+  }
+
+  #root {
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  .app {
+    width: 420px;
+    height: min(880px, calc(100vh - 48px));
+    border-radius: 38px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(30, 63, 104, 0.08),
+      0 30px 70px rgba(20, 34, 48, 0.28);
+  }
+}
+
 .app__body {
   flex: 1;
   overflow-y: auto;
