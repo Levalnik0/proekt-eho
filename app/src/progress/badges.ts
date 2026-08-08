@@ -13,10 +13,10 @@
 
 export type Role = 'teen' | 'adult';
 
+/** Картинку медали задаёт MEDAL_GLYPH в MedalIcon.tsx */
 export type Badge = {
   id: string;
   role: Role;
-  emoji: string;
   title: string;
   /** За что дана — читается уже после получения */
   reason: string;
@@ -33,7 +33,6 @@ export const BADGES: Badge[] = [
   {
     id: 'calm-no',
     role: 'teen',
-    emoji: '🛡',
     title: 'Спокойное «нет»',
     reason: 'Ты вышел из разговора, который тебе не нравился.',
     strength: 'Ты не обязан объяснять, почему отказался. Это уже взрослый навык.',
@@ -41,7 +40,6 @@ export const BADGES: Badge[] = [
   {
     id: 'double-check',
     role: 'teen',
-    emoji: '🔍',
     title: 'Мастер перепроверки',
     reason: 'Ты заметил, что в предложении что-то не сходится.',
     strength: 'Ты слушаешь не только слова, но и то, зачем их говорят.',
@@ -49,7 +47,6 @@ export const BADGES: Badge[] = [
   {
     id: 'call-team',
     role: 'teen',
-    emoji: '🤝',
     title: 'Позвал своих',
     reason: 'Ты показал переписку взрослому.',
     strength: 'Позвать напарника — это тактика, а не слабость. В рейде это все делают.',
@@ -57,7 +54,6 @@ export const BADGES: Badge[] = [
   {
     id: 'been-there',
     role: 'teen',
-    emoji: '🧭',
     title: 'Прошёл насквозь',
     reason: 'Ты дошёл до конца по тяжёлой ветке и увидел, чем это кончается.',
     strength: 'Теперь ты знаешь эту схему изнутри — в жизни узнаешь её с первой фразы.',
@@ -65,7 +61,6 @@ export const BADGES: Badge[] = [
   {
     id: 'replay',
     role: 'teen',
-    emoji: '♻️',
     title: 'Переигравший',
     reason: 'Ты прошёл историю ещё раз и выбрал по-другому.',
     strength: 'Проверять «а что, если иначе» — это как раз то, что ломает любую схему.',
@@ -74,7 +69,6 @@ export const BADGES: Badge[] = [
   {
     id: 'read-flags',
     role: 'teen',
-    emoji: '💡',
     title: 'Разобрал по полочкам',
     reason: 'Ты открыл разбор и посмотрел, где были красные флаги.',
     strength: 'Ты не просто прошёл — ты понял, как это работает.',
@@ -82,7 +76,6 @@ export const BADGES: Badge[] = [
   {
     id: 'checker',
     role: 'teen',
-    emoji: '🔎',
     title: 'Проверил сам',
     reason: 'Ты разобрал настоящее сообщение по приёмам.',
     strength: 'Ты умеешь смотреть не на то, что написано, а на то, зачем это написано.',
@@ -90,7 +83,6 @@ export const BADGES: Badge[] = [
   {
     id: 'self-scan',
     role: 'teen',
-    emoji: '🧩',
     title: 'Заглянул внутрь',
     reason: 'Ты прошёл первый тест про себя.',
     strength: 'Знать свои реакции заранее — половина дела. В нужный момент не придётся выбирать вслепую.',
@@ -98,7 +90,6 @@ export const BADGES: Badge[] = [
   {
     id: 'full-profile',
     role: 'teen',
-    emoji: '🏅',
     title: 'Собрал профиль',
     reason: 'Ты прошёл все три теста.',
     strength: 'Теперь у тебя есть три свои суперсилы. Они не про «правильно», они про то, как устроен именно ты.',
@@ -107,7 +98,6 @@ export const BADGES: Badge[] = [
   {
     id: 'mirror-teen',
     role: 'teen',
-    emoji: '🪞',
     title: 'Посмотрел с их стороны',
     reason: 'Ты угадывал, что ответит твой взрослый.',
     strength: 'Ты попробовал встать на чужое место. Это умеют далеко не все взрослые.',
@@ -117,7 +107,6 @@ export const BADGES: Badge[] = [
   {
     id: 'bullseye',
     role: 'adult',
-    emoji: '🎯',
     title: 'Попал в точку',
     reason: 'Вы угадали, что ответит ребёнок.',
     strength: 'Вы держите в голове его картину мира, а не только свою.',
@@ -126,7 +115,6 @@ export const BADGES: Badge[] = [
   {
     id: 'surprised',
     role: 'adult',
-    emoji: '🔦',
     title: 'Открыл новое',
     reason: 'Ответ ребёнка оказался не таким, как вы предполагали.',
     strength: 'Вы дошли до места, где он вас удивляет. Большинство до него не доходит.',
@@ -135,7 +123,6 @@ export const BADGES: Badge[] = [
   {
     id: 'paused',
     role: 'adult',
-    emoji: '⏳',
     title: 'Взял паузу',
     reason: 'В остром месте вы выбрали не реагировать сразу.',
     strength: 'Пауза — самый недооценённый родительский навык.',
@@ -144,7 +131,6 @@ export const BADGES: Badge[] = [
   {
     id: 'listener',
     role: 'adult',
-    emoji: '👂',
     title: 'Дослушал',
     reason: 'Вы дали ребёнку договорить, хотя ответ был уже понятен.',
     strength: 'Вы отделяете «услышать» от «согласиться». Это редко.',
@@ -153,7 +139,6 @@ export const BADGES: Badge[] = [
   {
     id: 'translator',
     role: 'adult',
-    emoji: '🗣',
     title: 'Переводчик',
     reason: 'Вы разобрались, что значат слова из его чата.',
     strength: 'Вы говорите на его языке, а не требуете, чтобы он говорил на вашем.',
@@ -162,7 +147,6 @@ export const BADGES: Badge[] = [
   {
     id: 'ally',
     role: 'adult',
-    emoji: '🤝',
     title: 'Напарник',
     reason: 'Вы прошли совместный квест вместе с ребёнком.',
     strength: 'Вы оба были в одной игре на равных — не проверяющий и проверяемый.',
@@ -171,7 +155,6 @@ export const BADGES: Badge[] = [
   {
     id: 'checker-adult',
     role: 'adult',
-    emoji: '🔎',
     title: 'Разобрали вместе',
     reason: 'Вы проверили сообщение через разбор приёмов.',
     strength: 'Вы показали инструмент, а не запрет. Инструментом ребёнок сможет пользоваться и без вас.',
@@ -180,7 +163,6 @@ export const BADGES: Badge[] = [
   {
     id: 'first-step',
     role: 'adult',
-    emoji: '🚪',
     title: 'Зашёл посмотреть',
     reason: 'Вы открыли режим «Я — Взрослый».',
     strength: 'Интерес к тому, как он живёт в сети, — это уже половина разговора.',
@@ -189,7 +171,6 @@ export const BADGES: Badge[] = [
   {
     id: 'in-his-shoes',
     role: 'adult',
-    emoji: '🎒',
     title: 'Прожил его день',
     reason: 'Вы прошли «День из жизни» от лица ребёнка.',
     strength: 'Вы посмотрели на его день изнутри, а не по рассказу за ужином.',
@@ -198,7 +179,6 @@ export const BADGES: Badge[] = [
   {
     id: 'own-style',
     role: 'adult',
-    emoji: '🧭',
     title: 'Нашёл свой стиль',
     reason: 'Вы прошли первый тест про свои реакции.',
     strength: 'У любого стиля есть сильная сторона. Знать свою — значит пользоваться ей осознанно.',
@@ -207,7 +187,6 @@ export const BADGES: Badge[] = [
   {
     id: 'full-picture',
     role: 'adult',
-    emoji: '🏅',
     title: 'Собрал картину',
     reason: 'Вы прошли все три теста.',
     strength: 'Три разных среза — это уже не впечатление, а картина.',
@@ -217,7 +196,6 @@ export const BADGES: Badge[] = [
   {
     id: 'decision-map',
     role: 'adult',
-    emoji: '🗺',
     title: 'Дошли до карты',
     reason: 'Вы завершили совместный квест и открыли «Карту решений».',
     strength: 'Вы увидели, где ваши решения совпали, а где разошлись — и не поссорились из-за этого.',

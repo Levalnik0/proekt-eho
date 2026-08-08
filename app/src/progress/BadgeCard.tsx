@@ -1,4 +1,5 @@
 import { BADGE_BY_ID } from './badges';
+import { MedalIcon } from './MedalIcon';
 
 /**
  * Карточка новой медали.
@@ -13,7 +14,14 @@ export function BadgeCard({ badgeId, onClose }: { badgeId: string; onClose: () =
     <div className="badge-pop" role="dialog" aria-label={`Медаль: ${badge.title}`}>
       <div className="badge-pop__card">
         <div className="badge-pop__label">Новая медаль</div>
-        <div className="badge-pop__emoji">{badge.emoji}</div>
+
+        {/* Лучи и кольцо живут отдельным слоем, чтобы не дёргать саму медаль */}
+        <div className="badge-pop__stage">
+          <span className="badge-pop__rays" aria-hidden="true" />
+          <span className="badge-pop__ring" aria-hidden="true" />
+          <MedalIcon badgeId={badge.id} size={92} />
+        </div>
+
         <div className="badge-pop__title">{badge.title}</div>
         <p className="badge-pop__reason">{badge.reason}</p>
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { badgesFor, BADGE_BY_ID, type Role } from '../progress/badges';
 import { useProgress } from '../progress/useProgress';
+import { MedalIcon } from '../progress/MedalIcon';
 
 const ROLE_LABEL: Record<Role, string> = { teen: 'Подросток', adult: 'Взрослый' };
 
@@ -58,7 +59,7 @@ export function ProfileScreen() {
                 onClick={() => got && setOpen(b.id)}
                 disabled={!got}
               >
-                <span className="medal__emoji">{got ? b.emoji : '·'}</span>
+                <MedalIcon badgeId={b.id} size={46} locked={!got} />
                 <span className="medal__title">{got ? b.title : 'Ещё не открыта'}</span>
               </button>
             </li>
@@ -67,7 +68,7 @@ export function ProfileScreen() {
         {secretsLeft > 0 && (
           <li>
             <div className="medal medal--secret">
-              <span className="medal__emoji">?</span>
+              <span className="medal__unknown">?</span>
               <span className="medal__title">
                 Скрытых: {secretsLeft}
               </span>
@@ -79,7 +80,9 @@ export function ProfileScreen() {
       {detail && (
         <div className="badge-pop" role="dialog" onClick={() => setOpen(null)}>
           <div className="badge-pop__card" onClick={(e) => e.stopPropagation()}>
-            <div className="badge-pop__emoji">{detail.emoji}</div>
+            <div className="badge-pop__stage">
+              <MedalIcon badgeId={detail.id} size={84} />
+            </div>
             <div className="badge-pop__title">{detail.title}</div>
             <p className="badge-pop__reason">{detail.reason}</p>
             <div className="badge-pop__block">
