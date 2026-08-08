@@ -59,7 +59,17 @@ export default function App() {
     if (route === 'adult') award(['first-step']);
   }, [route, award]);
 
-  if (!progress.role) return <RoleScreen onPick={setRole} />;
+  // Обязательно внутри .app: там задана максимальная ширина,
+  // иначе на широком экране карточки растягиваются во всю страницу
+  if (!progress.role) {
+    return (
+      <div className="app">
+        <main className="app__body">
+          <RoleScreen onPick={setRole} />
+        </main>
+      </div>
+    );
+  }
 
   // Сценарии занимают весь экран: таб-бар прячем, чтобы не рвать историю
   if (quest) {
