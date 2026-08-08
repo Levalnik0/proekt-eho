@@ -12,3 +12,8 @@ node_modules
 dist
 .DS_Store
 *.log
+
+# Локальные настройки редакторов и инструментов — в репозиторий не идут
+.claude/
+.vscode/
+.idea/
