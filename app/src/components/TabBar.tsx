@@ -1,5 +1,5 @@
 import { EchoMark } from './EchoLogo';
-import { IconGear, IconPerson } from './icons';
+import { IconGear, IconMedal } from './icons';
 import { TAB_LABEL, TABS, type Tab } from '../routes';
 
 export function TabBar({ active, onSelect }: { active: Tab; onSelect: (t: Tab) => void }) {
@@ -16,9 +16,9 @@ export function TabBar({ active, onSelect }: { active: Tab; onSelect: (t: Tab) =
             aria-label={TAB_LABEL[tab]}
           >
             {tab === 'home' && (
-              <EchoMark size={30} stroke={10} color={isActive ? undefined : 'currentColor'} />
+              <EchoMark size={28} color={isActive ? undefined : 'currentColor'} />
             )}
-            {tab === 'profile' && <IconPerson size={24} />}
+            {tab === 'profile' && <IconMedal size={24} />}
             {tab === 'settings' && <IconGear size={24} />}
           </button>
         );

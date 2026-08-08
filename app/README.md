@@ -101,8 +101,10 @@ npm run build --prefix app
 app/
 ├── index.html
 ├── vite.config.ts          настройки сборки и PWA
+├── scripts/
+│   └── gen-icons.py        пересобирает иконки из знака: python3 scripts/gen-icons.py
 ├── public/
-│   ├── icon.svg            знак «Эхо» в вектором виде
+│   ├── icon.svg            знак «Эхо» в векторном виде
 │   └── icons/              иконки приложения (192, 512, maskable, apple-touch)
 └── src/
     ├── theme.css           дизайн-токены: цвета, тени, скругления
@@ -136,6 +138,7 @@ app/
 | `src/progress/badges.ts` | медали: название, за что, сильная сторона, что попробовать |
 | `src/screens/ClubScreen.tsx` | программа офлайн-встречи |
 | `src/routes.tsx` | состав разделов на главном экране |
+| `src/components/EchoLogo.tsx` | сам знак; после правки прогнать `scripts/gen-icons.py` |
 
 В `badges.ts` в начале файла записаны правила формулировок — их стоит прочитать
 перед тем, как добавлять новые медали.

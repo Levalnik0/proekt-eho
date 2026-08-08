@@ -94,6 +94,22 @@ export function IconCompass({ size = 24, className }: IconProps) {
   );
 }
 
+/** Медаль — вкладка с наградами */
+export function IconMedal({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <g fill="currentColor">
+        <path d="M7.6 2.2a1 1 0 0 1 .9.55L11 7.7 8.9 9.9 6.6 5.3 5.1 7.6a1 1 0 0 1-1.7-1.1l2.6-3.9a1 1 0 0 1 .84-.45Zm8.8 0a1 1 0 0 1 .84.45l2.6 3.9a1 1 0 0 1-1.68 1.1L17.4 5.3 15.1 9.9 13 7.7l2.5-4.95a1 1 0 0 1 .9-.55Z" />
+        <path
+          fillRule="evenodd"
+          d="M12 9.6a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4Zm.3 2.9 .82 1.75 1.86.25a.35.35 0 0 1 .2.6l-1.37 1.3.35 1.9a.35.35 0 0 1-.52.36L12 17.76l-1.64.9a.35.35 0 0 1-.52-.36l.35-1.9-1.37-1.3a.35.35 0 0 1 .2-.6l1.86-.25.82-1.75a.35.35 0 0 1 .6 0Z"
+          clipRule="evenodd"
+        />
+      </g>
+    </svg>
+  );
+}
+
 /** Профиль */
 export function IconPerson({ size = 24, className }: IconProps) {
   return (
