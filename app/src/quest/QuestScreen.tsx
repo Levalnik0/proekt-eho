@@ -132,7 +132,7 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
 
       <div className="quest__actions">
         {!waiting && node.choices && (
-          <ul className="choices">
+          <ul className="choices stagger">
             {node.choices.map((c) => (
               <li key={c.text}>
                 <button className="choice" onClick={() => choose(c)}>

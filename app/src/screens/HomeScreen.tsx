@@ -15,7 +15,7 @@ export function HomeScreen({ onOpen }: { onOpen: (id: SectionId) => void }) {
         </p>
       </header>
 
-      <ul className="menu">
+      <ul className="menu stagger">
         {SECTIONS.map((section) => (
           <li key={section.id}>
             <MenuButton section={section} onClick={() => onOpen(section.id)} />

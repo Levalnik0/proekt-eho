@@ -78,7 +78,7 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
           </div>
           <div className="mirror-ask">{q.ask}</div>
 
-          <ul className="choices">
+          <ul className="choices stagger">
             {q.options.map((o) => {
               const chosen = picked[q.id] === o.id;
               const isKid = o.id === q.kidAnswer;

@@ -48,7 +48,7 @@ export function ProfileScreen() {
         </div>
       </div>
 
-      <ul className="medals">
+      <ul className="medals stagger">
         {visible.map((b) => {
           const got = progress.badges.includes(b.id);
           return (

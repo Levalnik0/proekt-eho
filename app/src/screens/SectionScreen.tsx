@@ -8,6 +8,7 @@ const KIND_LABEL: Record<string, string> = {
   test: 'Тест',
   coop: 'Вдвоём',
   offline: 'Офлайн',
+  checker: 'Инструмент',
 };
 
 export function SectionScreen({
@@ -46,7 +47,7 @@ export function SectionScreen({
 
       <p className="section-lead">{section.lead}</p>
 
-      <ul className="activities">
+      <ul className="activities stagger">
         {section.activities.map((a) => (
           <li key={a.route}>
             <button className="activity" onClick={() => onOpen(a.route)}>

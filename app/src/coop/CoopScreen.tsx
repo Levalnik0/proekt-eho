@@ -142,7 +142,7 @@ export function CoopScreen({ coop, onExit }: { coop: Coop; onExit: () => void })
           <div className="step-title">{coop.steps[phase.step].title}</div>
           <div className="situation">{coop.steps[phase.step].scene}</div>
           <div className="mirror-ask">{coop.steps[phase.step][phase.turn].prompt}</div>
-          <ul className="choices">
+          <ul className="choices stagger">
             {coop.steps[phase.step][phase.turn].options.map((o) => (
               <li key={o.text}>
                 <button className="choice" onClick={() => pick(phase.step, phase.turn, o)}>

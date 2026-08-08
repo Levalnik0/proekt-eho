@@ -7,6 +7,7 @@ import { SectionScreen } from './screens/SectionScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { ClubScreen } from './screens/ClubScreen';
 import { RoleScreen } from './screens/RoleScreen';
+import { CheckerScreen } from './checker/CheckerScreen';
 import { QuestScreen } from './quest/QuestScreen';
 import { MirrorScreen } from './mirror/MirrorScreen';
 import { TestScreen } from './tests/TestScreen';
@@ -105,8 +106,9 @@ export default function App() {
         {route === 'profile' && <ProfileScreen />}
         {route === 'settings' && <SettingsScreen />}
         {route === 'club-program' && <ClubScreen onBack={back} />}
+        {route === 'check-message' && <CheckerScreen onExit={back} />}
         {section && <SectionScreen section={section} onBack={back} onOpen={go} />}
-        {!section && !['profile', 'settings', 'club-program'].includes(route) && (
+        {!section && !['profile', 'settings', 'club-program', 'check-message'].includes(route) && (
           <HomeScreen onOpen={(id) => go(id)} />
         )}
       </main>

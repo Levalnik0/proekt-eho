@@ -3,11 +3,12 @@ import {
   IconAdultChild,
   IconCompass,
   IconGamepad,
+  IconMagnifier,
   IconRing,
   IconTogether,
 } from './components/icons';
 
-export type SectionId = 'teen' | 'adult' | 'together' | 'quest48' | 'club';
+export type SectionId = 'teen' | 'adult' | 'together' | 'quest48' | 'club' | 'checker';
 
 /** Что можно запустить внутри раздела */
 export type Activity = {
@@ -15,7 +16,7 @@ export type Activity = {
   label: string;
   /** Подпись под названием */
   hint: string;
-  kind: 'quest' | 'mirror' | 'test' | 'coop' | 'offline';
+  kind: 'quest' | 'mirror' | 'test' | 'coop' | 'offline' | 'checker';
 };
 
 export type Section = {
@@ -137,6 +138,21 @@ export const SECTIONS: Section[] = [
         label: 'Начать квест',
         hint: 'Телефон передаётся из рук в руки',
         kind: 'coop',
+      },
+    ],
+  },
+  {
+    id: 'checker',
+    title: 'Проверка сообщения',
+    icon: IconMagnifier,
+    look: 'gradient',
+    lead: 'Пришло странное сообщение? Вставьте его — покажем, какие приёмы в нём спрятаны.',
+    activities: [
+      {
+        route: 'check-message',
+        label: 'Разобрать сообщение',
+        hint: 'Работает без интернета · текст никуда не уходит',
+        kind: 'checker',
       },
     ],
   },

@@ -43,13 +43,53 @@
 
 .screen {
   padding: calc(var(--safe-top) + 18px) var(--pad-x) 24px;
-  animation: screen-in 0.22s ease-out;
+  animation: screen-in 0.26s cubic-bezier(0.22, 0.9, 0.3, 1);
 }
 
 @keyframes screen-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
+  }
+}
+
+/* Видимый фокус для клавиатуры. Без него по приложению невозможно
+   ходить с клавиатуры, а на touch-устройствах рамка не появляется —
+   :focus-visible срабатывает только при вводе с клавиатуры. */
+:focus-visible {
+  outline: 3px solid var(--echo-teal-text);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* Появление списка по очереди: глазу легче поймать порядок вариантов */
+.stagger > * {
+  animation: rise-in 0.32s cubic-bezier(0.22, 0.9, 0.3, 1) backwards;
+}
+
+.stagger > *:nth-child(1) {
+  animation-delay: 0.02s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.07s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.17s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.22s;
+}
+.stagger > *:nth-child(n + 6) {
+  animation-delay: 0.27s;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
 
@@ -136,7 +176,7 @@
 
 .menu-item__badge--outline {
   background: var(--surface);
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   box-shadow: inset 0 0 0 1px rgba(69, 169, 168, 0.18);
 }
 
@@ -181,8 +221,8 @@
 }
 
 .topbar__back {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -200,7 +240,7 @@
 }
 
 .topbar__spacer {
-  width: 40px;
+  width: 44px;
 }
 
 /* ── Экран раздела ────────────────────────────────────────────────── */
@@ -223,7 +263,7 @@
 
 .section-hero--outline {
   background: var(--surface);
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   box-shadow: var(--sh-pill);
 }
 
@@ -409,7 +449,9 @@
   flex: 0 0 auto;
   font-size: 14px;
   color: var(--ink-muted);
-  padding: 8px;
+  /* 44px по высоте — иначе в кнопку трудно попасть пальцем */
+  min-height: 44px;
+  padding: 8px 10px;
 }
 
 .quest__feed {
@@ -566,7 +608,7 @@
   margin-top: 8px;
   font-size: 15.5px;
   font-weight: 600;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .ending__text {
@@ -789,7 +831,7 @@
   font-size: 12.5px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   font-weight: 600;
 }
 
@@ -840,7 +882,7 @@
 }
 
 .badge-pop__block--try b {
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 /* ── «Зеркало»: угадай ответ ребёнка ──────────────────────────────── */
@@ -854,7 +896,7 @@
   font-size: 12.5px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   font-weight: 600;
 }
 
@@ -925,7 +967,7 @@
   font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   font-weight: 600;
 }
 
@@ -942,7 +984,7 @@
 }
 
 .reveal__verdict.is-hit {
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .reveal__quote {
@@ -973,7 +1015,7 @@
   font-size: 13px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   font-weight: 600;
 }
 
@@ -1009,7 +1051,7 @@
 }
 
 .result-block--try b {
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .result-block span {
@@ -1207,7 +1249,7 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .activity__label {
@@ -1229,13 +1271,13 @@
   padding: 4px 10px;
   border-radius: 99px;
   background: rgba(69, 169, 168, 0.13);
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   font-weight: 600;
 }
 
 .link-btn {
   font-size: 15px;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   font-weight: 500;
 }
 
@@ -1268,7 +1310,7 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
   margin-bottom: 10px;
 }
 
@@ -1311,7 +1353,7 @@
 }
 
 .verdict.is-together {
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .coop-consequence {
@@ -1338,7 +1380,7 @@
   font-size: 12px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .pause-card span {
@@ -1423,7 +1465,7 @@
 }
 
 .map__steps li.is-together .map__mark {
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .map__choice {
@@ -1437,7 +1479,7 @@
 }
 
 .map__choice--teen {
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .map__choice--adult {
@@ -1470,7 +1512,7 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--echo-teal);
+  color: var(--echo-teal-text);
 }
 
 .program__title {
@@ -1491,6 +1533,128 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
+}
+
+/* ── Проверка сообщения ───────────────────────────────────────────── */
+
+.checker__input {
+  width: 100%;
+  padding: 16px 18px;
+  border: none;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  font: inherit;
+  font-size: 16px; /* меньше 16 — iOS зумит страницу при фокусе */
+  line-height: 1.45;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.checker__input::placeholder {
+  color: var(--ink-faint);
+}
+
+.checker__privacy {
+  margin: 10px 2px 16px;
+  font-size: 13px;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.checker__samples-title {
+  margin: 6px 0 12px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+.checker__verdict {
+  padding: 20px 18px;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  text-align: center;
+  border-top: 4px solid var(--echo-teal);
+  margin-bottom: 16px;
+  animation: pop-in 0.3s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+/* Цветом отличаем спокойный итог от тревожного — но без красной паники:
+   ребёнок не должен пугаться, он должен разобраться */
+.checker__verdict--warn {
+  border-top-color: #d9a441;
+}
+
+.checker__verdict--bad {
+  border-top-color: #c2603f;
+}
+
+.checker__score {
+  font-size: 12.5px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.checker__title {
+  margin: 8px 0 0;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.checker__text {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.flags {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flags li {
+  padding: 15px 18px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  border-left: 4px solid var(--echo-teal);
+}
+
+.flag__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Цитата из самого сообщения: именно она делает разбор убедительным */
+.flag__quote {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(69, 169, 168, 0.1);
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--echo-navy);
+}
+
+.flag__why {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
 }
 
 /* ── Нижняя навигация ─────────────────────────────────────────────── */

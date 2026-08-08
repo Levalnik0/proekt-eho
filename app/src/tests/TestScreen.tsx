@@ -103,7 +103,7 @@ export function TestScreen({
       {q && (
         <>
           <div className="situation">{q.text}</div>
-          <ul className="choices">
+          <ul className="choices stagger">
             {q.options.map((o) => (
               <li key={o.text}>
                 <button className="choice" onClick={() => answer(o.key)}>
