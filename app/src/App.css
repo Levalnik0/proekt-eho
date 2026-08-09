@@ -188,12 +188,6 @@
   gap: 1px;
 }
 
-.menu-item__overline {
-  font-size: 12.5px;
-  color: var(--ink-muted);
-  letter-spacing: 0.1px;
-}
-
 .menu-item__title {
   font-size: 17px;
   font-weight: 500;

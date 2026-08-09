@@ -22,8 +22,6 @@ export type Activity = {
 export type Section = {
   id: SectionId;
   title: string;
-  /** Мелкая строка над заголовком (как «Co-op Quest: 48 Hours» на макете) */
-  overline?: string;
   icon: (props: { size?: number }) => ReactNode;
   /** gradient — залитый круг с белым глифом, outline — белый круг с бирюзовым контуром */
   look: 'gradient' | 'outline';
@@ -34,7 +32,7 @@ export type Section = {
 export const SECTIONS: Section[] = [
   {
     id: 'teen',
-    title: '«Я — Подросток»',
+    title: '«Я подросток»',
     icon: IconGamepad,
     look: 'gradient',
     lead: 'Опасные ситуации в формате переписки — и три теста про то, как устроен именно ты.',
@@ -73,7 +71,7 @@ export const SECTIONS: Section[] = [
   },
   {
     id: 'adult',
-    title: '«Я — Взрослый»',
+    title: '«Я взрослый»',
     icon: IconAdultChild,
     look: 'gradient',
     lead: 'Здесь не проверяют вас. Здесь можно посмотреть на его день изнутри и проверить свои догадки.',
@@ -128,7 +126,6 @@ export const SECTIONS: Section[] = [
   {
     id: 'quest48',
     title: '«Квест: 48 часов»',
-    overline: 'Co-op Quest: 48 Hours',
     icon: IconRing,
     look: 'outline',
     lead: 'Четыре точки за выходные, где взрослый и ребёнок выбирают каждый за себя.',
@@ -159,7 +156,6 @@ export const SECTIONS: Section[] = [
   {
     id: 'club',
     title: '«Клуб навигаторов»',
-    overline: 'Navigators Club',
     icon: IconCompass,
     look: 'outline',
     lead: 'Очные встречи в школах: играют не по одному, а вместе — и придумывают новые истории для приложения.',

@@ -10,7 +10,6 @@ export function MenuButton({ section, onClick }: { section: Section; onClick: ()
       </span>
 
       <span className="menu-item__labels">
-        {section.overline && <span className="menu-item__overline">{section.overline}</span>}
         <span className="menu-item__title">{section.title}</span>
       </span>
 
