@@ -1109,6 +1109,26 @@
   color: var(--ink);
 }
 
+/* Откуда взялся ответ — подпись под цитатой и абзац на вступлении.
+   Без них «так отвечают чаще» читается как «ответ вашего ребёнка». */
+.reveal__source {
+  margin: -6px 0 12px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+.mirror-basis {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(30, 63, 104, 0.05);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+  text-align: left;
+}
+
 .reveal__insight {
   margin: 0 0 16px;
   font-size: 14.5px;

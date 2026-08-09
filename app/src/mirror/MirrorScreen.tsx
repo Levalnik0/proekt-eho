@@ -65,6 +65,7 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
           <h2 className="mirror-intro__title">{mirror.intro.title}</h2>
           <p className="mirror-intro__text">{mirror.intro.text}</p>
           <div className="mirror-intro__note">{mirror.intro.note}</div>
+          <p className="mirror-basis">{mirror.basis}</p>
           <button className="btn btn--primary btn--wide" onClick={() => setPhase({ kind: 'ask', i: 0 })}>
             Попробовать угадать
           </button>
@@ -92,7 +93,7 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
                     onClick={() => pick(q.id, o.id, mirror.questions.indexOf(q))}
                   >
                     {o.text}
-                    {revealed && isKid && <span className="choice__tag">его ответ</span>}
+                    {revealed && isKid && <span className="choice__tag">так отвечают чаще</span>}
                   </button>
                 </li>
               );
@@ -102,10 +103,15 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
           {phase.kind === 'reveal' && (
             <div className="reveal">
               <div className={`reveal__verdict${picked[q.id] === q.kidAnswer ? ' is-hit' : ''}`}>
-                {picked[q.id] === q.kidAnswer ? 'Совпало' : 'Не совпало — и это интересно'}
+                {picked[q.id] === q.kidAnswer
+                  ? 'Совпало с частым ответом'
+                  : 'Не совпало — и это интересно'}
               </div>
               <div className="reveal__quote">
                 <Glossed text={q.kidSays} />
+              </div>
+              <div className="reveal__source">
+                {mirror.role === 'adult' ? 'так это описывают сами дети' : 'так это описывают сами взрослые'}
               </div>
               <p className="reveal__insight">{q.insight}</p>
               <button
@@ -137,6 +143,8 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
               <span>{result.growth}</span>
             </div>
           </div>
+
+          <p className="mirror-basis">{mirror.basis}</p>
 
           <button className="btn btn--wide" onClick={onExit}>
             В меню

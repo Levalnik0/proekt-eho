@@ -15,7 +15,11 @@ export type MirrorQuestion = {
   situation: string;
   ask: string;
   options: MirrorOption[];
-  /** Как отвечает большинство детей этого возраста */
+  /**
+   * Самый частый ответ для этого возраста.
+   * Это НЕ ответ конкретного человека — интерфейс обязан говорить это прямо,
+   * иначе приложение обещает то, чего не делает.
+   */
   kidAnswer: string;
   /** Живая цитата — она убеждает сильнее статистики */
   kidSays: string;
@@ -37,6 +41,8 @@ export type Mirror = {
   id: string;
   title: string;
   role: 'adult' | 'teen';
+  /** Одной строкой: чьи это ответы и откуда они взялись */
+  basis: string;
   intro: { kicker: string; title: string; text: string; note: string };
   questions: MirrorQuestion[];
   results: MirrorResult[];
