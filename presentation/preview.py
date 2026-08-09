@@ -12,9 +12,32 @@ import sys
 from pptx import Presentation
 from pptx.util import Emu
 
-SRC = sys.argv[1] if len(sys.argv) > 1 else 'Проект_Эхо_презентация.pptx'
+args = [a for a in sys.argv[1:] if not a.startswith('--')]
+SRC = args[0] if args else 'Проект_Эхо_презентация.pptx'
 OUT = 'preview.html'
-PX = 96  # 1 дюйм = 96 px
+
+# --only 7 оставляет в превью один слайд. Нужно, чтобы снять его отдельным
+# кадром: снимок делается с целой страницы, и на общем листе слайд мелкий.
+ONLY = next(
+    (int(a.split('=')[1]) for a in sys.argv[1:] if a.startswith('--only=')),
+    None,
+)
+# --scale=2 рисует слайд вдвое крупнее. Съехавший на пару пикселей маркер
+# в обычном размере просто не разглядеть.
+SCALE = next(
+    (float(a.split('=')[1]) for a in sys.argv[1:] if a.startswith('--scale=')),
+    1.0,
+)
+PX = 96 * SCALE  # 1 дюйм = 96 px
+
+# Cambria и Calibri — шрифты Microsoft, в macOS их нет. Подставляем то, что
+# есть в системе и не уже оригинала: если текст влез здесь, в PowerPoint он
+# влезет тем более. Точность ширины при этом теряется — на глаз проверяем
+# композицию, а не последний пиксель строки.
+FONTS = {
+    'Cambria': 'Cambria, Caladea, Georgia, serif',
+    'Calibri': 'Calibri, Carlito, Arial, sans-serif',
+}
 
 prs = Presentation(SRC)
 SW = prs.slide_width / 914400 * PX
@@ -27,17 +50,31 @@ def emu(v):
     return (v or 0) / 914400 * PX
 
 for idx, slide in enumerate(prs.slides, 1):
-    # Цвет фона берём из самого слайда, иначе тёмные слайды в превью
-    # выглядят светлыми и белый текст на них не виден
-    bg = 'F2F4F6'
+    if ONLY and idx != ONLY:
+        continue
+    # Фон берём из самого слайда, иначе тёмные слайды в превью выглядят
+    # светлыми и белый текст на них не виден. Фон бывает и картинкой.
+    style = 'background:#F2F4F6'
     try:
-        srgb = slide._element.find(
+        bg = slide._element.find(
             './/{http://schemas.openxmlformats.org/presentationml/2006/main}bg'
         )
-        if srgb is not None:
-            clr = srgb.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}srgbClr')
-            if clr is not None:
-                bg = clr.get('val')
+        if bg is not None:
+            clr = bg.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}srgbClr')
+            blip = bg.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}blip')
+            if blip is not None:
+                rid = blip.get(
+                    '{http://schemas.openxmlformats.org/officeDocument/2006/'
+                    'relationships}embed'
+                )
+                data = slide.part.related_part(rid).blob
+                b64 = base64.b64encode(data).decode()
+                style = (
+                    f'background-image:url(data:image/png;base64,{b64});'
+                    'background-size:cover'
+                )
+            elif clr is not None:
+                style = f'background:#{clr.get("val")}'
     except Exception:
         pass
     items = []
@@ -76,7 +113,7 @@ for idx, slide in enumerate(prs.slides, 1):
         if fill:
             radius = ''
             if prst == 'roundRect':
-                radius = 'border-radius:14px;'
+                radius = f'border-radius:{0.14 * PX:.0f}px;'
             elif prst == 'ellipse':
                 radius = 'border-radius:50%;'
             items.append(
@@ -85,18 +122,26 @@ for idx, slide in enumerate(prs.slides, 1):
             )
 
         if sh.has_text_frame and sh.text_frame.text.strip():
-            va = {1: 'center', 2: 'flex-end'}.get(
+            # Коды python-pptx: 1 — верх, 3 — середина, 4 — низ
+            va = {3: 'center', 4: 'flex-end'}.get(
                 int(sh.text_frame.vertical_anchor) if sh.text_frame.vertical_anchor else 0,
                 'flex-start',
             )
             runs = []
             size, color, bold, italic, align = 14, '232A32', False, False, 'left'
+            family = FONTS['Calibri']
+            spacing = None
             for p in sh.text_frame.paragraphs:
                 if p.alignment is not None:
-                    align = {1: 'center', 3: 'right'}.get(int(p.alignment), 'left')
+                    # Коды python-pptx: 1 — влево, 2 — по центру, 3 — вправо
+                    align = {2: 'center', 3: 'right'}.get(int(p.alignment), 'left')
+                if p.line_spacing is not None:
+                    spacing = p.line_spacing
                 for r in p.runs:
                     if r.font.size:
                         size = r.font.size.pt
+                    if r.font.name:
+                        family = FONTS.get(r.font.name, r.font.name)
                     if r.font.bold:
                         bold = True
                     if r.font.italic:
@@ -108,18 +153,32 @@ for idx, slide in enumerate(prs.slides, 1):
                         pass
                     runs.append(html.escape(r.text))
             text = ' '.join(runs)
+            # Размер шрифта в файле задан в пунктах, а рисуем в пикселях.
+            # 13 пунктов — это 17 пикселей: без пересчёта превью врало на
+            # четверть, и по нему нельзя было судить о выравнивании.
+            size_px = size / 72 * PX
+            if spacing is None:
+                line_px = size_px * 1.2
+            elif hasattr(spacing, 'pt'):
+                line_px = spacing.pt / 72 * PX
+            else:
+                line_px = size_px * spacing
             items.append(
                 f'<div class="tx" style="left:{x}px;top:{y}px;width:{w}px;height:{h}px;'
                 f'display:flex;flex-direction:column;justify-content:{va};'
-                f'font-size:{size}px;color:#{color};'
+                f'font-family:{family};font-size:{size_px:.2f}px;'
+                f'line-height:{line_px:.2f}px;color:#{color};'
                 f'font-weight:{"700" if bold else "400"};'
                 f'font-style:{"italic" if italic else "normal"};'
-                f'text-align:{align}">{text}</div>'
+                # Текст оборачиваем в свой блок: у голого текстового узла
+                # внутри flex одиночная строка съезжает вниз, и превью
+                # показывает её не там, где она окажется в PowerPoint.
+                f'text-align:{align}"><div>{text}</div></div>'
             )
 
     parts.append(
-        f'<div class="wrap"><div class="num">Слайд {idx}</div>'
-        f'<div class="slide" style="background:#{bg}">' + ''.join(items) + '</div></div>'
+        f'<div class="wrap" id="s{idx}"><div class="num">Слайд {idx}</div>'
+        f'<div class="slide" style="{style}">' + ''.join(items) + '</div></div>'
     )
 
 doc = f"""<!doctype html><html lang="ru"><head><meta charset="utf-8">
@@ -130,27 +189,40 @@ body {{ margin:0; padding:24px; background:#3a4450; font-family:Calibri,Carlito,
 .slide {{ position:relative; width:{SW}px; height:{SH}px; overflow:hidden;
   box-shadow:0 8px 30px rgba(0,0,0,.35); }}
 .shape, .tx, img {{ position:absolute; }}
-.tx {{ line-height:1.25; white-space:pre-wrap; overflow-wrap:break-word; }}
+.tx {{ white-space:pre-wrap; overflow-wrap:break-word; }}
 img {{ object-fit:contain; }}
 .over {{ outline:2px solid #ff4d4f; background:rgba(255,77,79,.12); }}
-</style></head><body>{''.join(parts)}
+body.solo {{ padding:0; }}
+body.solo .wrap {{ margin:0 auto; }}
+body.solo .num {{ display:none; }}
+</style></head><body class="{'solo' if ONLY else ''}">{''.join(parts)}
 <script>
 // Текст, который не влезает в свой блок, — самый частый дефект слайда.
-// Меряем по факту отрисовки, а не на глаз.
+// Меряем сами строки через Range: высота блока у крупных засечных
+// шрифтов больше строки, и по ней получались ложные срабатывания.
 window.overflows = [];
 document.querySelectorAll('.slide').forEach((sl, i) => {{
   sl.querySelectorAll('.tx').forEach((el) => {{
-    const need = [...el.childNodes].reduce((a, n) => a + (n.nodeType === 1 ? n.scrollHeight : 0), 0)
-      || el.scrollHeight;
-    if (need > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2) {{
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const lines = [...range.getClientRects()].filter((r) => r.height > 0);
+    if (!lines.length) return;
+    const box = el.getBoundingClientRect();
+    const top = Math.min(...lines.map((r) => r.top));
+    const bottom = Math.max(...lines.map((r) => r.bottom));
+    const wide = Math.max(...lines.map((r) => r.width));
+    const high = bottom - top;
+    if (high > box.height + 2 || wide > box.width + 2) {{
       el.classList.add('over');
       window.overflows.push(
         'слайд ' + (i + 1) + ': «' + el.textContent.slice(0, 42) + '…» ' +
-        el.scrollHeight + '>' + el.clientHeight
+        Math.round(high) + '×' + Math.round(wide) + ' в рамке ' +
+        Math.round(box.height) + '×' + Math.round(box.width)
       );
     }}
   }});
 }});
+
 </script></body></html>"""
 
 open(OUT, 'w', encoding='utf-8').write(doc)

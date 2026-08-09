@@ -11,6 +11,8 @@ IMG_*.jpg
 
 node_modules
 dist
+.venv
+preview*.html
 .DS_Store
 *.log
 
