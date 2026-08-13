@@ -48,6 +48,11 @@ pres.layout = 'LAYOUT_16x9';
 pres.author = 'Валеева Лиана Николаевна';
 pres.title = 'Проект «Эхо»';
 
+/**
+ * Карточка. Тени здесь намеренно нет: просмотрщик Finder рисовал её
+ * огромным белым пятном поверх соседних блоков, и то же может случиться
+ * на чужом ноутбуке. Вместо тени тонкая рамка — она везде одинаковая.
+ */
 function card(slide, { x, y, w, h, fill = WHITE }) {
   slide.addShape(pres.ShapeType.roundRect, {
     x,
@@ -56,8 +61,7 @@ function card(slide, { x, y, w, h, fill = WHITE }) {
     h,
     rectRadius: 0.14,
     fill: { color: fill },
-    line: { color: fill },
-    shadow: { type: 'outer', color: '1E3F68', opacity: 0.1, blur: 10, offset: 2, angle: 90 },
+    line: { color: fill === WHITE ? 'E4E9EE' : fill, width: 1 },
   });
 }
 
