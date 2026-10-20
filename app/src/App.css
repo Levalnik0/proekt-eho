@@ -43,13 +43,16 @@
 
 .screen {
   padding: calc(var(--safe-top) + 18px) var(--pad-x) 24px;
-  animation: screen-in 0.26s cubic-bezier(0.22, 0.9, 0.3, 1);
+  animation: screen-in 0.32s cubic-bezier(0.22, 0.9, 0.3, 1);
 }
 
+/* Чуть более «дорогой» заход экрана: не просто проявление, а лёгкий
+   наезд с небольшим увеличением — глазу читается как шаг вперёд по
+   иерархии экранов, а не случайное мигание. */
 @keyframes screen-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(16px) scale(0.985);
   }
 }
 
@@ -90,6 +93,20 @@
   from {
     opacity: 0;
     transform: translateY(14px);
+  }
+}
+
+/* Варианты ответа — не фоновый список, а то, на чём строится решение,
+   поэтому появляются пружинистее обычного «stagger» (задержки между
+   пунктами остаются те же, из правил выше). */
+.choices.stagger > * {
+  animation: rise-in-spring 0.38s cubic-bezier(0.2, 1.2, 0.4, 1) backwards;
+}
+
+@keyframes rise-in-spring {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
   }
 }
 
@@ -170,7 +187,7 @@
   background: var(--grad-icon);
   color: #fff;
   /* Прорези в глифе геймпада красим в цвет подложки */
-  --icon-glyph-bg: #5a94a5;
+  --icon-glyph-bg: var(--icon-glyph-dark);
   box-shadow: 0 3px 8px rgba(30, 63, 104, 0.22);
 }
 
@@ -251,7 +268,7 @@
 .section-hero--gradient {
   background: var(--grad-icon);
   color: #fff;
-  --icon-glyph-bg: #5a94a5;
+  --icon-glyph-bg: var(--icon-glyph-dark);
   box-shadow: 0 6px 16px rgba(30, 63, 104, 0.22);
 }
 
@@ -358,11 +375,78 @@
   color: var(--ink-muted);
 }
 
+.crisis__contact {
+  align-items: flex-start;
+}
+
+.crisis__contact b {
+  color: var(--echo-teal-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.crisis__contact-note {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+
 .stub-note {
   margin-top: 20px;
   text-align: center;
   font-size: 13px;
   color: var(--ink-faint);
+}
+
+/* ── Переключатель темы ──────────────────────────────────────────── */
+
+.panel__row--theme {
+  padding-bottom: 6px;
+}
+
+.theme-picker {
+  display: flex;
+  gap: 8px;
+  padding: 2px 14px 16px;
+  overflow-x: auto;
+}
+
+.theme-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 6px 7px;
+  border-radius: 16px;
+  flex: 1 0 0;
+  min-width: 58px;
+}
+
+.theme-swatch__dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.theme-swatch.is-active .theme-swatch__dot {
+  transform: scale(1.12);
+  outline: 2px solid var(--swatch);
+  outline-offset: 2px;
+}
+
+.theme-swatch__label {
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.theme-swatch.is-active .theme-swatch__label {
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* ── Кнопки ───────────────────────────────────────────────────────── */
@@ -464,7 +548,8 @@
   border-radius: 20px;
   font-size: 15.5px;
   line-height: 1.4;
-  animation: bubble-in 0.2s ease-out;
+  animation: bubble-pop 0.3s cubic-bezier(0.2, 1.2, 0.4, 1);
+  transform-origin: bottom center;
   white-space: pre-wrap;
 }
 
@@ -475,12 +560,22 @@
   }
 }
 
+/* Реплики всплывают чуть пружинисто, «вырастая» из своего хвостика —
+   живее, чем плоское появление, но без дрожания соседних элементов. */
+@keyframes bubble-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+}
+
 .bubble--them {
   align-self: flex-start;
   background: var(--surface);
   color: var(--ink);
   border-bottom-left-radius: 7px;
   box-shadow: var(--sh-pill);
+  transform-origin: bottom left;
 }
 
 .bubble--me {
@@ -489,6 +584,7 @@
   color: #fff;
   border-bottom-right-radius: 7px;
   box-shadow: 0 3px 10px rgba(30, 63, 104, 0.2);
+  transform-origin: bottom right;
 }
 
 /* Пояснение от игры — не реплика, а голос за кадром */
@@ -501,6 +597,71 @@
   color: var(--ink-muted);
   font-size: 13.5px;
   padding: 4px 8px;
+}
+
+/* Имитация системного уведомления (банк и т.п.) — выглядит как настоящий
+   пуш-алерт поверх чата, а не ещё одна реплика. Падает сверху, а не
+   всплывает снизу, как обычные баблы — это физически другой объект. */
+.sys-notif {
+  align-self: stretch;
+  display: flex;
+  gap: 10px;
+  padding: 11px 14px;
+  margin: 6px 0;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--sh-logo);
+  border: 1px solid rgba(30, 63, 104, 0.08);
+  animation: notif-drop 0.42s cubic-bezier(0.2, 1.1, 0.4, 1) backwards;
+}
+
+@keyframes notif-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.97);
+  }
+}
+
+.sys-notif__icon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--bg-soft);
+  color: var(--ink-muted);
+}
+
+.sys-notif__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sys-notif__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+
+.sys-notif__app {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.sys-notif__text {
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.sys-notif__amount {
+  color: #c2603f;
 }
 
 .bubble--typing {
@@ -653,6 +814,7 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
+  animation: rise-in 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) 0.2s backwards;
 }
 
 .quest__final-row {
@@ -853,6 +1015,7 @@
   text-transform: uppercase;
   color: var(--echo-teal-text);
   font-weight: 600;
+  animation: rise-in 0.24s cubic-bezier(0.22, 0.9, 0.3, 1) 0.18s backwards;
 }
 
 /* Сцена вручения. Лучи и кольцо — отдельным слоем под медалью,
@@ -869,6 +1032,7 @@
 .badge-pop__stage .medal-icon {
   position: relative;
   z-index: 2;
+  overflow: hidden;
   animation: medal-in 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) backwards;
   animation-delay: 0.08s;
 }
@@ -877,6 +1041,30 @@
   from {
     opacity: 0;
     transform: scale(0.3) rotate(-24deg);
+  }
+}
+
+/* Блик пробегает по медали сразу после приземления — короткая финальная
+   искра, которая и даёт ощущение «вау» без лишней пестроты. Цвет не
+   хардкодим: берём --surface и накладываем его через blend-режим, так
+   светлый сполох одинаково читается в любой из тем. */
+.badge-pop__stage .medal-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, var(--surface) 50%, transparent 65%);
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  animation: medal-shine 0.45s ease-out 0.5s backwards;
+}
+
+@keyframes medal-shine {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120%);
   }
 }
 
@@ -949,6 +1137,7 @@
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
+  animation: rise-in 0.26s cubic-bezier(0.22, 0.9, 0.3, 1) 0.26s backwards;
 }
 
 .badge-pop__reason {
@@ -956,6 +1145,7 @@
   font-size: 14.5px;
   color: var(--ink-muted);
   line-height: 1.4;
+  animation: rise-in 0.26s cubic-bezier(0.22, 0.9, 0.3, 1) 0.34s backwards;
 }
 
 .badge-pop__block {
@@ -967,6 +1157,12 @@
   border-radius: 18px;
   background: var(--bg-soft);
   margin-bottom: 10px;
+  animation: rise-in 0.26s cubic-bezier(0.22, 0.9, 0.3, 1) 0.42s backwards;
+}
+
+/* Второй блок («можно попробовать») — следом за первым, не одновременно */
+.badge-pop__block ~ .badge-pop__block {
+  animation-delay: 0.48s;
 }
 
 .badge-pop__block b {
@@ -987,6 +1183,12 @@
 
 .badge-pop__block--try b {
   color: var(--echo-teal-text);
+}
+
+/* Кнопка «Забрать» — финальный штрих каскада, только в этой карточке:
+   обычные широкие кнопки (.btn--wide) в остальном приложении не трогаем */
+.badge-pop__card > .btn {
+  animation: rise-in 0.26s cubic-bezier(0.22, 0.9, 0.3, 1) 0.56s backwards;
 }
 
 /* ── «Зеркало»: угадай ответ ребёнка ──────────────────────────────── */
@@ -1317,7 +1519,7 @@
   place-items: center;
   background: var(--grad-icon);
   color: #fff;
-  --icon-glyph-bg: #5a94a5;
+  --icon-glyph-bg: var(--icon-glyph-dark);
 }
 
 .role-card__body {
@@ -1789,6 +1991,7 @@
   background: var(--surface);
   box-shadow: var(--sh-pill);
   margin-bottom: 14px;
+  animation: rise-in 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) 0.1s backwards;
 }
 
 .checklist__title {
@@ -1818,6 +2021,7 @@
   line-height: 1.45;
   color: var(--ink-faint);
   text-align: center;
+  animation: rise-in 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) 0.16s backwards;
 }
 
 .flag__why {

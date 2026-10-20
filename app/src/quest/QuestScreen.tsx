@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { IconBack } from '../components/icons';
+import { IconBack, IconCardAlert } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
+import { Glossed } from '../glossary/Glossed';
 import type { Quest, QuestChoice, QuestMessage, QuestNode } from './types';
 
-/** Пауза перед появлением сообщения — чтобы переписка шла в живом темпе */
+/** Пауза перед появлением сообщения — чтобы переписка шла в живом темпе.
+ * У system чуть длиннее остальных: пауза перед «приходом» уведомления
+ * создаёт короткое напряжение перед плохой новостью. */
 const DELAY: Record<QuestMessage['from'], number> = {
   them: 1100,
   me: 350,
   note: 750,
+  system: 900,
 };
 
 export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => void }) {
@@ -95,11 +99,29 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
       </div>
 
       <div className="quest__feed" ref={feedRef}>
-        {shown.map((m, i) => (
-          <div key={i} className={`bubble bubble--${m.from}`}>
-            {m.text}
-          </div>
-        ))}
+        {shown.map((m, i) =>
+          m.from === 'system' ? (
+            <div className="sys-notif" key={i} role="status">
+              <span className="sys-notif__icon" aria-hidden="true">
+                <IconCardAlert size={18} />
+              </span>
+              <div className="sys-notif__body">
+                <div className="sys-notif__top">
+                  <span className="sys-notif__app">{m.app ?? 'Банк'}</span>
+                  <span className="sys-notif__time">{m.time ?? 'сейчас'}</span>
+                </div>
+                <div className="sys-notif__text">
+                  <Glossed text={m.text} />
+                  {m.amount && <b className="sys-notif__amount"> {m.amount}</b>}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div key={i} className={`bubble bubble--${m.from}`}>
+              <Glossed text={m.text} />
+            </div>
+          ),
+        )}
 
         {waiting && queue[0].from === 'them' && (
           <div className="bubble bubble--them bubble--typing" aria-label="Собеседник печатает">
@@ -113,7 +135,9 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
           <div className={`ending ending--${ending.tone}`}>
             <div className="ending__title">{ending.title}</div>
             <div className="ending__power">{ending.superpower}</div>
-            <p className="ending__text">{ending.text}</p>
+            <p className="ending__text">
+              <Glossed text={ending.text} />
+            </p>
           </div>
         )}
 
@@ -123,7 +147,9 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
             {quest.redFlags.map((f) => (
               <div className="debrief__item" key={f.title}>
                 <b>{f.title}</b>
-                <span>{f.text}</span>
+                <span>
+                  <Glossed text={f.text} />
+                </span>
               </div>
             ))}
           </div>

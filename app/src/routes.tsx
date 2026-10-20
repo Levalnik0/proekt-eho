@@ -35,12 +35,30 @@ export const SECTIONS: Section[] = [
     title: '«Я подросток»',
     icon: IconGamepad,
     look: 'gradient',
-    lead: 'Опасные ситуации в формате переписки — и три теста про то, как устроен именно ты.',
+    lead: 'Опасные ситуации в формате переписки — четыре квеста и три теста про то, как устроен именно ты.',
     activities: [
       {
         route: 'quest/new-contact',
         label: 'Квест «Новый контакт»',
         hint: 'Переписка с выборами · 4 финала',
+        kind: 'quest',
+      },
+      {
+        route: 'quest/easy-job',
+        label: 'Квест «Лёгкий заработок»',
+        hint: 'Переписка с выборами · вербовка в «дропы»',
+        kind: 'quest',
+      },
+      {
+        route: 'quest/too-much-known',
+        label: 'Квест «Слишком много знают»',
+        hint: 'Переписка с выборами · геолокация и овершеринг',
+        kind: 'quest',
+      },
+      {
+        route: 'quest/own-people',
+        label: 'Квест «Свои»',
+        hint: 'Переписка с выборами · вовлечение в закрытую группу',
         kind: 'quest',
       },
       {
@@ -81,6 +99,12 @@ export const SECTIONS: Section[] = [
         label: 'Квест «День из жизни»',
         hint: 'Один день от лица ребёнка',
         kind: 'quest',
+      },
+      {
+        route: 'crisis-protocol',
+        label: 'Что делать прямо сейчас',
+        hint: 'Протокол на случай тревожных признаков · контакты',
+        kind: 'checker',
       },
       {
         route: 'mirror/adult',

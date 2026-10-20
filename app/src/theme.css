@@ -35,6 +35,10 @@
   /* Градиент круглых иконок. Затемнён: на прежнем светлом крае
      белый глиф имел контраст 2.4:1 и сливался с фоном. */
   --grad-icon: linear-gradient(145deg, #4e9299 0%, #3d6f83 100%);
+  /* Тёмный край градиента отдельным токеном: им вырезаются прорези
+     в глифе (--icon-glyph-bg в App.css), чтобы они не слипались
+     с подложкой. У каждой темы — свой. */
+  --icon-glyph-dark: #5a94a5;
 
   /* Скругления */
   --r-pill: 999px;
@@ -98,10 +102,104 @@ button {
   --logo-navy: #8fb6dd;
 }
 
-/* Уважаем системную настройку «уменьшить движение» */
+/* Уважаем системную настройку «уменьшить движение».
+   Псевдоэлементы (::before/::after) не ловятся обычным «*», поэтому
+   перечисляем их отдельно — иначе анимация на них (напр. блик на медали)
+   не подчинится этой настройке. */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── Темы оформления ─────────────────────────────────────────────────
+   Переключаются через [data-theme] на <html> (useTheme.ts).
+   Меняются только фирменные цвета, поверхности и текст — форма кнопок,
+   скругления и тени остаются теми же, что в «Океане» (тема по умолчанию,
+   отдельного блока не требует — это и есть :root выше).
+   Статусные цвета (предупреждение/опасность в .ending и .checker) нигде
+   не трогаем: тревога должна выглядеть одинаково в любой теме.
+   ------------------------------------------------------------------ */
+
+[data-theme='pink'] {
+  --echo-teal: #d9607e;
+  --echo-teal-light: #ecb0c1;
+  --echo-navy: #7a2142;
+  --echo-navy-deep: #5c1731;
+  --echo-teal-text: #a8325a;
+  --grad-icon: linear-gradient(145deg, #e0718d 0%, #93295a 100%);
+  --icon-glyph-dark: #93295a;
+}
+
+[data-theme='violet'] {
+  --echo-teal: #8b6fd1;
+  --echo-teal-light: #bda8ea;
+  --echo-navy: #3c2766;
+  --echo-navy-deep: #2b1a4d;
+  --echo-teal-text: #6346ad;
+  --grad-icon: linear-gradient(145deg, #9b7fe0 0%, #5a3c99 100%);
+  --icon-glyph-dark: #5a3c99;
+}
+
+[data-theme='coral'] {
+  --echo-teal: #e2693f;
+  --echo-teal-light: #f0a480;
+  --echo-navy: #7a2f17;
+  --echo-navy-deep: #5c2110;
+  --echo-teal-text: #b24a26;
+  --grad-icon: linear-gradient(145deg, #ea7e52 0%, #a8431f 100%);
+  --icon-glyph-dark: #a8431f;
+}
+
+/* Единственная тёмная тема: закрывает сразу и «чёрный», и «неоновый»
+   запрос — тёмные поверхности плюс яркий циан-маджента акцент. */
+[data-theme='neon'] {
+  --bg: #121018;
+  --bg-soft: #181521;
+  --surface: #1d1a28;
+  --surface-bar: #17141f;
+  --ink: #f1eefc;
+  --ink-muted: #b6aed1;
+  --ink-faint: #a79fc4;
+  --echo-teal: #38e8d8;
+  --echo-teal-light: #8ff2e8;
+  --echo-navy: #ff57c7;
+  --echo-navy-deep: #c93ea0;
+  --echo-teal-text: #3be0cf;
+  --grad-icon: linear-gradient(145deg, #38e8d8 0%, #c850ff 100%);
+  --icon-glyph-dark: #8a3fc9;
+  color-scheme: dark;
+}
+
+/* Плавная смена темы: красим только фон/текст/рамку, не layout —
+   поэтому это безопасно повесить широким списком селекторов.
+   Глобальный @media(prefers-reduced-motion) выше уже обнуляет
+   transition-duration, так что доп. условие здесь не нужно. */
+body,
+.screen,
+.panel,
+.panel__row,
+.menu-item,
+.bubble,
+.choice,
+.btn,
+.btn-magnetic,
+.topbar,
+.tabbar,
+.section-hero,
+.quest,
+.quest__bar,
+.ending,
+.sheet__card,
+.badge-pop__card,
+input,
+textarea {
+  transition:
+    background-color 0.35s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }

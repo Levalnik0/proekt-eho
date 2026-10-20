@@ -6,6 +6,7 @@ import { ProfileScreen } from './screens/ProfileScreen';
 import { SectionScreen } from './screens/SectionScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { ClubScreen } from './screens/ClubScreen';
+import { CrisisScreen } from './screens/CrisisScreen';
 import { RoleScreen } from './screens/RoleScreen';
 import { CheckerScreen } from './checker/CheckerScreen';
 import { QuestScreen } from './quest/QuestScreen';
@@ -17,6 +18,9 @@ import type { Mirror } from './mirror/types';
 import type { PsyTest } from './tests/types';
 import type { Coop } from './coop/types';
 import newContact from './data/new-contact.json';
+import easyJob from './data/easy-job.json';
+import tooMuchKnown from './data/too-much-known.json';
+import ownPeople from './data/own-people.json';
 import dayInLife from './data/day-in-life.json';
 import mirrorAdult from './data/mirror-adult.json';
 import mirrorTeen from './data/mirror-teen.json';
@@ -30,6 +34,9 @@ import { useHashRoute } from './useHashRoute';
 /** Библиотеки сценариев: чтобы добавить историю, достаточно положить JSON и вписать сюда */
 const QUESTS: Record<string, Quest> = {
   'new-contact': newContact as Quest,
+  'easy-job': easyJob as Quest,
+  'too-much-known': tooMuchKnown as Quest,
+  'own-people': ownPeople as Quest,
   'day-in-life': dayInLife as Quest,
 };
 const MIRRORS: Record<string, Mirror> = {
@@ -76,7 +83,7 @@ export default function App() {
   if (quest) {
     return (
       <div className="app">
-        <QuestScreen quest={quest} onExit={back} />
+        <QuestScreen key={quest.id} quest={quest} onExit={back} />
       </div>
     );
   }
@@ -86,15 +93,16 @@ export default function App() {
     return (
       <div className="app">
         <main className="app__body">
-          {mirror && <MirrorScreen mirror={mirror} onExit={back} />}
+          {mirror && <MirrorScreen key={mirror.id} mirror={mirror} onExit={back} />}
           {test && (
             <TestScreen
+              key={test.id}
               test={test}
               allOfRole={ALL_TESTS.filter((t) => t.role === test.role).map((t) => t.id)}
               onExit={back}
             />
           )}
-          {coop && <CoopScreen coop={coop} onExit={back} />}
+          {coop && <CoopScreen key={coop.id} coop={coop} onExit={back} />}
         </main>
       </div>
     );
@@ -107,10 +115,12 @@ export default function App() {
         {route === 'settings' && <SettingsScreen />}
         {route === 'club-program' && <ClubScreen onBack={back} />}
         {route === 'check-message' && <CheckerScreen onExit={back} />}
+        {route === 'crisis-protocol' && <CrisisScreen onBack={back} />}
         {section && <SectionScreen section={section} onBack={back} onOpen={go} />}
-        {!section && !['profile', 'settings', 'club-program', 'check-message'].includes(route) && (
-          <HomeScreen onOpen={(id) => go(id)} />
-        )}
+        {!section &&
+          !['profile', 'settings', 'club-program', 'check-message', 'crisis-protocol'].includes(
+            route,
+          ) && <HomeScreen onOpen={(id) => go(id)} />}
       </main>
 
       <TabBar active={activeTab} onSelect={(tab) => go(tab)} />

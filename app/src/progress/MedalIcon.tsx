@@ -118,6 +118,30 @@ const GLYPHS: Record<string, ReactNode> = {
       <circle cx="12" cy="12" r="2.8" />
     </>
   ),
+  // Карта с перечёркнутой линией передачи — отказ быть «дропом»
+  cardOff: (
+    <>
+      <path d="M3.4 6.4h17.2v11.2H3.4z" />
+      <path d="M3.4 10.2h17.2" />
+      <path d="m6 20.6 12-17.2" />
+    </>
+  ),
+  // Разомкнутое звено цепи — вышел из круга, не дав себя замкнуть
+  brokenLink: (
+    <>
+      <path d="M9.6 14.4 6.8 17.2a3 3 0 0 1-4.2-4.2l2.8-2.8" />
+      <path d="M14.4 9.6l2.8-2.8a3 3 0 0 1 4.2 4.2l-2.8 2.8" />
+      <path d="M8.4 12.2v3M12.2 8.4h3" strokeDasharray="0.1 2.4" />
+    </>
+  ),
+  // Пин на карте, собранный из точек — «по кусочкам видно слишком много»
+  pinDots: (
+    <>
+      <path d="M12 21.4c4-4.4 6.4-7.8 6.4-11A6.4 6.4 0 0 0 5.6 10.4c0 3.2 2.4 6.6 6.4 11Z" />
+      <circle cx="12" cy="10.2" r="0.6" />
+      <path d="M9 10.2h.01M15 10.2h.01" strokeDasharray="0.1 2.6" />
+    </>
+  ),
 };
 
 /** Какой глиф у какой медали */
@@ -132,6 +156,9 @@ export const MEDAL_GLYPH: Record<string, string> = {
   'self-scan': 'puzzle',
   'full-profile': 'medal',
   'mirror-teen': 'mirror',
+  'spotted-drop': 'cardOff',
+  'spotted-group': 'brokenLink',
+  'geo-aware': 'pinDots',
   bullseye: 'target',
   surprised: 'flashlight',
   paused: 'hourglass',

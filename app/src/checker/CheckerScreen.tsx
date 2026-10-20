@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
+import { Glossed } from '../glossary/Glossed';
 import { analyse, CHECKLIST, SAMPLES, VERDICTS } from './analyse';
 
 /**
@@ -107,7 +108,9 @@ export function CheckerScreen({ onExit }: { onExit: () => void }) {
                       </span>
                     ))}
                   </div>
-                  <div className="flag__why">{h.why}</div>
+                  <div className="flag__why">
+                    <Glossed text={h.why} />
+                  </div>
                 </li>
               ))}
             </ul>

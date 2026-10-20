@@ -181,6 +181,26 @@ export function IconBack({ size = 24, className }: IconProps) {
   );
 }
 
+/** Карта со знаком — имитация банковского уведомления в квесте */
+export function IconCardAlert({ size = 24, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect x="2.4" y="5.4" width="19.2" height="13.2" rx="2.6" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M2.4 9.4h19.2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M5.6 15h4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <circle cx="18.2" cy="14.6" r="0.9" fill="currentColor" />
+      <path d="M18.2 10.4v2.4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /** Шеврон «вперёд» — правый край пункта меню */
 export function IconChevron({ size = 20, className }: IconProps) {
   return (

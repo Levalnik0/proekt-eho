@@ -78,7 +78,12 @@ export function ProfileScreen() {
       </ul>
 
       {detail && (
-        <div className="badge-pop" role="dialog" onClick={() => setOpen(null)}>
+        <div
+          className="badge-pop"
+          role="dialog"
+          aria-label={`Медаль: ${detail.title}`}
+          onClick={() => setOpen(null)}
+        >
           <div className="badge-pop__card" onClick={(e) => e.stopPropagation()}>
             <div className="badge-pop__stage">
               <MedalIcon badgeId={detail.id} size={84} />

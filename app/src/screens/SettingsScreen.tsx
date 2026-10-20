@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useProgress } from '../progress/useProgress';
+import { THEMES, useTheme } from '../theme/useTheme';
 
 const ROLE_LABEL = { teen: 'Подросток', adult: 'Взрослый' } as const;
 
 export function SettingsScreen() {
   const { progress, reset, setRole } = useProgress();
+  const { theme, setTheme } = useTheme();
   const [confirming, setConfirming] = useState(false);
 
   return (
@@ -34,6 +36,27 @@ export function SettingsScreen() {
         <div className="panel__row">
           <span>Звук в квестах</span>
           <b>Включён</b>
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="panel__row panel__row--theme">
+          <span>Тема оформления</span>
+        </div>
+        <div className="theme-picker">
+          {THEMES.map((t) => (
+            <button
+              key={t.id}
+              className={`theme-swatch${theme === t.id ? ' is-active' : ''}`}
+              style={{ ['--swatch' as string]: t.swatch }}
+              onClick={() => setTheme(t.id)}
+              aria-pressed={theme === t.id}
+              aria-label={`Тема «${t.label}»`}
+            >
+              <span className="theme-swatch__dot" />
+              <span className="theme-swatch__label">{t.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -79,7 +102,7 @@ export function SettingsScreen() {
         </button>
       )}
 
-      <div className="stub-note">Переключатели станут рабочими на следующем шаге.</div>
+      <div className="stub-note">Уведомления, шрифт и звук станут рабочими на следующем шаге.</div>
     </div>
   );
 }

@@ -8,14 +8,32 @@ type Term = { forms: string[]; title: string; text: string; note: string };
 
 const TERMS = glossary.terms as Term[];
 
-/** Словоформа → термин. Ищем по точному слову, чтобы «топор» не стал «топ». */
+/** Словоформа → термин. Ключ — форма с пробелами, приведёнными к одному. */
 const BY_FORM = new Map<string, Term>();
+const ALL_FORMS: string[] = [];
 for (const term of TERMS) {
-  for (const form of term.forms) BY_FORM.set(form.toLowerCase(), term);
+  for (const form of term.forms) {
+    BY_FORM.set(form.toLowerCase().replace(/\s+/g, ' '), term);
+    ALL_FORMS.push(form);
+  }
 }
+// Длинные формы — в т.ч. из нескольких слов вроде «цифровой след» —
+// проверяем раньше коротких, чтобы фраза не распалась на одно слово.
+ALL_FORMS.sort((a, b) => b.length - a.length);
 
-/** Слова, в том числе через дефис */
-const WORD = /[А-Яа-яЁёA-Za-z]+(?:-[А-Яа-яЁёA-Za-z]+)?/g;
+/**
+ * Границы слова строим сами, а не через \b: в JS \b завязан на \w,
+ * а кириллица в \w не входит — \bскинь\b никогда не совпадёт.
+ * Формы ищем точным совпадением (а не разбиением текста на токены),
+ * чтобы поддержать и словосочетания из нескольких слов.
+ */
+const NOT_WORD_CHAR = 'А-Яа-яЁёA-Za-z0-9_';
+const escapeForm = (f: string) =>
+  f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+const WORD = new RegExp(
+  `(?<![${NOT_WORD_CHAR}])(?:${ALL_FORMS.map(escapeForm).join('|')})(?![${NOT_WORD_CHAR}])`,
+  'gi',
+);
 
 /**
  * Подсвечивает сленг в тексте: тап по слову открывает объяснение.
@@ -41,7 +59,7 @@ export function Glossed({ text }: { text: string }) {
     let match: RegExpExecArray | null;
     WORD.lastIndex = 0;
     while ((match = WORD.exec(text))) {
-      const term = BY_FORM.get(match[0].toLowerCase());
+      const term = BY_FORM.get(match[0].toLowerCase().replace(/\s+/g, ' '));
       if (!term) continue;
       if (match.index > last) out.push(text.slice(last, match.index));
       const word = match[0];
@@ -68,7 +86,12 @@ export function Glossed({ text }: { text: string }) {
 
       {open &&
         createPortal(
-          <div className="sheet" role="dialog" onClick={() => setOpen(null)}>
+          <div
+            className="sheet"
+            role="dialog"
+            aria-label={`Слово: ${open.title}`}
+            onClick={() => setOpen(null)}
+          >
             <div className="sheet__card" onClick={(e) => e.stopPropagation()}>
               <div className="sheet__grip" />
               <div className="sheet__title">{open.title}</div>
