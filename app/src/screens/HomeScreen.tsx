@@ -11,7 +11,7 @@ export function HomeScreen({ onOpen }: { onOpen: (id: SectionId) => void }) {
         <p className="hero__subtitle">
           «Интерактивный мост
           <br />
-          доверия для 10–11 лет»
+          доверия для 10–12 лет»
         </p>
       </header>
 
