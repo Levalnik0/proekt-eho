@@ -1,4 +1,39 @@
+import { useState } from 'react';
 import { IconBack } from '../components/icons';
+
+/**
+ * Формат офлайн-встреч ещё обсуждается, поэтому программа не видна всем
+ * подряд — открывается кодом, который называет ведущий на самой встрече.
+ * Это не защита данных, а просто занавес: код живёт в коде приложения,
+ * без сервера.
+ */
+const CLUB_CODE = 'навигатор90';
+const UNLOCK_KEY = 'echo.club.unlocked';
+
+function useClubGate() {
+  const [unlocked, setUnlocked] = useState(() => {
+    try {
+      return localStorage.getItem(UNLOCK_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  const tryUnlock = (code: string) => {
+    const ok = code.trim().toLowerCase() === CLUB_CODE;
+    if (ok) {
+      setUnlocked(true);
+      try {
+        localStorage.setItem(UNLOCK_KEY, '1');
+      } catch {
+        // приватный режим — просто не запомнится между визитами
+      }
+    }
+    return ok;
+  };
+
+  return { unlocked, tryUnlock };
+}
 
 /**
  * Программа офлайн-встречи «Клуб навигаторов».
@@ -46,6 +81,58 @@ const RULES = [
 ];
 
 export function ClubScreen({ onBack }: { onBack: () => void }) {
+  const { unlocked, tryUnlock } = useClubGate();
+  const [code, setCode] = useState('');
+  const [error, setError] = useState(false);
+
+  if (!unlocked) {
+    return (
+      <div className="screen">
+        <div className="topbar">
+          <button className="topbar__back" onClick={onBack} aria-label="Назад">
+            <IconBack size={22} />
+          </button>
+          <span className="topbar__title">Клуб навигаторов</span>
+          <span className="topbar__spacer" />
+        </div>
+
+        <p className="section-lead">
+          Программа встречи открывается кодом прямо на самой встрече — его
+          называет ведущий.
+        </p>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!tryUnlock(code)) {
+              setError(true);
+            }
+          }}
+        >
+          <input
+            className="checker__input"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+              setError(false);
+            }}
+            placeholder="Код встречи"
+            autoFocus
+          />
+          <p className="checker__privacy">Код скажет ведущий встречи.</p>
+          {error && (
+            <p className="checker__privacy" style={{ color: 'var(--danger, #c0392b)' }}>
+              Код неверный, попробуйте ещё раз.
+            </p>
+          )}
+          <button type="submit" className="btn btn--primary">
+            Открыть
+          </button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="screen">
       <div className="topbar">
