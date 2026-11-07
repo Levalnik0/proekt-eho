@@ -104,6 +104,9 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .r-base::before { width: 2px; height: 70%; }
 .r-base::after { height: 2px; width: 70%; }
 .r-knob { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); box-shadow: 0 6px 16px rgba(0,0,0,.45); position: relative; z-index: 1; }
+.thm { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.thm i { width: 13px; height: 13px; border-radius: 50%; background: var(--c); flex: none; }
+.thm--hard { width: 100%; margin: -6px 0 16px; font-weight: 600; font-size: 13.5px; color: var(--muted); }
 .menu__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; min-height: 38px; }
 .overlay h2 { font-size: 26px; margin: 0 0 6px; text-wrap: balance; }
 .overlay .big { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; margin: 6px 0; font-variant-numeric: tabular-nums; }
@@ -377,6 +380,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <h2>Автодром слов</h2>
         <div data-how="race"></div>
         <div class="themes" id="r-themes"></div>
+        <button class="thm thm--hard" id="r-hard" aria-pressed="false">Режим эксперта: слова без цвета</button>
         <button class="btn btn--main btn--wide" id="r-go">Ехать</button>
       </div>
       <div class="overlay" id="r-end" hidden></div>
@@ -439,7 +443,7 @@ const HOWTO = {
   detective: ['<b>Води пальцем</b> по картинке: лупа ходит над пальцем и показывает мелочи.', 'Ищи то, по чему чужой человек поймёт, <b>где Маша живёт и учится</b>.', 'Найди все <b>5 улик</b>. Если застрял, через несколько секунд появится подсказка.'],
   fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
   net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b>: подделку выдаёт одна буква. Три ошибки и конец.'],
-  race: ['Веди <b>пультом</b> внизу: машинка едет по арене, куда направишь.', 'Подбирай слова <b>только своей темы</b>. Чужое слово затормозит машинку.', 'Соперники <b>толкаются</b>, и тебя тоже могут сбить. Кто соберёт больше за 45 секунд, тот победил.'],
+  race: ['Веди <b>пультом</b> внизу: машинка едет по арене, куда направишь.', 'Твоя машинка цвета твоей темы. <b>Собирай слова такого же цвета.</b> Чужого цвета не трогай: затормозит.', 'Соперники <b>толкаются</b>, и тебя тоже могут сбить. Кто соберёт больше за 45 секунд, тот победил.'],
   windows: ['К окнам твоего профиля приходят гости: <b>серые</b> незнакомцы, <b>бирюзовые</b> друзья.', '<b>Нажми на окно</b>, чтобы выбрать, кому оно открыто: всем, друзьям или никому.', 'Гость с подписью <b>«0 общих»</b> не друг: нажми на него, и он уйдёт.'],
 };
 const renderHow = (id) => `<ol class="howto">${HOWTO[id].map((t) => `<li><span>${t}</span></li>`).join('')}</ol>`;
@@ -1272,6 +1276,13 @@ function close() {
       ['удаление поста', 'Сохранить могли, но лишнее лучше убрать.'],
     ] },
   ];
+  // Цвет и фигурка темы: по ним видно, чьё слово, не читая
+  const LOOK = {
+    safe: { c: '#5fe39a', shape: 'circle' },
+    manip: { c: '#ffc04d', shape: 'diamond' },
+    scam: { c: '#ff6b6b', shape: 'triangle' },
+    priv: { c: '#5bb8ff', shape: 'square' },
+  };
   const BOTS = [
     { name: 'Лиса', color: '#ff8fb1', skill: 0.85, speed: 0.74 },
     { name: 'Кит', color: '#a996ff', skill: 0.7, speed: 0.64 },
@@ -1280,6 +1291,8 @@ function close() {
   const DURATION = 45, CR = 17, MAXV = 190, ITEM_W = 92, ITEM_H = 40, HIT = 30;
   const cv = $('#r-canvas'), stage = $('#r-stage'), ctx = cv.getContext('2d'), pad = $('#r-pad'), knob = $('#r-knob');
   let W = 0, H = 0, raf = 0, last = 0, running = false, paused = false;
+  let hard = false;
+  try { hard = localStorage.getItem('echo.lab.race.hard') === '1'; } catch (e) {}
   let cars = [], items = [], decks = [], pops = [], elapsed = 0, my = null, pickId = THEMES[0].id, collected = [], boardKey = '', bumpAt = 0;
   const joy = { x: 0, y: 0 }, keys = { l: 0, r: 0, u: 0, d: 0 };
 
@@ -1289,7 +1302,7 @@ function close() {
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   function renderThemes() {
-    $('#r-themes').innerHTML = THEMES.map((t) => `<button class="thm" data-t="${t.id}" aria-pressed="${t.id === pickId}">${t.name}</button>`).join('');
+    $('#r-themes').innerHTML = THEMES.map((t) => `<button class="thm" data-t="${t.id}" aria-pressed="${t.id === pickId}" style="--c:${LOOK[t.id].c}"><i></i>${t.name}</button>`).join('');
     document.querySelectorAll('#r-themes .thm').forEach((b) => b.addEventListener('click', () => { pickId = b.dataset.t; renderThemes(); }));
   }
   function pick(tid) {
@@ -1316,12 +1329,12 @@ function close() {
     decks = THEMES.map((t) => ({ id: t.id, list: shuffle(t.words), i: 0 }));
     const mine = THEMES.find((t) => t.id === pickId), others = shuffle(THEMES.filter((t) => t.id !== pickId));
     const spots = shuffle([[0.25, 0.8], [0.75, 0.8], [0.25, 0.5], [0.75, 0.5]]);
-    const mk = (o, i) => ({ score: 0, vx: 0, vy: 0, ang: 0, slow: 0, think: 0, target: null, x: spots[i][0] * W, y: spots[i][1] * H, ...o });
-    cars = [mk({ name: 'Ты', color: '#3fd0cc', theme: mine.id, me: true }, 0),
-      ...BOTS.map((b, i) => mk({ name: b.name, color: b.color, theme: others[i].id, skill: b.skill, speed: b.speed }, i + 1))];
+    const mk = (o, i) => ({ color: LOOK[o.theme].c, score: 0, vx: 0, vy: 0, ang: 0, slow: 0, think: 0, target: null, x: spots[i][0] * W, y: spots[i][1] * H, ...o });
+    cars = [mk({ name: 'Ты', theme: mine.id, me: true }, 0),
+      ...BOTS.map((b, i) => mk({ name: b.name, theme: others[i].id, skill: b.skill, speed: b.speed }, i + 1))];
     my = cars[0];
     THEMES.forEach((t) => { for (let k = 0; k < 2; k++) items.push(spawnItem(t.id)); });
-    const th = $('#r-theme'); th.hidden = false; th.innerHTML = `Твоя тема: <b>${mine.name}</b>`;
+    const th = $('#r-theme'); th.hidden = false; th.innerHTML = `Твоя тема: <b style="color:${LOOK[mine.id].c}">${mine.name}</b>`;
     $('#r-score').textContent = '0'; $('#r-time').textContent = DURATION;
     running = true; last = performance.now(); raf = requestAnimationFrame(tick);
   }
@@ -1361,7 +1374,7 @@ function close() {
         if (Math.hypot(it.x - c.x, it.y - c.y) > HIT) continue;
         if (it.theme === c.theme) {
           c.score++;
-          if (c.me) { collected.push(it); pops.push({ x: it.x, y: it.y, t: 0, txt: '+1', c: '#3fd0cc' }); snd.good(); buzz(10); $('#r-score').textContent = c.score; }
+          if (c.me) { collected.push(it); pops.push({ x: it.x, y: it.y, t: 0, txt: '+1', c: LOOK[my.theme].c }); snd.good(); buzz(10); $('#r-score').textContent = c.score; }
         } else {
           c.slow = 1.1;
           if (c.me) { pops.push({ x: c.x, y: c.y - 20, t: 0, txt: 'чужое', c: '#ffc27a' }); snd.bad(); buzz([20, 40, 20]); }
@@ -1416,6 +1429,14 @@ function close() {
     while (fs > 9 && Math.max(...lines.map((l) => ctx.measureText(l).width)) > maxW) { fs -= 0.5; setF(); }
     lines.forEach((l, i) => ctx.fillText(l, cx, cy + (i - (lines.length - 1) / 2) * (fs + 2)));
   }
+  function shape(kind, cx, cy, r, color) {
+    ctx.fillStyle = color; ctx.strokeStyle = '#0c1a1d'; ctx.lineWidth = 1.5; ctx.beginPath();
+    if (kind === 'circle') ctx.arc(cx, cy, r, 0, 7);
+    else if (kind === 'square') ctx.rect(cx - r * 0.85, cy - r * 0.85, r * 1.7, r * 1.7);
+    else if (kind === 'triangle') { ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r, cy + r * 0.8); ctx.lineTo(cx - r, cy + r * 0.8); ctx.closePath(); }
+    else { ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r, cy); ctx.closePath(); }
+    ctx.stroke(); ctx.fill();
+  }
   function drawCar(c) {
     const wob = c.slow > 0 ? Math.sin(performance.now() / 45) * 1.5 : 0;
     ctx.save(); ctx.translate(c.x + wob, c.y); ctx.rotate(c.ang);
@@ -1424,6 +1445,7 @@ function close() {
     rr(-11, -18, 22, 36, 8); ctx.fillStyle = c.color; ctx.fill();
     rr(-7.5, -11, 15, 9, 3); ctx.fillStyle = 'rgba(6,32,34,.78)'; ctx.fill();
     rr(-6, 5, 12, 8, 3); ctx.fillStyle = 'rgba(6,32,34,.25)'; ctx.fill();
+    shape(LOOK[c.theme].shape, 0, 11, 4.2, '#0c1a1d');
     if (c.me) { rr(-14, -21, 28, 42, 10); ctx.strokeStyle = '#e9f5f4'; ctx.lineWidth = 2; ctx.stroke(); }
     ctx.restore(); ctx.globalAlpha = 1;
     ctx.fillStyle = '#e9f5f4'; ctx.font = '700 10.5px -apple-system, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
@@ -1436,8 +1458,14 @@ function close() {
     for (const it of items) {
       const s = 1 + Math.sin(elapsed * 4 + it.x) * 0.025;
       ctx.save(); ctx.translate(it.x, it.y); ctx.scale(s, s);
+      const lk = LOOK[it.theme];
       rr(-ITEM_W / 2, -ITEM_H / 2, ITEM_W, ITEM_H, 13); ctx.fillStyle = '#1b3a42'; ctx.fill();
-      ctx.strokeStyle = 'rgba(160,230,228,.3)'; ctx.lineWidth = 1.4; ctx.stroke();
+      if (hard) { ctx.strokeStyle = 'rgba(160,230,228,.3)'; ctx.lineWidth = 1.4; ctx.stroke(); }
+      else {
+        ctx.globalAlpha = 0.22; ctx.fillStyle = lk.c; ctx.fill(); ctx.globalAlpha = 1;
+        ctx.strokeStyle = lk.c; ctx.lineWidth = 2.6; ctx.stroke();
+        shape(lk.shape, -ITEM_W / 2 + 4, -ITEM_H / 2 - 3, 6.5, lk.c);
+      }
       label(it.w, 0, 0, ITEM_W - 12); ctx.restore();
     }
     cars.forEach(drawCar);
@@ -1480,6 +1508,10 @@ function close() {
   window.addEventListener('keydown', (e) => { if (current === 'race' && KEYMAP[e.key]) { keys[KEYMAP[e.key]] = 1; e.preventDefault(); } });
   window.addEventListener('keyup', (e) => { if (KEYMAP[e.key]) keys[KEYMAP[e.key]] = 0; });
   window.addEventListener('resize', () => { if (current === 'race') size(); });
+  const hardBtn = $('#r-hard');
+  const paintHard = () => hardBtn.setAttribute('aria-pressed', String(hard));
+  hardBtn.addEventListener('click', () => { hard = !hard; try { localStorage.setItem('echo.lab.race.hard', hard ? '1' : '0'); } catch (e) {} paintHard(); });
+  paintHard();
   $('#r-go').onclick = start;
   games.race = {
     enter() { running = false; $('#r-start').hidden = false; $('#r-end').hidden = true; $('#r-theme').hidden = true; $('#r-board').innerHTML = ''; renderThemes(); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
