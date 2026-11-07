@@ -11,7 +11,8 @@ type Question = Word & { options: string[] };
 
 const POOL = words as Word[];
 const ROUND = 10;
-const NEXT_MS = 950;
+/** Сколько видно верный ответ, прежде чем придёт следующее слово */
+const NEXT_MS = 2200;
 
 const newDeck = (): Question[] =>
   shuffle(POOL)
@@ -169,12 +170,18 @@ export function SlangGame({ onExit }: { onExit: () => void }) {
                   onClick={() => choose(opt)}
                   disabled={picked !== null}
                 >
+                  {right && <span aria-hidden="true">✓ </span>}
+                  {wrong && <span aria-hidden="true">✕ </span>}
                   {opt}
                 </button>
               </li>
             );
           })}
         </ul>
+        {/* Результат ответа для скринридера: цвет и значок видят не все */}
+        <div className="sr-only" role="status">
+          {picked === null ? '' : picked === q.ok ? 'Верно' : `Неверно. Правильный ответ: ${q.ok}`}
+        </div>
       </div>
     </div>
   );

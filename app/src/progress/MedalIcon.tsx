@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { MEDAL_GLYPH } from './medalGlyphs';
 
 /**
  * Глифы медалей.
@@ -142,39 +143,6 @@ const GLYPHS: Record<string, ReactNode> = {
       <path d="M9 10.2h.01M15 10.2h.01" strokeDasharray="0.1 2.6" />
     </>
   ),
-};
-
-/** Какой глиф у какой медали */
-export const MEDAL_GLYPH: Record<string, string> = {
-  'calm-no': 'shield',
-  'double-check': 'magnifier',
-  'call-team': 'handshake',
-  'been-there': 'route',
-  replay: 'refresh',
-  'read-flags': 'bulb',
-  checker: 'eye',
-  'self-scan': 'puzzle',
-  'full-profile': 'medal',
-  'mirror-teen': 'mirror',
-  'spotted-drop': 'cardOff',
-  'spotted-group': 'brokenLink',
-  'geo-aware': 'pinDots',
-  bullseye: 'target',
-  surprised: 'flashlight',
-  paused: 'hourglass',
-  listener: 'ear',
-  translator: 'speech',
-  ally: 'handshake',
-  'checker-adult': 'eye',
-  'first-step': 'door',
-  'in-his-shoes': 'backpack',
-  'own-style': 'compass',
-  'full-picture': 'medal',
-  'decision-map': 'map',
-  'swipe-first': 'magnifier',
-  'swipe-perfect': 'target',
-  'slang-first': 'speech',
-  'family-round': 'handshake',
 };
 
 export function MedalIcon({

@@ -45,7 +45,9 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
 
   // Лента всегда прокручена к последнему сообщению
   useEffect(() => {
-    feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: 'smooth' });
+    // Плавная прокрутка не нужна тем, кто в системе просил уменьшить движение
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: calm ? 'auto' : 'smooth' });
   }, [shown, waiting, showDebrief]);
 
   const ending = !waiting ? node.ending : undefined;
@@ -98,7 +100,8 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
         </button>
       </div>
 
-      <div className="quest__feed" ref={feedRef}>
+      {/* role="log": новые реплики собеседника скринридер читает по мере появления */}
+      <div className="quest__feed" ref={feedRef} role="log" aria-live="polite" aria-relevant="additions">
         {shown.map((m, i) =>
           m.from === 'system' ? (
             <div className="sys-notif" key={i} role="status">
@@ -124,7 +127,7 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
         )}
 
         {waiting && queue[0].from === 'them' && (
-          <div className="bubble bubble--them bubble--typing" aria-label="Собеседник печатает">
+          <div className="bubble bubble--them bubble--typing" aria-hidden="true">
             <i />
             <i />
             <i />

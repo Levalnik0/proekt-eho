@@ -51,7 +51,7 @@ export function CheckerScreen({ onExit }: { onExit: () => void }) {
         <button className="topbar__back" onClick={onExit} aria-label="Назад">
           <IconBack size={22} />
         </button>
-        <span className="topbar__title">Проверка сообщения</span>
+        <h1 className="topbar__title">Проверка сообщения</h1>
         <span className="topbar__spacer" />
       </div>
 

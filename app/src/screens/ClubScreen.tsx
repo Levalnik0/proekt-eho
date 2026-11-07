@@ -99,7 +99,7 @@ export function ClubScreen({
           <button className="topbar__back" onClick={onBack} aria-label="Назад">
             <IconBack size={22} />
           </button>
-          <span className="topbar__title">Клуб навигаторов</span>
+          <h1 className="topbar__title">Клуб навигаторов</h1>
           <span className="topbar__spacer" />
         </div>
 
@@ -144,7 +144,7 @@ export function ClubScreen({
         <button className="topbar__back" onClick={onBack} aria-label="Назад">
           <IconBack size={22} />
         </button>
-        <span className="topbar__title">Программа встречи</span>
+        <h1 className="topbar__title">Программа встречи</h1>
         <span className="topbar__spacer" />
       </div>
 

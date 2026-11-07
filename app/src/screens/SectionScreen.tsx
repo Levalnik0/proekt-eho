@@ -57,7 +57,7 @@ export function SectionScreen({
         <button className="topbar__back" onClick={onBack} aria-label="Назад">
           <IconBack size={22} />
         </button>
-        <span className="topbar__title">{section.title}</span>
+        <h1 className="topbar__title">{section.title}</h1>
         <span className="topbar__spacer" />
       </div>
 

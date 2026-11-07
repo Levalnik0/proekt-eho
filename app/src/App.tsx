@@ -121,6 +121,24 @@ export default function App() {
     if (!known) window.location.replace('#/home');
   }, [known]);
 
+  // При смене экрана: название вкладки, прокрутка вверх и фокус на заголовок,
+  // чтобы скринридер сказал, где человек оказался. На самый первый показ
+  // фокус не переносим, чтобы не прыгать при открытии приложения.
+  const firstScreen = useRef(true);
+  useEffect(() => {
+    const heading = document.querySelector<HTMLElement>('main h1, main h2, h1');
+    document.title = heading?.textContent ? `${heading.textContent} — Эхо` : 'Проект Эхо';
+    document.querySelector('.app__body')?.scrollTo({ top: 0 });
+    if (firstScreen.current) {
+      firstScreen.current = false;
+      return;
+    }
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+  }, [path]);
+
   // Первая медаль взрослому: просто за то, что зашёл посмотреть
   useEffect(() => {
     if (path === 'parents') award(['first-step']);
@@ -151,7 +169,7 @@ export default function App() {
   // Сценарии и игры занимают весь экран: таб-бар прячем, чтобы не рвать игру
   if (quest) {
     return (
-      <div className="app">
+      <div className="app" role="main">
         <QuestScreen key={quest.id} quest={quest} onExit={back} />
       </div>
     );
@@ -159,7 +177,7 @@ export default function App() {
 
   if (path === 'game/swipe') {
     return (
-      <div className="app">
+      <div className="app" role="main">
         <SwipeGame onExit={back} beat={beat} />
       </div>
     );
@@ -168,7 +186,7 @@ export default function App() {
   // «Лаборатория»: пять новых игр на отдельной странице, открывается кодом
   if (labOpen) {
     return (
-      <div className="app">
+      <div className="app" role="main">
         <iframe
           ref={labFrame}
           title="Лаборатория игр"
@@ -181,7 +199,7 @@ export default function App() {
 
   if (path === 'game/slang') {
     return (
-      <div className="app">
+      <div className="app" role="main">
         <SlangGame onExit={back} />
       </div>
     );

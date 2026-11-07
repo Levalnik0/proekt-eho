@@ -19,7 +19,7 @@ export function SettingsScreen() {
   return (
     <div className="screen">
       <div className="topbar topbar--plain">
-        <span className="topbar__title">Настройки</span>
+        <h1 className="topbar__title">Настройки</h1>
       </div>
 
       <div className="panel">
@@ -72,7 +72,8 @@ export function SettingsScreen() {
         </div>
         <div className="panel__row">
           <span>Версия</span>
-          <b>0.3.0</b>
+          {/* Дата сборки нужна, чтобы сразу видеть, какую версию открыл тестировщик */}
+          <b>0.3.0 · {__BUILD_DATE__}</b>
         </div>
       </div>
 

@@ -179,6 +179,12 @@ function change(next: ThemeId, origin?: Origin) {
   const hold = clone.animate(innerKf, opts);
   wave = { frame, anims: [grow, hold], next };
 
+  // Страховка: если анимацию придержали (фоновая вкладка, слабый телефон),
+  // новый цвет всё равно должен примениться, а не ждать неизвестно сколько
+  window.setTimeout(() => {
+    if (wave?.frame === frame) finishWave();
+  }, WAVE_MS + 300);
+
   grow.finished
     .then(() => {
       if (wave?.frame !== frame) return;

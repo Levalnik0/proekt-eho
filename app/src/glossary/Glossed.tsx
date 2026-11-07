@@ -1,5 +1,6 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { useDialog } from '../components/useDialog';
 import { useProgress } from '../progress/useProgress';
 import { BadgeCard } from '../progress/BadgeCard';
 import glossary from '../data/glossary.json';
@@ -84,26 +85,7 @@ export function Glossed({ text }: { text: string }) {
     <>
       {parts}
 
-      {open &&
-        createPortal(
-          <div
-            className="sheet"
-            role="dialog"
-            aria-label={`Слово: ${open.title}`}
-            onClick={() => setOpen(null)}
-          >
-            <div className="sheet__card" onClick={(e) => e.stopPropagation()}>
-              <div className="sheet__grip" />
-              <div className="sheet__title">{open.title}</div>
-              <p className="sheet__text">{open.text}</p>
-              <div className="sheet__note">{open.note}</div>
-              <button className="btn btn--wide" onClick={() => setOpen(null)}>
-                Понятно
-              </button>
-            </div>
-          </div>,
-          document.body,
-        )}
+      {open && createPortal(<GlossSheet term={open} onClose={() => setOpen(null)} />, document.body)}
 
       {/* Медаль ждёт, пока закроют словарь: два окна разом сбивают с толку */}
       {!open &&
@@ -113,5 +95,32 @@ export function Glossed({ text }: { text: string }) {
           document.body,
         )}
     </>
+  );
+}
+
+/** Окно с объяснением слова; закрывается по Esc, кнопке и нажатию на фон */
+function GlossSheet({ term, onClose }: { term: Term; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useDialog(ref, onClose);
+  return (
+    <div
+      ref={ref}
+      tabIndex={-1}
+      className="sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Слово: ${term.title}`}
+      onClick={onClose}
+    >
+      <div className="sheet__card" onClick={(e) => e.stopPropagation()}>
+        <div className="sheet__grip" />
+        <div className="sheet__title">{term.title}</div>
+        <p className="sheet__text">{term.text}</p>
+        <div className="sheet__note">{term.note}</div>
+        <button className="btn btn--wide" onClick={onClose}>
+          Понятно
+        </button>
+      </div>
+    </div>
   );
 }

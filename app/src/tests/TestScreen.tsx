@@ -79,7 +79,8 @@ export function TestScreen({
           <IconBack size={22} />
         </button>
         <span className="topbar__title">
-          {q ? `${step + 1} из ${test.questions.length}` : test.title}
+          {/* На вводном экране название теста уже в заголовке ниже: дважды подряд не повторяем */}
+          {q ? `${step + 1} из ${test.questions.length}` : ''}
         </span>
         <span className="topbar__spacer" />
       </div>

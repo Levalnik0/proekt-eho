@@ -28,6 +28,7 @@ const CONTACTS = [
   {
     title: 'Детский телефон доверия',
     value: '8-800-2000-122',
+    href: 'tel:88002000122',
     note: 'Круглосуточно и бесплатно, по всей России — для детей и для взрослых.',
   },
   {
@@ -44,7 +45,7 @@ export function CrisisScreen({ onBack }: { onBack: () => void }) {
         <button className="topbar__back" onClick={onBack} aria-label="Назад">
           <IconBack size={22} />
         </button>
-        <span className="topbar__title">Что делать прямо сейчас</span>
+        <h1 className="topbar__title">Что делать прямо сейчас</h1>
         <span className="topbar__spacer" />
       </div>
 
@@ -78,7 +79,13 @@ export function CrisisScreen({ onBack }: { onBack: () => void }) {
               <span>{c.title}</span>
               <p className="crisis__contact-note">{c.note}</p>
             </div>
-            <b>{c.value}</b>
+            {c.href ? (
+              <a className="crisis__call" href={c.href}>
+                {c.value}
+              </a>
+            ) : (
+              <b>{c.value}</b>
+            )}
           </div>
         ))}
       </div>

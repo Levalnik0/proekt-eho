@@ -13,7 +13,7 @@
 
 export type Role = 'teen' | 'adult';
 
-/** Картинку медали задаёт MEDAL_GLYPH в MedalIcon.tsx */
+/** Картинку медали задаёт MEDAL_GLYPH в medalGlyphs.ts */
 export type Badge = {
   id: string;
   role: Role;

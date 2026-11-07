@@ -12,9 +12,6 @@ const POOL = cards as Card[];
 const ROUND = 10;
 /** Сколько пикселей надо протащить карточку, чтобы это считалось ответом */
 const SWIPE_AT = 90;
-/** Сколько висит пояснение, если не нажать «Дальше» */
-const FEEDBACK_MS = 1800;
-
 const newDeck = () => shuffle(POOL).slice(0, ROUND);
 
 /**
@@ -45,6 +42,12 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // После ответа фокус переходит на «Дальше», чтобы не терялся при клавиатуре
+  const nextBtn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (shown !== null) nextBtn.current?.focus({ preventScroll: true });
+  }, [shown]);
+
   function next() {
     window.clearTimeout(timer.current);
     setShown(null);
@@ -58,7 +61,7 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
     setMarks((m) => [...m, ok]);
     setDx(0);
     buzz(ok ? 'good' : 'bad');
-    timer.current = window.setTimeout(next, FEEDBACK_MS);
+    // Дальше человек идёт сам, кнопкой: пояснение не исчезает, пока его читают
   }
 
   // Раунд закончился: рекорд и медали
@@ -205,7 +208,9 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
           onPointerCancel={onUp}
         >
           <span className="swipe-card__from">{card.from}</span>
-          <p className="swipe-card__text">{card.text}</p>
+          <p className="swipe-card__text" aria-live="polite">
+            {card.text}
+          </p>
           <span
             className="swipe-stamp swipe-stamp--scam"
             style={{ opacity: Math.min(1, Math.max(0, -dx) / SWIPE_AT) }}
@@ -239,7 +244,7 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
         </button>
       </div>
 
-      <button className="game__skip" onClick={next} disabled={shown === null}>
+      <button ref={nextBtn} className="game__skip" onClick={next} disabled={shown === null}>
         Дальше
       </button>
     </div>

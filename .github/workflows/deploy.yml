@@ -8,10 +8,9 @@ on:
   # Позволяет запустить публикацию вручную из вкладки Actions
   workflow_dispatch:
 
+# Права по умолчанию минимальные; публикации нужны больше, они выданы ей одной ниже
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Если пушей несколько подряд — публикуем только последний
 concurrency:
@@ -26,6 +25,8 @@ jobs:
         working-directory: app
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -34,6 +35,9 @@ jobs:
           cache-dependency-path: app/package-lock.json
 
       - run: npm ci
+
+      # Ошибки в коде должны останавливать публикацию до сборки
+      - run: npm run lint
 
       # Сайт живёт по адресу вида user.github.io/имя-репозитория/,
       # поэтому все пути внутри сборки должны начинаться с этого префикса
@@ -46,6 +50,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

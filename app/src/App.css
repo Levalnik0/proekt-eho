@@ -56,13 +56,18 @@
   }
 }
 
+/* Заголовок получает фокус программно при смене экрана; рамка вокруг него не нужна */
+h1[tabindex='-1']:focus,
+h2[tabindex='-1']:focus {
+  outline: none;
+}
+
 /* Видимый фокус для клавиатуры. Без него по приложению невозможно
    ходить с клавиатуры, а на touch-устройствах рамка не появляется —
    :focus-visible срабатывает только при вводе с клавиатуры. */
 :focus-visible {
   outline: 3px solid var(--echo-teal-text);
   outline-offset: 3px;
-  border-radius: 12px;
 }
 
 /* Появление списка по очереди: глазу легче поймать порядок вариантов */
@@ -239,11 +244,13 @@
   border-radius: 50%;
   background: var(--surface);
   color: var(--ink);
-  box-shadow: var(--sh-pill);
+  /* Тонкая обводка: в тёмных темах круг «назад» иначе почти сливается с фоном */
+  box-shadow: var(--sh-pill), inset 0 0 0 1px color-mix(in srgb, var(--ink) 20%, transparent);
 }
 
 .topbar__title {
   flex: 1;
+  margin: 0;
   text-align: center;
   font-size: 17px;
   font-weight: 600;
@@ -660,8 +667,19 @@
   color: var(--ink);
 }
 
+/* Телефон доверия: ссылка, чтобы позвонить одним нажатием */
+.crisis__call {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  color: var(--echo-teal-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .sys-notif__amount {
-  color: #c2603f;
+  color: #b0502f;
 }
 
 .bubble--typing {
@@ -2493,6 +2511,13 @@
   opacity: 0.3;
 }
 
+/* Когда можно идти дальше, кнопка заметна: пояснение больше не исчезает само */
+.game__skip:not(:disabled) {
+  color: var(--ink);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--echo-teal) 16%, transparent);
+}
+
 /* «Развод или нет?» */
 .swipe-stage {
   flex: 1;
@@ -2758,8 +2783,16 @@
   width: 52px;
   height: 32px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--ink) 24%, transparent);
+  /* Выключенный переключатель должен быть виден на фоне (не слабее 3:1) */
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
   transition: background 0.2s ease;
+}
+
+/* Видимая часть небольшая, а нажимать надо уверенно: зону касания расширяем до 44 px */
+.toggle::before {
+  content: '';
+  position: absolute;
+  inset: -6px -4px;
 }
 
 .toggle::after {
@@ -2777,6 +2810,12 @@
 
 .toggle[aria-checked='true'] {
   background: var(--echo-teal);
+}
+
+/* В светлой теме бирюзовый слишком бледный рядом с белым ползунком */
+html:not([data-theme]) .toggle[aria-checked='true'],
+html[data-theme='day'] .toggle[aria-checked='true'] {
+  background: var(--echo-teal-text);
 }
 
 .toggle[aria-checked='true']::after {

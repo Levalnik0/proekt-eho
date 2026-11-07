@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { BADGES, BADGE_BY_ID } from '../progress/badges';
+import { useRef, useState } from 'react';
+import { useDialog } from '../components/useDialog';
+import { BADGES, BADGE_BY_ID, type Badge } from '../progress/badges';
 import { useProgress } from '../progress/useProgress';
 import { MedalIcon } from '../progress/MedalIcon';
 
@@ -24,7 +25,7 @@ export function ProfileScreen() {
   return (
     <div className="screen">
       <div className="topbar topbar--plain">
-        <span className="topbar__title">Медали</span>
+        <h1 className="topbar__title">Медали</h1>
       </div>
 
       <div className="progress-line">
@@ -69,35 +70,45 @@ export function ProfileScreen() {
         )}
       </ul>
 
-      {detail && (
-        <div
-          className="badge-pop"
-          role="dialog"
-          aria-label={`Медаль: ${detail.title}`}
-          onClick={() => setOpen(null)}
-        >
-          <div className="badge-pop__card" onClick={(e) => e.stopPropagation()}>
-            <div className="badge-pop__stage">
-              <MedalIcon badgeId={detail.id} size={84} />
-            </div>
-            <div className="badge-pop__title">{detail.title}</div>
-            <p className="badge-pop__reason">{detail.reason}</p>
-            <div className="badge-pop__block">
-              <b>{detail.role === 'teen' ? 'Что это про тебя' : 'Что это про вас'}</b>
-              <span>{detail.strength}</span>
-            </div>
-            {detail.growth && (
-              <div className="badge-pop__block badge-pop__block--try">
-                <b>Можно попробовать</b>
-                <span>{detail.growth}</span>
-              </div>
-            )}
-            <button className="btn btn--primary btn--wide" onClick={() => setOpen(null)}>
-              Понятно
-            </button>
-          </div>
+      {detail && <DetailDialog detail={detail} onClose={() => setOpen(null)} />}
+    </div>
+  );
+}
+
+/** Окно с описанием полученной медали; закрывается по Esc, кнопке и нажатию на фон */
+function DetailDialog({ detail, onClose }: { detail: Badge; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useDialog(ref, onClose);
+  return (
+    <div
+      ref={ref}
+      tabIndex={-1}
+      className="badge-pop"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Медаль: ${detail.title}`}
+      onClick={onClose}
+    >
+      <div className="badge-pop__card" onClick={(e) => e.stopPropagation()}>
+        <div className="badge-pop__stage">
+          <MedalIcon badgeId={detail.id} size={84} />
         </div>
-      )}
+        <div className="badge-pop__title">{detail.title}</div>
+        <p className="badge-pop__reason">{detail.reason}</p>
+        <div className="badge-pop__block">
+          <b>{detail.role === 'teen' ? 'Что это про тебя' : 'Что это про вас'}</b>
+          <span>{detail.strength}</span>
+        </div>
+        {detail.growth && (
+          <div className="badge-pop__block badge-pop__block--try">
+            <b>Можно попробовать</b>
+            <span>{detail.growth}</span>
+          </div>
+        )}
+        <button className="btn btn--primary btn--wide" onClick={onClose}>
+          Понятно
+        </button>
+      </div>
     </div>
   );
 }

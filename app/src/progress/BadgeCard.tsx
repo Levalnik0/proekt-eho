@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { useDialog } from '../components/useDialog';
 import { BADGE_BY_ID } from './badges';
 import { MedalIcon } from './MedalIcon';
 
@@ -7,11 +9,20 @@ import { MedalIcon } from './MedalIcon';
  * и только для взрослых: без похвалы такая строка читается как упрёк.
  */
 export function BadgeCard({ badgeId, onClose }: { badgeId: string; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useDialog(ref, onClose);
   const badge = BADGE_BY_ID[badgeId];
   if (!badge) return null;
 
   return (
-    <div className="badge-pop" role="dialog" aria-label={`Медаль: ${badge.title}`}>
+    <div
+      ref={ref}
+      tabIndex={-1}
+      className="badge-pop"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Медаль: ${badge.title}`}
+    >
       <div className="badge-pop__card">
         <div className="badge-pop__label">Новая медаль</div>
 

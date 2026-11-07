@@ -26,7 +26,7 @@
      на солнце и при слабом зрении. */
   --ink: #232a32;
   --ink-muted: #58636e;
-  --ink-faint: #5f6b78;
+  --ink-faint: #56626f;
 
   /* Бирюзовый как ЦВЕТ ТЕКСТА: фирменный #45a9a8 даёт всего 2.8:1.
      Для заливок и линий по-прежнему используем --echo-teal. */
@@ -116,7 +116,10 @@ button {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -240,7 +243,7 @@ button {
   --surface-bar: #f7f7f7;
   --ink: #232a32;
   --ink-muted: #58636e;
-  --ink-faint: #5f6b78;
+  --ink-faint: #56626f;
   --echo-teal: #45a9a8;
   --echo-teal-light: #7ec0bf;
   --echo-navy: #1e3f68;
