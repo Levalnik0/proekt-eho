@@ -85,14 +85,15 @@ export function TestScreen({
       </div>
 
       {step === -1 && (
+        // Перед тестом только заголовок, две метки и кнопка: подробности
+        // до начала никто не читает, а глаза от них разбегаются
         <div className="mirror-intro">
-          <div className="mirror-intro__kicker">{test.kicker}</div>
           <h2 className="mirror-intro__title">{test.title}</h2>
-          <p className="mirror-intro__text">{test.intro}</p>
-          <div className="mirror-intro__note">
-            {test.role === 'teen'
-              ? 'Правильных ответов нет. Отвечай как есть — результат всё равно будет про суперсилу.'
-              : 'Здесь нет «хорошего» и «плохого» стиля. У каждого своя сильная сторона.'}
+          <div className="intro-chips">
+            <span className="chip chip--accent">{test.questions.length} вопросов</span>
+            <span className="chip chip--accent">
+              {test.role === 'teen' ? 'ответы видишь только ты' : 'плохого стиля нет'}
+            </span>
           </div>
           <button className="btn btn--primary btn--wide" onClick={() => setStep(0)}>
             Начать

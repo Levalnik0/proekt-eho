@@ -2782,3 +2782,12 @@
 .quest.is-beat::after {
   filter: brightness(1.7);
 }
+
+/* Метки на входе в тест и «Угадай»: вместо абзацев перед началом */
+.intro-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 4px 0 20px;
+}

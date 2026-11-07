@@ -60,12 +60,14 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
       </div>
 
       {phase.kind === 'intro' && (
+        // Перед игрой только заголовок, одна метка и кнопка. Пояснения,
+        // откуда ответы и почему их нет «правильных», перенесены в итог:
+        // до начала их никто не читает, а глаза разбегаются.
         <div className="mirror-intro">
-          <div className="mirror-intro__kicker">{mirror.intro.kicker}</div>
           <h2 className="mirror-intro__title">{mirror.intro.title}</h2>
-          <p className="mirror-intro__text">{mirror.intro.text}</p>
-          <div className="mirror-intro__note">{mirror.intro.note}</div>
-          <p className="mirror-basis">{mirror.basis}</p>
+          <div className="intro-chips">
+            <span className="chip chip--accent">правильных ответов нет</span>
+          </div>
           <button className="btn btn--primary btn--wide" onClick={() => setPhase({ kind: 'ask', i: 0 })}>
             Попробовать угадать
           </button>
@@ -144,6 +146,7 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
             </div>
           </div>
 
+          <p className="mirror-basis">{mirror.intro.note}</p>
           <p className="mirror-basis">{mirror.basis}</p>
 
           <button className="btn btn--wide" onClick={onExit}>
