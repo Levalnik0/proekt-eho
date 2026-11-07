@@ -324,7 +324,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <div class="pass" id="k-pass"></div>
         <div class="tray" id="k-tray"></div>
         <div class="legend"><span><i class="t-word"></i>слово</span><span><i class="t-me"></i>про тебя</span><span><i class="t-common"></i>популярное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span></div>
-        <div class="fort__actions"><button class="btn" id="k-clear">Сбросить</button><button class="btn btn--main" id="k-attack">Запустить робота</button></div>
+        <div class="fort__actions"><button class="btn" id="k-clear">Новый набор</button><button class="btn btn--main" id="k-attack">Запустить робота</button></div>
       </div>
     </div>
   </section>
@@ -780,13 +780,21 @@ function close() {
 
 /* ══════════ 3. КРЕПОСТЬ ══════════ */
 (() => {
-  const BLOCKS = [
-    { v: 'кит', t: 'word' }, { v: 'облако', t: 'word' }, { v: 'гитара', t: 'word' }, { v: 'ракета', t: 'word' }, { v: 'луна', t: 'word' }, { v: 'пицца', t: 'word' },
-    { v: 'Маша', t: 'me' }, { v: '2014', t: 'me' }, { v: 'Барсик', t: 'me' },
-    { v: 'qwerty', t: 'common' }, { v: '123456', t: 'common' }, { v: 'пароль', t: 'common' },
-    { v: '57', t: 'num' }, { v: '903', t: 'num' },
-    { v: '!', t: 'sym' }, { v: '#', t: 'sym' }, { v: '_', t: 'sym' },
-  ];
+  // Запас блоков по видам. В каждом раунде из него берётся случайная выборка,
+  // поэтому набор всегда новый.
+  const POOL = {
+    word: ['кит', 'облако', 'гитара', 'ракета', 'луна', 'пицца', 'арбуз', 'мост', 'лампа', 'ёжик', 'шторм', 'компас', 'маяк', 'башня', 'пингвин', 'радуга', 'дракон', 'бублик', 'вулкан', 'зонтик', 'комета', 'баобаб', 'самокат', 'чайник', 'медуза', 'фонарь', 'кактус', 'парус', 'молния', 'тыква', 'глобус', 'сапог'],
+    me: ['Маша', 'Даня', 'Катя', 'Лёша', 'Барсик', 'Рекс', 'Мурка', 'Миша', '2012', '2013', '2014', 'Шарик'],
+    common: ['qwerty', '123456', 'пароль', '111111', 'admin', 'password', '000000', 'привет', '12345', 'qwerty123'],
+    num: ['57', '903', '48', '716', '25', '391', '64', '182', '305', '77'],
+    sym: ['!', '#', '_', '$', '%', '*', '@', '-'],
+  };
+  const COUNT = { word: 6, me: 3, common: 2, num: 3, sym: 3 };
+  let BLOCKS = [];
+  function newSet() {
+    BLOCKS = Object.keys(POOL).flatMap((t) => shuffle(POOL[t]).slice(0, COUNT[t]).map((v) => ({ v, t })));
+  }
+  newSet();
   // Сколько «бит» добавляет блок: случайное слово из большого словаря
   // даёт много, всё, что робот знает о тебе или что у всех, почти ничего
   const BITS = { word: 12, me: 2, common: 1, num: 6.5, sym: 4 };
@@ -871,8 +879,8 @@ function close() {
     }, 1100);
   }
   $('#k-attack').onclick = attack;
-  $('#k-clear').onclick = () => { if (busy) return; pass = []; clearVerdict(); render(); };
-  games.fort = { enter() { pass = []; busy = false; renderTray(); clearVerdict(); render(); } };
+  $('#k-clear').onclick = () => { if (busy) return; pass = []; newSet(); renderTray(); clearVerdict(); render(); };
+  games.fort = { enter() { pass = []; busy = false; newSet(); renderTray(); clearVerdict(); render(); } };
 })();
 
 /* ══════════ 4. СЕТЬ ══════════ */
