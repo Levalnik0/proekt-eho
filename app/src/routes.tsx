@@ -55,7 +55,6 @@ export const SECTIONS: Section[] = [
       { route: 'check-message', label: 'Проверить сообщение', kind: 'checker' },
       { route: 'crisis-protocol', label: 'Что делать сейчас', kind: 'checker' },
       { route: 'understand', label: 'Понять его', kind: 'section' },
-      { route: 'club-program', label: 'Клуб навигаторов', kind: 'offline' },
     ],
   },
   {
@@ -76,10 +75,15 @@ export const SECTION_BY_ID = Object.fromEntries(SECTIONS.map((s) => [s.id, s])) 
   Section
 >;
 
-export type Tab = 'home' | 'profile' | 'settings';
-export const TABS: Tab[] = ['home', 'profile', 'settings'];
+/**
+ * «Клуб» — отдельная вкладка, а не плитка у родителей: код от ведущего
+ * вводят и дети, и взрослые на очной встрече, искать его некогда.
+ */
+export type Tab = 'home' | 'club' | 'profile' | 'settings';
+export const TABS: Tab[] = ['home', 'club', 'profile', 'settings'];
 export const TAB_LABEL: Record<Tab, string> = {
   home: 'Главная',
+  club: 'Клуб',
   profile: 'Медали',
   settings: 'Настройки',
 };

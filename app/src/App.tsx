@@ -154,14 +154,14 @@ export default function App() {
     );
   }
 
-  const OTHER = ['profile', 'settings', 'club-program', 'check-message', 'crisis-protocol'];
+  const OTHER = ['profile', 'settings', 'club', 'club-program', 'check-message', 'crisis-protocol'];
 
   return (
     <div className="app">
       <main className="app__body">
         {path === 'profile' && <ProfileScreen />}
         {path === 'settings' && <SettingsScreen />}
-        {path === 'club-program' && <ClubScreen onBack={back} />}
+        {(path === 'club' || path === 'club-program') && <ClubScreen onBack={back} />}
         {path === 'check-message' && <CheckerScreen onExit={back} />}
         {path === 'crisis-protocol' && <CrisisScreen onBack={back} />}
         {section && <SectionScreen section={section} onBack={back} onOpen={go} />}

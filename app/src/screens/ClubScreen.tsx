@@ -96,11 +96,6 @@ export function ClubScreen({ onBack }: { onBack: () => void }) {
           <span className="topbar__spacer" />
         </div>
 
-        <p className="section-lead">
-          Программа встречи открывается кодом прямо на самой встрече — его
-          называет ведущий.
-        </p>
-
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -122,7 +117,7 @@ export function ClubScreen({ onBack }: { onBack: () => void }) {
           <p className="checker__privacy">Код скажет ведущий встречи.</p>
           {error && (
             <p className="checker__privacy" style={{ color: 'var(--danger, #c0392b)' }}>
-              Код неверный, попробуйте ещё раз.
+              Не тот код. Ещё раз?
             </p>
           )}
           <button type="submit" className="btn btn--primary">
