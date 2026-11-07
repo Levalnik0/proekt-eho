@@ -60,9 +60,9 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .game { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); z-index: 5; }
 .game[hidden] { display: none !important; }
 .bar { display: flex; align-items: center; gap: 10px; padding: 10px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px)); }
-.back { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-size: 22px; }
+.back { width: 38px; height: 38px; flex: none; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-size: 22px; }
 .bar__title { font-weight: 700; font-size: 17px; flex: 1; }
-.pill { padding: 6px 12px; border-radius: 999px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.pill { padding: 6px 10px; border-radius: 999px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 600; }
 .pill--accent { background: var(--accent); color: var(--accent-ink); }
 .stage { position: relative; flex: 1; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
 .hint { text-align: center; color: var(--muted); font-size: 14px; padding: 6px 16px 12px; min-height: 36px; }
@@ -79,6 +79,16 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .overlay[hidden] { display: none !important; }
 [id$="-end"].overlay { background: var(--bg); justify-content: center; }
 .recap--tight div { padding: 12px 14px; }
+.howto { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 12px; counter-reset: s; }
+.howto li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; font-size: 16px; line-height: 1.35; color: var(--muted); counter-increment: s; }
+.howto li::before { content: counter(s); width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.howto b { color: var(--ink); }
+.snd, .help { width: 38px; height: 38px; flex: none; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-weight: 800; font-size: 17px; }
+.snd svg { display: block; }
+.snd.off { color: var(--muted); }
+.snd:not(.off) .slash { display: none; }
+.phone > .overlay { z-index: 40; background: rgba(12, 26, 29, .97); justify-content: center; }
+.menu__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; min-height: 38px; }
 .overlay h2 { font-size: 26px; margin: 0 0 6px; text-wrap: balance; }
 .overlay .big { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; margin: 6px 0; font-variant-numeric: tabular-nums; }
 .overlay p { color: var(--muted); margin: 0 0 14px; line-height: 1.45; }
@@ -190,7 +200,7 @@ canvas { display: block; width: 100%; height: 100%; }
 
   <!-- ═════════ МЕНЮ ═════════ -->
   <div class="menu" id="menu">
-    <button class="back" id="lab-exit" hidden aria-label="Назад в приложение" style="margin-bottom:10px">‹</button>
+    <div class="menu__top"><button class="back" id="lab-exit" hidden aria-label="Назад в приложение">‹</button><span></span><button class="snd" aria-label="Звук"></button></div>
     <h1>Лаборатория</h1>
     <p class="sub">Новые игры в пробной версии. Поиграй и скажи, какие оставить.</p>
     <div class="cards">
@@ -232,6 +242,7 @@ canvas { display: block; width: 100%; height: 100%; }
     </div>
     <p class="note">Рекорды остаются в этом телефоне</p>
   </div>
+  <div class="overlay" id="howto" hidden></div>
 
   <!-- ═════════ 1. ФИЛЬТР ═════════ -->
   <section class="game" id="g-filter" hidden>
@@ -242,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="chat-line">в чат</div>
       <div class="overlay" id="f-start">
         <h2>Фильтр</h2>
-        <p>Сообщения падают в твой чат. Разводы сбивай нажатием, нормальные пропускай. Минута, скорость растёт.</p>
+        <div data-how="filter"></div>
         <div class="chips"><span class="chip">1 мин</span><span class="chip">рекорд: <b id="f-best">0</b></span></div>
         <button class="btn btn--main btn--wide" id="f-go">Играть</button>
       </div>
@@ -259,7 +270,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="scene-wrap"><div class="scene-box" id="d-box"></div></div>
       <div class="overlay" id="d-start">
         <h2>Детектив</h2>
-        <p>Маша выложила сторис. Проведи лупой по экрану и найди 5 вещей, по которым незнакомец поймёт, где она живёт и учится.</p>
+        <div data-how="detective"></div>
         <button class="btn btn--main btn--wide" id="d-go">Взять лупу</button>
       </div>
       <div class="overlay" id="d-end" hidden></div>
@@ -301,7 +312,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="pads"><button aria-label="Влево" data-dir="-1"></button><button aria-label="Вправо" data-dir="1"></button></div>
       <div class="overlay" id="n-start">
         <h2>Сеть</h2>
-        <p>Твой сигнал летит к друзьям. На каждой развилке трое ворот, настоящие только одни. Нажимай слева или справа от сигнала, чтобы перестроиться.</p>
+        <div data-how="net"></div>
         <div class="chips"><span class="chip">3 ошибки и стоп</span><span class="chip">рекорд: <b id="n-best">0</b></span></div>
         <button class="btn btn--main btn--wide" id="n-go">Поехали</button>
       </div>
@@ -322,7 +333,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="w-grid" id="w-grid"></div>
       <div class="overlay" id="w-start">
         <h2>Окна</h2>
-        <p>К окнам твоего профиля подходят гости. Серые — незнакомцы, бирюзовые — друзья. Нажми на окно, чтобы выбрать, кому оно открыто. Если в подписи гостя «0 общих», нажми на него: настоящий друг так не выглядит.</p>
+        <div data-how="windows"></div>
         <div class="chips"><span class="chip">50 секунд</span><span class="chip">рекорд: <b id="w-best">0</b></span></div>
         <button class="btn btn--main btn--wide" id="w-go">Открыть окна</button>
       </div>
@@ -335,7 +346,77 @@ canvas { display: block; width: 100%; height: 100%; }
 <script>
 /* ══════════ общее ══════════ */
 const $ = (s, r = document) => r.querySelector(s);
-const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+// Вибрация подчиняется общей настройке приложения (на iPhone её нет вовсе)
+const hapticsOn = () => { try { return localStorage.getItem('echo.haptics.v1') !== '0'; } catch (e) { return true; } };
+const buzz = (p) => { try { if (hapticsOn() && navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+
+// Звуки рисует сам браузер: файлов нет, весит ноль
+const snd = (() => {
+  let ctx = null, on = true;
+  try { on = localStorage.getItem('echo.lab.sound') !== '0'; } catch (e) {}
+  const AC = window.AudioContext || window.webkitAudioContext;
+  function ensure() {
+    if (!AC) return null;
+    if (!ctx) ctx = new AC();
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+  function tone(f, d, type, v, at, to) {
+    if (!on) return;
+    const c = ensure(); if (!c) return;
+    const t = c.currentTime + (at || 0), o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(f, t);
+    if (to) o.frequency.exponentialRampToValueAtTime(to, t + d);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(v || 0.1, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d + 0.03);
+  }
+  return {
+    get on() { return on; },
+    set(v) { on = v; try { localStorage.setItem('echo.lab.sound', v ? '1' : '0'); } catch (e) {} if (v) this.tap(); },
+    unlock() { ensure(); },
+    tap() { tone(520, 0.05, 'sine', 0.07); },
+    good() { tone(660, 0.09, 'sine', 0.1); tone(990, 0.14, 'sine', 0.1, 0.08); },
+    bad() { tone(240, 0.22, 'triangle', 0.13, 0, 150); },
+    zap() { tone(420, 0.16, 'square', 0.04, 0, 1300); },
+    step(i) { tone(360 + i * 70, 0.07, 'triangle', 0.09); },
+    robot() { tone(95, 0.9, 'sawtooth', 0.05, 0, 55); },
+    win() { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.2, 'sine', 0.1, i * 0.1)); },
+    lose() { [392, 330, 262].forEach((f, i) => tone(f, 0.24, 'triangle', 0.11, i * 0.15)); },
+  };
+})();
+window.addEventListener('pointerdown', () => snd.unlock());
+document.addEventListener('click', (e) => { if (e.target.closest('.btn, .back, .card, .help')) snd.tap(); });
+
+// Правила каждой игры: три коротких шага
+const HOWTO = {
+  filter: ['Сообщения падают сверху в твой чат.', '<b>Развод</b> (просит пароль, код или деньги, торопит): нажми на него, он улетит в спам.', '<b>Нормальное</b> (от мамы, друга, школы): не трогай, пусть падает в чат.'],
+  detective: ['<b>Води пальцем</b> по картинке: лупа ходит над пальцем и показывает мелочи.', 'Ищи то, по чему чужой человек поймёт, <b>где Маша живёт и учится</b>.', 'Найди все <b>5 улик</b>. Если застрял, через несколько секунд появится подсказка.'],
+  fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
+  net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b>: подделку выдаёт одна буква. Три ошибки и конец.'],
+  windows: ['К окнам твоего профиля приходят гости: <b>серые</b> незнакомцы, <b>бирюзовые</b> друзья.', '<b>Нажми на окно</b>, чтобы выбрать, кому оно открыто: всем, друзьям или никому.', 'Гость с подписью <b>«0 общих»</b> не друг: нажми на него, и он уйдёт.'],
+};
+const renderHow = (id) => `<ol class="howto">${HOWTO[id].map((t) => `<li><span>${t}</span></li>`).join('')}</ol>`;
+document.querySelectorAll('[data-how]').forEach((el) => { el.outerHTML = renderHow(el.dataset.how); });
+
+const speakerSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" class="wave"/><path d="M16 9l5 6M21 9l-5 6" class="slash"/></svg>';
+function paintSound() { document.querySelectorAll('.snd').forEach((b) => { b.innerHTML = speakerSvg; b.classList.toggle('off', !snd.on); b.setAttribute('aria-pressed', String(snd.on)); }); }
+document.querySelectorAll('.game .bar').forEach((bar) => {
+  bar.querySelector('.bar__title').insertAdjacentHTML('afterend', '<button class="snd" aria-label="Звук"></button><button class="help" aria-label="Как играть">?</button>');
+  bar.querySelector('.help').addEventListener('click', () => showHow(bar.closest('.game').id.slice(2)));
+});
+document.addEventListener('click', (e) => { if (e.target.closest('.snd')) { snd.set(!snd.on); paintSound(); } });
+paintSound();
+
+function showHow(id) {
+  const box = document.getElementById('howto');
+  box.innerHTML = `<h2>Как играть</h2>${renderHow(id)}<button class="btn btn--main btn--wide" id="how-ok">Понятно</button>`;
+  box.hidden = false;
+  games[id] && games[id].pause && games[id].pause();
+  document.getElementById('how-ok').onclick = () => { box.hidden = true; games[id] && games[id].resume && games[id].resume(); };
+}
 const store = {
   get(k) { try { return Number(localStorage.getItem('echo.proto.' + k)) || 0; } catch (e) { return 0; } },
   set(k, v) { try { localStorage.setItem('echo.proto.' + k, String(v)); } catch (e) {} },
@@ -358,9 +439,15 @@ function open(id) {
   current = id;
   $('#g-' + id).hidden = false;
   games[id].enter && games[id].enter();
+  if (id === 'fort') {
+    let seen = false;
+    try { seen = localStorage.getItem('echo.lab.how.fort') === '1'; localStorage.setItem('echo.lab.how.fort', '1'); } catch (e) {}
+    if (!seen) showHow('fort');
+  }
 }
 function close() {
   if (!current) return;
+  document.getElementById('howto').hidden = true;
   games[current].leave && games[current].leave();
   $('#g-' + current).hidden = true;
   current = null;
@@ -395,14 +482,14 @@ function close() {
     { f: 'Мама', t: 'Ты где? Позвони', s: 0 },
   ];
   const stage = $('#f-stage');
-  let bubs = [], raf = 0, last = 0, t0 = 0, spawnAt = 0, score = 0, combo = 1, running = false, missed = [], deck = [];
+  let bubs = [], raf = 0, last = 0, t0 = 0, spawnAt = 0, score = 0, combo = 1, running = false, missed = [], deck = [], paused = false, pausedAt = 0;
   const DURATION = 60000;
   $('#f-best').textContent = store.get('filter');
 
   function start() {
     $('#f-start').hidden = true; $('#f-end').hidden = true;
     bubs.forEach((b) => b.el.remove()); bubs = [];
-    score = 0; combo = 1; missed = []; deck = shuffle(MSG); running = true;
+    score = 0; combo = 1; missed = []; deck = shuffle(MSG); running = true; paused = false;
     $('#f-score').textContent = '0';
     $('#f-hint').textContent = 'Комбо растёт, если не ошибаешься';
     t0 = last = performance.now(); spawnAt = t0 + 300;
@@ -438,17 +525,18 @@ function close() {
       popText(b.x + 40, Math.max(10, b.y), '+' + pts, 'var(--accent)');
       $('#f-hint').textContent = combo > 1 ? `Комбо ×${combo}` : 'Отлично';
       $('#f-score').textContent = score;
-      buzz(12);
+      buzz(12); snd.zap();
       setTimeout(() => b.el.remove(), 500);
     } else {
       combo = 1;
       b.el.classList.remove('wobble'); void b.el.offsetWidth; b.el.classList.add('wobble');
       $('#f-hint').textContent = 'Это нормальное сообщение, его пропускай';
-      buzz([20, 40, 20]);
+      buzz([20, 40, 20]); snd.bad();
     }
   }
   function tick(now) {
     if (!running) return;
+    if (paused) { last = now; raf = requestAnimationFrame(tick); return; }
     const dt = Math.min(50, now - last) / 1000; last = now;
     const el = now - t0, k = Math.min(1, el / DURATION);
     $('#f-time').textContent = Math.max(0, Math.ceil((DURATION - el) / 1000));
@@ -465,7 +553,7 @@ function close() {
           combo = 1; missed.push(b.m);
           b.el.classList.add('miss');
           $('#f-hint').textContent = 'Развод проскочил в чат';
-          buzz(30);
+          buzz(30); snd.bad();
         } else {
           score += 2; $('#f-score').textContent = score;
           b.el.classList.add('ok');
@@ -492,12 +580,14 @@ function close() {
     box.hidden = false;
     $('#f-again').onclick = start;
     box.querySelector('[data-c]').onclick = close;
-    buzz([15, 60, 15]);
+    buzz([15, 60, 15]); rec || score > 0 ? snd.win() : snd.lose();
   }
   $('#f-go').onclick = start;
   games.filter = {
     enter() { $('#f-start').hidden = false; $('#f-end').hidden = true; $('#f-time').textContent = '60'; $('#f-score').textContent = '0'; },
-    leave() { running = false; cancelAnimationFrame(raf); bubs.forEach((b) => b.el.remove()); bubs = []; },
+    leave() { running = false; paused = false; cancelAnimationFrame(raf); bubs.forEach((b) => b.el.remove()); bubs = []; },
+    pause() { if (running && !paused) { paused = true; pausedAt = performance.now(); } },
+    resume() { if (running && paused) { const d = performance.now() - pausedAt; t0 += d; spawnAt += d; last = performance.now(); paused = false; } },
   };
 })();
 
@@ -616,12 +706,12 @@ function close() {
     box.appendChild(ring);
     $('#d-count').textContent = `${found.size} из 5`;
     toast(c.title.toLowerCase());
-    buzz([12, 40, 12]);
+    buzz([12, 40, 12]); snd.good();
     clearTimeout(hintTimer); hintTimer = setTimeout(nudge, 20000);
     if (found.size === CLUES.length) { active = false; setTimeout(end, 1000); }
   }
   function end() {
-    clearTimeout(hintTimer);
+    clearTimeout(hintTimer); snd.win(); buzz([15, 60, 15]);
     dim.style.transition = 'opacity .5s'; dim.style.opacity = '0'; lens.style.display = 'none';
     const el = $('#d-end');
     el.innerHTML = `<h2>Все улики найдены</h2>
@@ -675,7 +765,7 @@ function close() {
   }
   function add(b) {
     if (busy || pass.length >= 7) return;
-    clearVerdict(); pass.push(b); buzz(6); render();
+    clearVerdict(); pass.push(b); buzz(6); snd.step(pass.length); render();
   }
   function clearVerdict() { scene.querySelector('.verdict')?.remove(); }
   function bits() {
@@ -705,7 +795,7 @@ function close() {
     const robot = $('#k-robot');
     robot.classList.remove('hit'); void robot.offsetWidth; robot.classList.add('hit');
     tower.classList.add('shake');
-    buzz([30, 60, 30, 60, 30]);
+    buzz([30, 60, 30, 60, 30]); snd.robot();
     const b = bits(), sec = Math.pow(2, b) / 1e9;
     const me = pass.some((x) => x.t === 'me'), common = pass.some((x) => x.t === 'common');
     setTimeout(() => {
@@ -716,16 +806,16 @@ function close() {
         bricks.forEach((el, i) => { const d = i % 2 ? 1 : -1; el.style.transform = `translate(${d * (60 + i * 15)}px, ${120 + i * 10}px) rotate(${d * 70}deg)`; el.classList.add('fall'); });
         title = `Взломан за ${human(sec)}`;
         sub = me ? 'Имя, год и кличку робот берёт прямо из твоего профиля.' : common ? 'Такие пароли робот пробует первыми.' : 'Слишком коротко. Добавь ещё слов.';
-        buzz(80);
+        buzz(80); snd.lose();
       } else if (b < 56) {
         bricks.slice(-2).forEach((el, i) => { el.style.transform = `translate(${70 + i * 30}px, 90px) rotate(50deg)`; el.classList.add('fall'); });
         title = `Продержался ${human(sec)}`;
-        sub = 'Уже неплохо. Ещё одно случайное слово, и робот сдастся.';
+        sub = 'Уже неплохо. Ещё одно случайное слово, и робот сдастся.'; snd.bad();
       } else {
         tower.classList.add('hold');
         title = `Роботу нужно ${human(sec)}`;
         sub = me || common ? 'Крепость стоит, но блоки «про тебя» лучше убрать.' : 'Несколько случайных слов — сильный пароль, и его легко запомнить.';
-        buzz([15, 50, 15]);
+        buzz([15, 50, 15]); snd.win();
       }
       const v = document.createElement('div'); v.className = 'verdict'; v.innerHTML = `${esc(title)}<span>${esc(sub)}</span>`;
       scene.appendChild(v);
@@ -754,6 +844,7 @@ function close() {
   const cv = $('#n-canvas'), stage = $('#n-stage');
   const ctx = cv.getContext('2d');
   let W = 0, H = 0, raf = 0, last = 0, running = false;
+  let paused = false;
   let lane = 1, px = 0, rows = [], score = 0, lives = 3, deck = [], speed = 0, mistakes = [], flash = 0, trail = [];
 
   function size() {
@@ -770,7 +861,7 @@ function close() {
   }
   function start() {
     $('#n-start').hidden = true; $('#n-end').hidden = true;
-    size(); lane = 1; px = laneX(1); score = 0; lives = 3; mistakes = []; deck = shuffle(SITES); speed = 62; trail = []; flash = 0;
+    size(); lane = 1; px = laneX(1); score = 0; lives = 3; mistakes = []; deck = shuffle(SITES); speed = 62; trail = []; flash = 0; paused = false;
     rows = [newRow(-30)];
     $('#n-score').textContent = '0'; $('#n-life').textContent = '●●●';
     running = true; last = performance.now(); raf = requestAnimationFrame(tick);
@@ -780,11 +871,12 @@ function close() {
     if (!running) return;
     const r = stage.getBoundingClientRect();
     const d = clientX - r.left < px ? -1 : 1;
-    lane = Math.max(0, Math.min(2, lane + d)); buzz(5);
+    lane = Math.max(0, Math.min(2, lane + d)); buzz(5); snd.tap();
   }
   function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
   function tick(now) {
     if (!running) return;
+    if (paused) { last = now; raf = requestAnimationFrame(tick); return; }
     const dt = Math.min(50, now - last) / 1000; last = now;
     const py = H - 70;
     px += (laneX(lane) - px) * Math.min(1, dt * 14);
@@ -795,8 +887,8 @@ function close() {
     for (const r of rows) {
       if (!r.passed && r.y >= py - 8) {
         r.passed = true;
-        if (lane === r.real) { score++; speed = Math.min(140, speed + 5); buzz(10); }
-        else { lives--; r.bad = lane; mistakes.push(r); flash = 1; speed = Math.max(55, speed - 12); buzz([30, 50, 30]); }
+        if (lane === r.real) { score++; speed = Math.min(140, speed + 5); buzz(10); snd.good(); }
+        else { lives--; r.bad = lane; mistakes.push(r); flash = 1; speed = Math.max(55, speed - 12); buzz([30, 50, 30]); snd.bad(); }
         $('#n-score').textContent = score;
         $('#n-life').textContent = '●'.repeat(Math.max(0, lives)) + '○'.repeat(3 - Math.max(0, lives));
         if (lives <= 0) { draw(py); return end(); }
@@ -841,6 +933,7 @@ function close() {
       <div class="recap recap--tight">${mistakes.slice(0, 2).map((r) => `<div><b>${esc(r.labels[r.bad])} → настоящий ${esc(r.s.real)}</b>${esc(r.s.why)}</div>`).join('')}</div>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="n-again">Ещё раз</button></div>`;
     el.hidden = false; $('#n-again').onclick = start; el.querySelector('[data-c]').onclick = close;
+    buzz([15, 60, 15]); score > 0 ? snd.win() : snd.lose();
   }
   stage.querySelector('.pads').addEventListener('pointerdown', (e) => { e.preventDefault(); steerAt(e.clientX); });
   window.addEventListener('keydown', (e) => {
@@ -852,7 +945,9 @@ function close() {
   $('#n-go').onclick = start;
   games.net = {
     enter() { $('#n-start').hidden = false; $('#n-end').hidden = true; $('#n-best').textContent = store.get('net'); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
-    leave() { running = false; cancelAnimationFrame(raf); },
+    leave() { running = false; paused = false; cancelAnimationFrame(raf); },
+    pause() { if (running) paused = true; },
+    resume() { if (running) { paused = false; last = performance.now(); } },
   };
 })();
 
@@ -868,14 +963,15 @@ function close() {
   const FRIENDS = ['Лёша', 'Катя', 'Дима', 'Аня', 'Саша', 'Вика'];
   const DURATION = 50;
   const stage = $('#w-stage'), grid = $('#w-grid');
-  let state, fr, pr, left, running, gen = 0, guests, leaks, stat, spawnT, clockT;
+  let state, fr, pr, left, running, gen = 0, guests, leaks, stat, spawnT, clockT, paused = false;
+  const defer = (fn) => (paused ? setTimeout(() => defer(fn), 250) : fn());
 
   function buildGrid() {
     grid.innerHTML = WINS.map((w) => `<button class="w s0" data-id="${w.id}" aria-label="${w.label}">
       <span class="sh l"></span><span class="sh r"></span><span class="ico">${w.ico}</span>
       <span class="lab">${w.label}<small>${NAMES[0]}</small></span></button>`).join('');
     grid.querySelectorAll('.w').forEach((el) => el.addEventListener('click', () => {
-      const id = el.dataset.id; state[id] = (state[id] + 1) % 3; buzz(8); paint(el, id);
+      const id = el.dataset.id; state[id] = (state[id] + 1) % 3; buzz(8); snd.tap(); paint(el, id);
     }));
   }
   function paint(el, id) {
@@ -898,6 +994,7 @@ function close() {
   }
   function spawn(myGen) {
     if (!running || myGen !== gen) return;
+    if (paused) { spawnT = setTimeout(() => spawn(myGen), 250); return; }
     const elapsed = DURATION - left;
     const roll = Math.random();
     const kind = elapsed > 12 && roll < 0.26 ? 'fake' : roll < 0.62 ? 'friend' : 'stranger';
@@ -918,8 +1015,8 @@ function close() {
       g.el.style.transition = 'transform 1.8s cubic-bezier(.25,.7,.3,1)';
       g.el.style.transform = `translate(${tx}px, ${pt.y}px)`;
     }));
-    g.timers.push(setTimeout(() => resolve(g), 1900));
-    g.timers.push(setTimeout(() => leave(g, fromLeft), 3000));
+    g.timers.push(setTimeout(() => defer(() => resolve(g)), 1900));
+    g.timers.push(setTimeout(() => defer(() => leave(g, fromLeft)), 3000));
     g.el.addEventListener('pointerdown', (e) => { e.preventDefault(); tap(g); });
     const wait = Math.max(750, 1700 - elapsed * 17);
     spawnT = setTimeout(() => spawn(myGen), wait);
@@ -932,13 +1029,13 @@ function close() {
     if (!running || g.dead) return;
     const st = state[g.win], wn = WINS.find((w) => w.id === g.win).label;
     if (g.kind === 'friend') {
-      if (st <= 1) { fr += 7; mood(g, '^ ^', 'Посмотрел', 'var(--good)'); buzz(8); }
-      else { fr -= 13; stat.shut++; mood(g, '- -', 'Закрыто…', 'var(--soft)'); buzz([20, 40, 20]); }
+      if (st <= 1) { fr += 7; mood(g, '^ ^', 'Посмотрел', 'var(--good)'); buzz(8); snd.good(); }
+      else { fr -= 13; stat.shut++; mood(g, '- -', 'Закрыто…', 'var(--soft)'); buzz([20, 40, 20]); snd.bad(); }
     } else if (g.kind === 'stranger') {
-      if (st === 0) { pr -= 12; leaks.push(wn); mood(g, '• •', 'Подсмотрел', 'var(--soft)'); buzz([30, 40, 30]); }
+      if (st === 0) { pr -= 12; leaks.push(wn); mood(g, '• •', 'Подсмотрел', 'var(--soft)'); buzz([30, 40, 30]); snd.bad(); }
       else mood(g, '- -', 'Не пустили', 'var(--good)');
     } else {
-      if (st <= 1) { pr -= 22; stat.fake++; mood(g, '• •', 'Подсмотрел', 'var(--soft)'); buzz([30, 40, 30]); }
+      if (st <= 1) { pr -= 22; stat.fake++; mood(g, '• •', 'Подсмотрел', 'var(--soft)'); buzz([30, 40, 30]); snd.bad(); }
       else mood(g, '- -', 'Не пустили', 'var(--good)');
     }
     meters();
@@ -946,8 +1043,8 @@ function close() {
   }
   function tap(g) {
     if (!running || g.dead) return;
-    if (g.kind === 'fake') { pr += 6; stat.caught++; pop(g.tx, g.ty - 6, 'Удалён', 'var(--good)'); buzz(12); }
-    else if (g.kind === 'friend') { fr -= 14; stat.offended++; pop(g.tx, g.ty - 6, 'Обиделся', 'var(--soft)'); buzz([20, 40, 20]); }
+    if (g.kind === 'fake') { pr += 6; stat.caught++; pop(g.tx, g.ty - 6, 'Удалён', 'var(--good)'); buzz(12); snd.zap(); }
+    else if (g.kind === 'friend') { fr -= 14; stat.offended++; pop(g.tx, g.ty - 6, 'Обиделся', 'var(--soft)'); buzz([20, 40, 20]); snd.bad(); }
     else { pop(g.tx, g.ty - 6, 'Ушёл', 'var(--muted)'); }
     meters(); kill(g);
     if (fr <= 0 || pr <= 0) finish(false);
@@ -963,7 +1060,7 @@ function close() {
     g.el.style.transform = `translate(${fromLeft ? stage.clientWidth + 60 : -60}px, ${g.ty}px)`;
   }
   function stop() {
-    running = false; gen++; clearTimeout(spawnT); clearInterval(clockT);
+    running = false; paused = false; gen++; clearTimeout(spawnT); clearInterval(clockT);
     (guests || []).forEach((g) => { g.timers.forEach(clearTimeout); g.el.remove(); });
     guests = [];
   }
@@ -977,6 +1074,7 @@ function close() {
     const myGen = ++gen;
     spawnT = setTimeout(() => spawn(myGen), 600);
     clockT = setInterval(() => {
+      if (paused) return;
       left--; $('#w-time').textContent = left;
       if (left <= 0) finish(true);
     }, 1000);
@@ -1001,12 +1099,14 @@ function close() {
       <div class="recap recap--tight">${lines.slice(0, 2).join('')}</div>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="w-again">Ещё раз</button></div>`;
     el.hidden = false; $('#w-again').onclick = start; el.querySelector('[data-c]').onclick = close;
-    buzz([15, 60, 15]);
+    buzz([15, 60, 15]); won ? snd.win() : snd.lose();
   }
   $('#w-go').onclick = start;
   games.windows = {
     enter() { stop(); state = { photo: 0, chat: 0, geo: 0 }; fr = pr = 80; buildGrid(); meters(); $('#w-start').hidden = false; $('#w-end').hidden = true; $('#w-time').textContent = DURATION; $('#w-best').textContent = store.get('windows'); },
     leave: stop,
+    pause() { if (running) paused = true; },
+    resume() { if (running) paused = false; },
   };
 })();
 </script>
