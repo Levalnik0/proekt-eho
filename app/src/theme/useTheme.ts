@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { appRect, reachFrom } from '../fx';
 
 /**
  * 'day' — светлая тема, это :root, отдельного CSS-блока не требует.
@@ -58,7 +59,7 @@ apply(current);
 const listeners = new Set<(t: ThemeId) => void>();
 
 export type Origin = { x: number; y: number };
-type ViewTransitionLike = { ready: Promise<void> };
+type ViewTransitionLike = { ready: Promise<void>; finished: Promise<void> };
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -88,14 +89,16 @@ function change(next: ThemeId, origin?: Origin) {
     commit(next);
     return;
   }
+  const root = document.documentElement;
+  root.classList.add('theme-swap');
   const transition = doc.startViewTransition(() => commit(next));
+  transition.finished.finally(() => root.classList.remove('theme-swap'));
   transition.ready
     .then(() => {
-      const radius = Math.hypot(
-        Math.max(origin.x, window.innerWidth - origin.x),
-        Math.max(origin.y, window.innerHeight - origin.y),
-      );
-      document.documentElement.animate(
+      // Круг рассчитан до дальнего угла «телефона», а не всего окна:
+      // иначе он заливал экран на середине и дальше будто стоял на месте
+      const radius = reachFrom(origin.x, origin.y, appRect()) + 2;
+      root.animate(
         {
           clipPath: [
             `circle(0px at ${origin.x}px ${origin.y}px)`,
@@ -103,8 +106,9 @@ function change(next: ThemeId, origin?: Origin) {
           ],
         },
         {
-          duration: 800,
-          easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+          duration: 900,
+          // Плавно разгоняется и так же плавно доходит до края, без рывка в конце
+          easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
           pseudoElement: '::view-transition-new(root)',
         },
       );

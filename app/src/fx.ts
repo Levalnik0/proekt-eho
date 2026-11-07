@@ -53,17 +53,35 @@ export function setHaptics(on: boolean) {
 const reduced = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/** Прямоугольник «телефона»: волна и кольца не должны выходить за него */
+export function appRect() {
+  const app = document.querySelector('.app');
+  return app
+    ? app.getBoundingClientRect()
+    : new DOMRect(0, 0, window.innerWidth, window.innerHeight);
+}
+
+/** Расстояние от точки до дальнего угла прямоугольника */
+export function reachFrom(x: number, y: number, r: DOMRect) {
+  return Math.hypot(Math.max(x - r.left, r.right - x), Math.max(y - r.top, r.bottom - y));
+}
+
 /** Три кольца расходятся от точки нажатия: «эхо». Фирменный жест приложения. */
 export function rings(x: number, y: number) {
   if (reduced()) return;
-  [0, 140, 280].forEach((delay) => {
+  const host = document.querySelector('.app') ?? document.body;
+  const r = appRect();
+  // Кольцо доходит до края экрана, но не больше: так оно ровное и не тяжёлое
+  const size = Math.min(420, reachFrom(x, y, r) * 1.4);
+  [0, 160, 320].forEach((delay) => {
     const el = document.createElement('div');
     el.className = 'echo-ring';
-    el.style.left = `${x}px`;
-    el.style.top = `${y}px`;
+    el.style.left = `${x - r.left}px`;
+    el.style.top = `${y - r.top}px`;
     el.style.animationDelay = `${delay}ms`;
-    document.body.appendChild(el);
-    window.setTimeout(() => el.remove(), 1400);
+    el.style.setProperty('--ring-size', `${size}px`);
+    host.appendChild(el);
+    window.setTimeout(() => el.remove(), 1700);
   });
 }
 
