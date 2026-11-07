@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { badgesFor, BADGE_BY_ID, type Role } from '../progress/badges';
+import { BADGES, BADGE_BY_ID } from '../progress/badges';
 import { useProgress } from '../progress/useProgress';
 import { MedalIcon } from '../progress/MedalIcon';
 
-const ROLE_LABEL: Record<Role, string> = { teen: 'Подросток', adult: 'Взрослый' };
-
+/**
+ * Одна полка медалей на всех. Переключателя «подросток / взрослый» больше
+ * нет: ролей в приложении нет, а делить полку значило прятать половину.
+ * Полученные медали идут первыми, чтобы сразу было видно, что уже есть.
+ */
 export function ProfileScreen() {
   const { progress } = useProgress();
-  // Начинаем со своей роли, но чужие медали тоже видно — это часть механики
-  const [role, setRole] = useState<Role>(progress.role ?? 'teen');
   const [open, setOpen] = useState<string | null>(null);
 
-  const all = badgesFor(role);
+  const got = (id: string) => progress.badges.includes(id);
+  const all = [...BADGES].sort((a, b) => Number(got(b.id)) - Number(got(a.id)));
   const earned = all.filter((b) => progress.badges.includes(b.id));
   // Скрытые медали не показываем заранее — их интереснее найти
   const visible = all.filter((b) => !b.secret || progress.badges.includes(b.id));
@@ -23,18 +25,6 @@ export function ProfileScreen() {
     <div className="screen">
       <div className="topbar topbar--plain">
         <span className="topbar__title">Медали</span>
-      </div>
-
-      <div className="switch">
-        {(Object.keys(ROLE_LABEL) as Role[]).map((r) => (
-          <button
-            key={r}
-            className={`switch__item${r === role ? ' is-active' : ''}`}
-            onClick={() => setRole(r)}
-          >
-            {ROLE_LABEL[r]}
-          </button>
-        ))}
       </div>
 
       <div className="progress-line">
