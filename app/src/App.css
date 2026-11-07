@@ -2158,6 +2158,9 @@
   height: 76px;
   border-radius: 50%;
   background: var(--swatch);
+  /* Градиент рисуем на весь кружок вместе с обводкой. Без этого он
+     повторялся под прозрачной обводкой, и по краям был виден квадрат */
+  background-origin: border-box;
   border: 3px solid transparent;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
   transition:
