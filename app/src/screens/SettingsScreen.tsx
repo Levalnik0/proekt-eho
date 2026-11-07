@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { buzz, centerOf, hapticsEnabled, hapticsSupported, rings, setHaptics } from '../fx';
+import { buzz, centerOf, hapticsEnabled, hapticsSupported, setHaptics } from '../fx';
 import { useProgress } from '../progress/useProgress';
 import { THEMES, useTheme } from '../theme/useTheme';
 
@@ -34,7 +34,7 @@ export function SettingsScreen() {
               onClick={(e) => {
                 const origin = centerOf(e.currentTarget);
                 buzz('select');
-                rings(origin.x, origin.y);
+                // Кольца запускает сама смена темы, в правильный момент волны
                 setTheme(t.id, origin);
               }}
               aria-pressed={theme === t.id}

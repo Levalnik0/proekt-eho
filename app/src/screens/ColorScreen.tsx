@@ -1,5 +1,5 @@
 import { EchoAppIcon } from '../components/EchoLogo';
-import { buzz, centerOf, rings } from '../fx';
+import { buzz, centerOf } from '../fx';
 import { markThemeChosen, THEMES, useTheme, type ThemeId } from '../theme/useTheme';
 
 /**
@@ -15,7 +15,7 @@ export function ColorScreen({ onDone }: { onDone: () => void }) {
   const pick = (id: ThemeId, el: HTMLElement) => {
     const origin = centerOf(el);
     buzz('select');
-    rings(origin.x, origin.y);
+    // Кольца запускает сама смена темы, в правильный момент волны
     setTheme(id, origin);
   };
 

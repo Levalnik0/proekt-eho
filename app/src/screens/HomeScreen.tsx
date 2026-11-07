@@ -71,7 +71,7 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
           onClick={(e) => {
             const origin = centerOf(e.currentTarget);
             buzz('select');
-            rings(origin.x, origin.y);
+            // Кольца запускает сама смена темы, в правильный момент волны
             cycle(origin);
           }}
         />

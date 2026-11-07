@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { appRect, reachFrom } from '../fx';
+import { appRect, reachFrom, rings } from '../fx';
 
 /**
  * 'day' — светлая тема, это :root, отдельного CSS-блока не требует.
@@ -87,6 +87,7 @@ function change(next: ThemeId, origin?: Origin) {
   };
   if (!origin || !doc.startViewTransition || reducedMotion()) {
     commit(next);
+    if (origin) rings(origin.x, origin.y);
     return;
   }
   const root = document.documentElement;
@@ -95,6 +96,10 @@ function change(next: ThemeId, origin?: Origin) {
   transition.finished.finally(() => root.classList.remove('theme-swap'));
   transition.ready
     .then(() => {
+      // Кольца запускаем только сейчас, когда старый кадр уже снят.
+      // Раньше они попадали в этот снимок и за краем волны замирали,
+      // а потом «оживали»: казалось, что волна встала и поехала снова.
+      rings(origin.x, origin.y);
       // Круг рассчитан до дальнего угла «телефона», а не всего окна:
       // иначе он заливал экран на середине и дальше будто стоял на месте
       const radius = reachFrom(origin.x, origin.y, appRect()) + 2;
