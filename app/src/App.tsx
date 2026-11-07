@@ -15,6 +15,7 @@ import { TestScreen } from './tests/TestScreen';
 import { CoopScreen } from './coop/CoopScreen';
 import { SwipeGame } from './games/SwipeGame';
 import { SlangGame } from './games/SlangGame';
+import { labUnlocked } from './games/lab';
 import type { Quest } from './quest/types';
 import type { Mirror } from './mirror/types';
 import type { PsyTest } from './tests/types';
@@ -82,6 +83,15 @@ export default function App() {
   // На внутренних экранах в таб-баре остаётся подсвеченной «Главная»
   const activeTab: Tab = isTab ? (path as Tab) : 'home';
 
+  // Страница «Лаборатории» живёт в рамке и сама просит вернуться в приложение
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin === window.location.origin && e.data?.echoLab === 'exit') back();
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [back]);
+
   // Первая медаль взрослому: просто за то, что зашёл посмотреть
   useEffect(() => {
     if (path === 'parents') award(['first-step']);
@@ -126,6 +136,19 @@ export default function App() {
     );
   }
 
+  // «Лаборатория»: пять новых игр на отдельной странице, открывается кодом
+  if (path === 'game/lab' && labUnlocked()) {
+    return (
+      <div className="app">
+        <iframe
+          title="Лаборатория игр"
+          src={`${import.meta.env.BASE_URL}lab/index.html`}
+          style={{ border: 0, width: '100%', height: '100%', display: 'block' }}
+        />
+      </div>
+    );
+  }
+
   if (path === 'game/slang') {
     return (
       <div className="app">
@@ -161,7 +184,7 @@ export default function App() {
       <main className="app__body">
         {path === 'profile' && <ProfileScreen />}
         {path === 'settings' && <SettingsScreen />}
-        {(path === 'club' || path === 'club-program') && <ClubScreen onBack={back} />}
+        {(path === 'club' || path === 'club-program') && <ClubScreen onBack={back} onOpenLab={() => go('game/lab')} />}
         {path === 'check-message' && <CheckerScreen onExit={back} />}
         {path === 'crisis-protocol' && <CrisisScreen onBack={back} />}
         {section && <SectionScreen section={section} onBack={back} onOpen={go} />}

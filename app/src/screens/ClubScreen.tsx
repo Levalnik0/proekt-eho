@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IconBack } from '../components/icons';
+import { tryUnlockLab } from '../games/lab';
 
 /**
  * Формат офлайн-встреч ещё обсуждается, поэтому программа не видна всем
@@ -80,7 +81,13 @@ const RULES = [
   'Взрослый, который отказался играть роль ребёнка, остаётся наблюдателем без уговоров.',
 ];
 
-export function ClubScreen({ onBack }: { onBack: () => void }) {
+export function ClubScreen({
+  onBack,
+  onOpenLab,
+}: {
+  onBack: () => void;
+  onOpenLab: () => void;
+}) {
   const { unlocked, tryUnlock } = useClubGate();
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
@@ -99,7 +106,10 @@ export function ClubScreen({ onBack }: { onBack: () => void }) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!tryUnlock(code)) {
+            // Код игр ведёт сразу в «Лабораторию», код встречи открывает программу
+            if (tryUnlockLab(code)) {
+              onOpenLab();
+            } else if (!tryUnlock(code)) {
               setError(true);
             }
           }}
@@ -158,6 +168,28 @@ export function ClubScreen({ onBack }: { onBack: () => void }) {
           <li key={r}>{r}</li>
         ))}
       </ul>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (tryUnlockLab(code)) onOpenLab();
+          else setError(true);
+        }}
+      >
+        <input
+          className="checker__input"
+          value={code}
+          onChange={(e) => {
+            setCode(e.target.value);
+            setError(false);
+          }}
+          placeholder="Другой код"
+        />
+        {error && <p className="checker__privacy">Не тот код. Ещё раз?</p>}
+        <button type="submit" className="btn btn--wide">
+          Открыть
+        </button>
+      </form>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
   IconTogether,
 } from '../components/icons';
 import { buzz } from '../fx';
+import { labUnlocked } from '../games/lab';
 import { useProgress } from '../progress/useProgress';
 import type { Activity, Section } from '../routes';
 
@@ -61,7 +62,13 @@ export function SectionScreen({
       </div>
 
       <ul className="tiles tiles--section stagger">
-        {section.activities.map((a) => {
+        {[
+          ...section.activities,
+          // После ввода кода в «Клубе» в играх появляется «Лаборатория»
+          ...(section.id === 'games' && labUnlocked()
+            ? [{ route: 'game/lab', label: 'Лаборатория', kind: 'game' as const }]
+            : []),
+        ].map((a) => {
           const Icon = KIND_ICON[a.kind];
           return (
             <li key={a.route}>

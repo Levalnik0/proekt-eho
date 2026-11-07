@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Эхо: игры</title>
+<style>
+/* Один экран-телефон по центру, игры открываются поверх меню.
+   Единый тёмный бирюзовый вид, как тема «Океан» в приложении. */
+:root {
+  --bg: #0c1a1d;
+  --surface: #17323a;
+  --surface-2: #1f4049;
+  --line: rgba(160, 230, 228, 0.14);
+  --ink: #e9f5f4;
+  --muted: #9fbcbb;
+  --accent: #3fd0cc;
+  --accent-ink: #062022;
+  --good: #7fe0a6;
+  --soft: #ffc27a;
+  --violet: #a996ff;
+  --pink: #ff8fb1;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font);
+  -webkit-tap-highlight-color: transparent; overscroll-behavior: none;
+}
+* { box-sizing: border-box; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.phone {
+  position: relative; max-width: 440px; height: 100%; margin: 0 auto;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: radial-gradient(120% 60% at 50% -10%, rgba(63,208,204,.16), transparent 60%), var(--bg);
+}
+
+/* ── Меню ── */
+.menu { flex: 1; overflow-y: auto; padding-block: 22px 28px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.menu h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: -.02em; }
+.menu .sub { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+.cards { display: grid; gap: 12px; }
+.card {
+  display: grid; grid-template-columns: 64px 1fr auto; align-items: center; gap: 14px;
+  text-align: left; padding: 14px; border-radius: 22px; background: var(--surface);
+  border: 1px solid var(--line); transition: transform .15s ease, background .15s;
+}
+.card:active { transform: scale(.98); background: var(--surface-2); }
+.card__art { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; }
+.card__name { font-weight: 700; font-size: 17px; }
+.card__how { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.card__go { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; color: var(--accent); font-size: 20px; }
+.note { color: var(--muted); font-size: 13px; margin-top: 18px; text-align: center; }
+
+/* ── Общий каркас игры ── */
+.game { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); z-index: 5; }
+.game[hidden] { display: none !important; }
+.bar { display: flex; align-items: center; gap: 10px; padding: 10px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px)); }
+.back { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-size: 22px; }
+.bar__title { font-weight: 700; font-size: 17px; flex: 1; }
+.pill { padding: 6px 12px; border-radius: 999px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.pill--accent { background: var(--accent); color: var(--accent-ink); }
+.stage { position: relative; flex: 1; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+.hint { text-align: center; color: var(--muted); font-size: 14px; padding: 6px 16px 12px; min-height: 36px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 22px;
+  border-radius: 999px; background: var(--surface-2); font-weight: 700; font-size: 16px; }
+.btn--main { background: var(--accent); color: var(--accent-ink); }
+.btn--wide { width: 100%; }
+
+/* Стартовый экран и итог поверх сцены */
+.overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end;
+  background: linear-gradient(to top, rgba(12,26,29,.98) 55%, rgba(12,26,29,.6)); padding: 20px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px));
+  animation: fade .25s ease; overflow-y: auto; touch-action: pan-y; }
+.overlay[hidden] { display: none !important; }
+[id$="-end"].overlay { background: var(--bg); justify-content: center; }
+.recap--tight div { padding: 12px 14px; }
+.overlay h2 { font-size: 26px; margin: 0 0 6px; text-wrap: balance; }
+.overlay .big { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; margin: 6px 0; font-variant-numeric: tabular-nums; }
+.overlay p { color: var(--muted); margin: 0 0 14px; line-height: 1.45; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.chip { padding: 6px 12px; border-radius: 999px; background: var(--surface); font-size: 13px; color: var(--muted); }
+.recap { display: grid; gap: 8px; margin: 4px 0 18px; }
+.recap div { background: var(--surface); border-radius: 16px; padding: 10px 12px; font-size: 14px; line-height: 1.4; color: var(--muted); }
+.recap b { display: block; margin-bottom: 2px; color: var(--ink); }
+.row { display: flex; gap: 10px; }
+.row .btn { flex: 1; }
+@keyframes fade { from { opacity: 0 } }
+
+/* ── 1. Фильтр ── */
+.bub { position: absolute; left: 0; top: 0; width: 66%; max-width: 270px; padding: 10px 13px; border-radius: 18px 18px 18px 6px;
+  background: var(--surface-2); box-shadow: 0 6px 18px rgba(0,0,0,.28); font-size: 14px; line-height: 1.3; will-change: transform; }
+.bub small { display: block; color: var(--muted); font-size: 11.5px; margin-bottom: 2px; font-weight: 600; }
+.bub.zap { transition: transform .45s cubic-bezier(.3,.7,.3,1), opacity .45s; opacity: 0; }
+.bub.ok { transition: transform .5s ease-in, opacity .5s; opacity: 0; }
+.bub.miss { transition: opacity .5s, filter .5s; opacity: 0; filter: blur(4px); }
+.bub.wobble { animation: wobble .4s ease; background: #2a5560; }
+@keyframes wobble { 25% { margin-left: -8px } 50% { margin-left: 8px } 75% { margin-left: -4px } }
+.spam-bin { position: absolute; left: 12px; top: 10px; font-size: 13px; color: var(--muted); }
+.chat-line { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; border-top: 1px dashed var(--line);
+  display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; background: linear-gradient(to top, rgba(63,208,204,.08), transparent); }
+.pop { position: absolute; font-weight: 800; font-size: 18px; pointer-events: none; animation: pop .7s ease-out forwards; }
+@keyframes pop { to { transform: translateY(-40px); opacity: 0 } }
+
+/* ── 2. Детектив ── */
+.scene-wrap { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 12px; }
+.scene-box { position: relative; width: 300px; height: 433px; }
+.scene-box > svg { width: 100%; height: 100%; display: block; border-radius: 20px; }
+.dim { position: absolute; inset: 0; border-radius: 20px; background: rgba(4,12,14,.86); pointer-events: none;
+  -webkit-mask: radial-gradient(circle 64px at var(--x, -200px) var(--y, -200px), transparent 96%, #000 100%);
+  mask: radial-gradient(circle 64px at var(--x, -200px) var(--y, -200px), transparent 96%, #000 100%); }
+.lens { position: absolute; width: 128px; height: 128px; margin: -64px 0 0 -64px; border-radius: 50%; overflow: hidden; pointer-events: none;
+  border: 3px solid var(--accent); box-shadow: 0 0 0 6px rgba(63,208,204,.18), 0 10px 30px rgba(0,0,0,.5); left: -200px; top: -200px; background: #2a4456; }
+.lens svg { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.found-ring { position: absolute; width: 54px; height: 54px; margin: -27px 0 0 -27px; border-radius: 50%; border: 2.5px solid var(--good);
+  pointer-events: none; animation: ring .5s cubic-bezier(.3,1.6,.5,1); box-shadow: 0 0 18px rgba(127,224,166,.5); z-index: 3; }
+@keyframes ring { from { transform: scale(.2); opacity: 0 } }
+.toast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: var(--surface-2); padding: 10px 14px; border-radius: 14px;
+  font-size: 14px; font-weight: 600; width: max-content; max-width: calc(100% - 32px); text-align: center; animation: fade .2s; z-index: 4; pointer-events: none; }
+
+/* ── 3. Крепость ── */
+.fort { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+.fort__scene { position: relative; flex: 1; min-height: 190px; display: flex; align-items: flex-end; justify-content: center; gap: 22px; padding: 70px 0 14px; }
+.tower { position: relative; width: 150px; display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; min-height: 30px; }
+.tower::after { content: ""; position: absolute; bottom: -8px; left: -20px; right: -20px; height: 8px; border-radius: 4px; background: var(--surface-2); }
+.brick { width: 100%; height: 26px; border-radius: 7px; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--accent-ink);
+  animation: drop .35s cubic-bezier(.3,1.5,.5,1); transition: transform .9s cubic-bezier(.5,0,.8,.6), opacity .9s; }
+@keyframes drop { from { transform: translateY(-60px); opacity: 0 } }
+.brick.fall { opacity: 0; }
+.tower.shake { animation: shake .5s ease 2; }
+@keyframes shake { 25% { transform: translateX(-4px) rotate(-1deg) } 75% { transform: translateX(4px) rotate(1deg) } }
+.tower.hold .brick { box-shadow: 0 0 16px rgba(127,224,166,.55); }
+.robot { width: 86px; flex: none; }
+.robot.hit { animation: hit .25s ease 4; }
+@keyframes hit { 50% { transform: translateX(-16px) rotate(-6deg) } }
+.pass { margin: 0 16px; min-height: 52px; padding: 8px; border-radius: 16px; background: var(--surface); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pass:empty::before { content: "Нажимай на блоки ниже, чтобы собрать пароль"; color: var(--muted); font-size: 14px; padding-left: 6px; }
+.tray { padding: 10px 16px 6px; display: grid; gap: 8px; }
+.tray__row { display: flex; flex-wrap: wrap; gap: 6px; }
+.blk { padding: 8px 12px; border-radius: 12px; font-weight: 700; font-size: 14px; color: var(--accent-ink); transition: transform .1s; }
+.blk:active { transform: scale(.93); }
+.t-word { background: var(--accent); } .t-me { background: var(--pink); } .t-common { background: #b9c7c6; } .t-num { background: var(--soft); } .t-sym { background: var(--violet); }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 16px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+.fort__actions { padding: 10px 16px 16px; display: flex; gap: 10px; }
+.fort__actions .btn { flex: 1; }
+.verdict { position: absolute; top: 8px; left: 16px; right: 16px; text-align: center; font-weight: 700; font-size: 17px; animation: fade .3s; }
+.verdict span { display: block; font-weight: 500; font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+
+/* ── 4. Сеть ── */
+canvas { display: block; width: 100%; height: 100%; }
+.pads { position: absolute; inset: 0; display: flex; z-index: 2; }
+.pads button { flex: 1; }
+
+/* ── 5. Окна ── */
+.w-meters { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px 6px; }
+.meter { display: grid; gap: 5px; font-size: 13px; color: var(--muted); }
+.meter__track { height: 10px; border-radius: 6px; background: var(--surface); overflow: hidden; }
+.meter__fill { height: 100%; width: 80%; border-radius: 6px; background: var(--accent); transition: width .35s ease, background .3s; }
+.meter--sec .meter__fill { background: var(--violet); }
+.meter.low .meter__fill { background: var(--soft); }
+.w-grid { position: absolute; left: 16px; right: 16px; top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 78px 14px; }
+.w { position: relative; height: 104px; border-radius: 16px; overflow: hidden; background: #ffe3a6; border: 3px solid #2a4456; transition: background .3s; }
+.w.s2 { background: #10252a; }
+.w:nth-child(3) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 7px); }
+.w .sh { position: absolute; top: 0; bottom: 0; width: 0; background: #ff8fb1; transition: width .3s cubic-bezier(.3,1.2,.5,1); }
+.w .sh.l { left: 0; } .w .sh.r { right: 0; background: #e46f95; }
+.w.s1 .sh { width: 24%; } .w.s2 .sh { width: 50%; }
+.w .lab { position: absolute; left: 0; right: 0; bottom: 0; padding: 6px 4px; text-align: center; font-size: 12.5px; font-weight: 700; background: rgba(12,26,29,.78); }
+.w .lab small { display: block; font-weight: 500; font-size: 11.5px; color: var(--muted); }
+.w .ico { position: absolute; top: 12px; left: 0; right: 0; text-align: center; font-size: 11px; color: #5a4a3a; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.w.s2 .ico { color: #3b5560; }
+.guest { position: absolute; left: 0; top: 0; width: 70px; margin-left: -35px; text-align: center; z-index: 6; will-change: transform; touch-action: manipulation; }
+.guest .face { width: 44px; height: 44px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; color: #0c1a1d; box-shadow: 0 4px 12px rgba(0,0,0,.35); transition: transform .2s; }
+.guest.friend .face, .guest.fake .face { background: var(--accent); }
+.guest.stranger .face { background: #9fb2b1; }
+.guest .tag { display: inline-block; margin-top: 3px; padding: 2px 6px; border-radius: 8px; background: rgba(12,26,29,.85); font-size: 10.5px; line-height: 1.25; color: var(--ink); white-space: nowrap; }
+.guest .tag i { font-style: normal; color: var(--muted); }
+.guest.gone { opacity: 0; transition: opacity .25s, margin-top .25s; margin-top: -14px; pointer-events: none; }
+.guest.bump .face { transform: scale(1.25); }
+.w-pop { position: absolute; z-index: 7; font-weight: 800; font-size: 14px; pointer-events: none; transform: translateX(-50%); animation: pop .9s ease-out forwards; white-space: nowrap; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+
+<div class="phone" id="phone">
+
+  <!-- ═════════ МЕНЮ ═════════ -->
+  <div class="menu" id="menu">
+    <button class="back" id="lab-exit" hidden aria-label="Назад в приложение" style="margin-bottom:10px">‹</button>
+    <h1>Лаборатория</h1>
+    <p class="sub">Новые игры в пробной версии. Поиграй и скажи, какие оставить.</p>
+    <div class="cards">
+      <button class="card" data-open="filter">
+        <span class="card__art" style="background:linear-gradient(145deg,#2a8f8c,#18515a)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="6" width="22" height="12" rx="6" fill="#e9f5f4"/><rect x="14" y="22" width="22" height="12" rx="6" fill="#ffc27a"/><path d="M6 37h28" stroke="#3fd0cc" stroke-width="3" stroke-linecap="round"/></svg>
+        </span>
+        <span><div class="card__name">Фильтр</div><div class="card__how">Сбивай разводы, пока они не упали в чат</div></span>
+        <span class="card__go">›</span>
+      </button>
+      <button class="card" data-open="detective">
+        <span class="card__art" style="background:linear-gradient(145deg,#6b5bd6,#30285e)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="17" cy="17" r="10" stroke="#e9f5f4" stroke-width="3.5"/><path d="M25 25l9 9" stroke="#e9f5f4" stroke-width="4" stroke-linecap="round"/><circle cx="17" cy="17" r="4" fill="#a996ff"/></svg>
+        </span>
+        <span><div class="card__name">Детектив</div><div class="card__how">Найди лупой, что выдаёт человека в сторис</div></span>
+        <span class="card__go">›</span>
+      </button>
+      <button class="card" data-open="fort">
+        <span class="card__art" style="background:linear-gradient(145deg,#c9824a,#5e3a1f)">
+          <svg width="40" height="40" viewBox="0 0 40 40"><rect x="10" y="28" width="20" height="7" rx="2" fill="#3fd0cc"/><rect x="10" y="19" width="20" height="7" rx="2" fill="#a996ff"/><rect x="10" y="10" width="20" height="7" rx="2" fill="#ffc27a"/><rect x="10" y="4" width="4" height="5" fill="#e9f5f4"/><rect x="18" y="4" width="4" height="5" fill="#e9f5f4"/><rect x="26" y="4" width="4" height="5" fill="#e9f5f4"/></svg>
+        </span>
+        <span><div class="card__name">Крепость</div><div class="card__how">Построй пароль, который робот не сломает</div></span>
+        <span class="card__go">›</span>
+      </button>
+      <button class="card" data-open="net">
+        <span class="card__art" style="background:linear-gradient(145deg,#2d78b8,#173a5e)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="6" width="9" height="12" rx="3" stroke="#e9f5f4" stroke-width="2.5"/><rect x="15.5" y="6" width="9" height="12" rx="3" fill="#7fe0a6"/><rect x="27" y="6" width="9" height="12" rx="3" stroke="#e9f5f4" stroke-width="2.5"/><circle cx="20" cy="31" r="5" fill="#3fd0cc"/></svg>
+        </span>
+        <span><div class="card__name">Сеть</div><div class="card__how">Веди сигнал только через настоящие сайты</div></span>
+        <span class="card__go">›</span>
+      </button>
+      <button class="card" data-open="windows">
+        <span class="card__art" style="background:linear-gradient(145deg,#d0567e,#5c2238)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M6 18L20 6l14 12v16H6z" fill="#e9f5f4"/><rect x="11" y="20" width="7" height="7" rx="1.5" fill="#ff8fb1"/><rect x="22" y="20" width="7" height="7" rx="1.5" fill="#5c2238"/></svg>
+        </span>
+        <span><div class="card__name">Окна</div><div class="card__how">Реши, кто заглядывает в твой профиль</div></span>
+        <span class="card__go">›</span>
+      </button>
+    </div>
+    <p class="note">Рекорды остаются в этом телефоне</p>
+  </div>
+
+  <!-- ═════════ 1. ФИЛЬТР ═════════ -->
+  <section class="game" id="g-filter" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Фильтр</span>
+      <span class="pill" id="f-time">60</span><span class="pill pill--accent" id="f-score">0</span></div>
+    <div class="stage" id="f-stage">
+      <div class="spam-bin">↖ в спам</div>
+      <div class="chat-line">в чат</div>
+      <div class="overlay" id="f-start">
+        <h2>Фильтр</h2>
+        <p>Сообщения падают в твой чат. Разводы сбивай нажатием, нормальные пропускай. Минута, скорость растёт.</p>
+        <div class="chips"><span class="chip">1 мин</span><span class="chip">рекорд: <b id="f-best">0</b></span></div>
+        <button class="btn btn--main btn--wide" id="f-go">Играть</button>
+      </div>
+      <div class="overlay" id="f-end" hidden></div>
+    </div>
+    <div class="hint" id="f-hint">Комбо растёт, если не ошибаешься</div>
+  </section>
+
+  <!-- ═════════ 2. ДЕТЕКТИВ ═════════ -->
+  <section class="game" id="g-detective" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Детектив</span>
+      <span class="pill pill--accent" id="d-count">0 из 5</span></div>
+    <div class="stage" id="d-stage">
+      <div class="scene-wrap"><div class="scene-box" id="d-box"></div></div>
+      <div class="overlay" id="d-start">
+        <h2>Детектив</h2>
+        <p>Маша выложила сторис. Проведи лупой по экрану и найди 5 вещей, по которым незнакомец поймёт, где она живёт и учится.</p>
+        <button class="btn btn--main btn--wide" id="d-go">Взять лупу</button>
+      </div>
+      <div class="overlay" id="d-end" hidden></div>
+    </div>
+    <div class="hint" id="d-hint">Веди пальцем: лупа над пальцем</div>
+  </section>
+
+  <!-- ═════════ 3. КРЕПОСТЬ ═════════ -->
+  <section class="game" id="g-fort" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Крепость</span>
+      <span class="pill" id="k-len">0 символов</span></div>
+    <div class="stage" style="touch-action:auto">
+      <div class="fort">
+        <div class="fort__scene" id="k-scene">
+          <div class="tower" id="k-tower"></div>
+          <svg class="robot" id="k-robot" viewBox="0 0 86 100" role="img" aria-label="Робот-подборщик">
+            <line x1="43" y1="6" x2="43" y2="18" stroke="#9fbcbb" stroke-width="3"/><circle cx="43" cy="6" r="5" fill="#ffc27a"/>
+            <rect x="16" y="18" width="54" height="40" rx="14" fill="#2b5662"/>
+            <circle cx="33" cy="38" r="7" fill="#e9f5f4"/><circle cx="53" cy="38" r="7" fill="#e9f5f4"/>
+            <circle cx="34" cy="39" r="3" fill="#0c1a1d"/><circle cx="54" cy="39" r="3" fill="#0c1a1d"/>
+            <rect x="22" y="62" width="42" height="30" rx="10" fill="#1f4049"/>
+            <text x="43" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#3fd0cc" font-family="monospace">0101</text>
+          </svg>
+        </div>
+        <div class="pass" id="k-pass"></div>
+        <div class="tray" id="k-tray"></div>
+        <div class="legend"><span><i class="t-word"></i>слово</span><span><i class="t-me"></i>про тебя</span><span><i class="t-common"></i>популярное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span></div>
+        <div class="fort__actions"><button class="btn" id="k-clear">Сбросить</button><button class="btn btn--main" id="k-attack">Запустить робота</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ 4. СЕТЬ ═════════ -->
+  <section class="game" id="g-net" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Сеть</span>
+      <span class="pill" id="n-life">●●●</span><span class="pill pill--accent" id="n-score">0</span></div>
+    <div class="stage" id="n-stage">
+      <canvas id="n-canvas"></canvas>
+      <div class="pads"><button aria-label="Влево" data-dir="-1"></button><button aria-label="Вправо" data-dir="1"></button></div>
+      <div class="overlay" id="n-start">
+        <h2>Сеть</h2>
+        <p>Твой сигнал летит к друзьям. На каждой развилке трое ворот, настоящие только одни. Нажимай слева или справа от сигнала, чтобы перестроиться.</p>
+        <div class="chips"><span class="chip">3 ошибки и стоп</span><span class="chip">рекорд: <b id="n-best">0</b></span></div>
+        <button class="btn btn--main btn--wide" id="n-go">Поехали</button>
+      </div>
+      <div class="overlay" id="n-end" hidden></div>
+    </div>
+    <div class="hint">Смотри на адрес целиком: подделку выдаёт одна буква</div>
+  </section>
+
+  <!-- ═════════ 5. ОКНА ═════════ -->
+  <section class="game" id="g-windows" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Окна</span>
+      <span class="pill pill--accent" id="w-time">50</span></div>
+    <div class="w-meters">
+      <div class="meter" id="w-m-fr"><span>Друзья довольны</span><div class="meter__track"><div class="meter__fill"></div></div></div>
+      <div class="meter meter--sec" id="w-m-pr"><span>Секреты целы</span><div class="meter__track"><div class="meter__fill"></div></div></div>
+    </div>
+    <div class="stage" id="w-stage" style="touch-action:manipulation">
+      <div class="w-grid" id="w-grid"></div>
+      <div class="overlay" id="w-start">
+        <h2>Окна</h2>
+        <p>К окнам твоего профиля подходят гости. Серые — незнакомцы, бирюзовые — друзья. Нажми на окно, чтобы выбрать, кому оно открыто. Если в подписи гостя «0 общих», нажми на него: настоящий друг так не выглядит.</p>
+        <div class="chips"><span class="chip">50 секунд</span><span class="chip">рекорд: <b id="w-best">0</b></span></div>
+        <button class="btn btn--main btn--wide" id="w-go">Открыть окна</button>
+      </div>
+      <div class="overlay" id="w-end" hidden></div>
+    </div>
+    <div class="hint" id="w-hint">Нажимай на окна: всем → друзьям → никому</div>
+  </section>
+</div>
+
+<script>
+/* ══════════ общее ══════════ */
+const $ = (s, r = document) => r.querySelector(s);
+const buzz = (p) => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+const store = {
+  get(k) { try { return Number(localStorage.getItem('echo.proto.' + k)) || 0; } catch (e) { return 0; } },
+  set(k, v) { try { localStorage.setItem('echo.proto.' + k, String(v)); } catch (e) {} },
+};
+const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+const games = {};
+// Внутри приложения показываем кнопку «назад», снаружи она не нужна
+if (window.parent !== window) {
+  const x = document.getElementById('lab-exit');
+  x.hidden = false;
+  x.addEventListener('click', () => window.parent.postMessage({ echoLab: 'exit' }, location.origin));
+}
+let current = null;
+document.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => open(b.dataset.open)));
+document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', close));
+function open(id) {
+  buzz(8);
+  current = id;
+  $('#g-' + id).hidden = false;
+  games[id].enter && games[id].enter();
+}
+function close() {
+  if (!current) return;
+  games[current].leave && games[current].leave();
+  $('#g-' + current).hidden = true;
+  current = null;
+}
+
+/* ══════════ 1. ФИЛЬТР ══════════ */
+(() => {
+  const MSG = [
+    { f: 'Неизвестный', t: 'Ты выиграл iPhone 16! Забери по ссылке за 10 минут', s: 1, why: 'Ты ничего не разыгрывал, а таймер торопит.' },
+    { f: 'Мама', t: 'Буду в 7, суп в холодильнике', s: 0 },
+    { f: 'Поддержка Roblox', t: 'Пришли пароль, начислим 5000 робуксов', s: 1, why: 'Настоящая поддержка никогда не просит пароль.' },
+    { f: 'Лёша', t: 'Го в майн после уроков?', s: 0 },
+    { f: 'Неизвестный', t: 'Тут твоё фото выложили, глянь: bit.ly/x7f', s: 1, why: 'Пугают, чтобы ты открыл ссылку не думая.' },
+    { f: 'Классный чат', t: 'Завтра физра, не забудьте форму', s: 0 },
+    { f: 'Аня', t: 'Скинь код из смс, он мне по ошибке пришёл на твой номер', s: 1, why: 'Код из смс — ключ от аккаунта. Его не отдают никому, даже друзьям.' },
+    { f: 'Папа', t: 'Забери брата из сада, я задерживаюсь', s: 0 },
+    { f: 'Steam', t: 'Ваш аккаунт заблокируют через час. Войдите тут', s: 1, why: 'Угроза, спешка и чужая ссылка сразу.' },
+    { f: 'Бабушка', t: 'Позвони, как будет время', s: 0 },
+    { f: 'Незнакомка', t: 'Привет) давай дружить, только никому не говори', s: 1, why: '«Никому не говори» с первого сообщения от незнакомца.' },
+    { f: 'Тренер', t: 'Тренировка переносится на 17:00', s: 0 },
+    { f: 'Банк', t: 'Подтвердите карту родителей, иначе спишем 3000 ₽', s: 1, why: 'Банк не пишет детям и не угрожает списаниями.' },
+    { f: 'Катя', t: 'Смотри какой кот 😂', s: 0 },
+    { f: 'Блогер', t: 'Раздаю скины! Нужен только твой логин и пароль', s: 1, why: 'Подарок, за который надо отдать пароль, это кража.' },
+    { f: 'Дима', t: 'Дз по алгебре скинешь?', s: 0 },
+    { f: 'Неизвестный', t: 'Заработок 5000 в день, нужна только карта мамы', s: 1, why: 'Лёгкие деньги и чужая карта — всегда развод.' },
+    { f: 'Школа', t: 'Родительское собрание в четверг', s: 0 },
+    { f: 'Друг друга', t: 'Проголосуй за меня, войди через ВК по ссылке', s: 1, why: 'Фальшивое голосование ворует аккаунты ВК.' },
+    { f: 'Сестра', t: 'Возьми мне булку по дороге', s: 0 },
+    { f: 'Telegram', t: 'Premium в подарок! Активируй по номеру телефона', s: 1, why: 'Подарок от «Telegram» в личке почти всегда фейк.' },
+    { f: 'Саша', t: 'Ты на концерт идёшь в субботу?', s: 0 },
+    { f: 'Неизвестный', t: 'Для приза нужно фото паспорта родителей, пришли сюда', s: 1, why: 'Документы родителей не отправляют никому и никуда.' },
+    { f: 'Мама', t: 'Ты где? Позвони', s: 0 },
+  ];
+  const stage = $('#f-stage');
+  let bubs = [], raf = 0, last = 0, t0 = 0, spawnAt = 0, score = 0, combo = 1, running = false, missed = [], deck = [];
+  const DURATION = 60000;
+  $('#f-best').textContent = store.get('filter');
+
+  function start() {
+    $('#f-start').hidden = true; $('#f-end').hidden = true;
+    bubs.forEach((b) => b.el.remove()); bubs = [];
+    score = 0; combo = 1; missed = []; deck = shuffle(MSG); running = true;
+    $('#f-score').textContent = '0';
+    $('#f-hint').textContent = 'Комбо растёт, если не ошибаешься';
+    t0 = last = performance.now(); spawnAt = t0 + 300;
+    raf = requestAnimationFrame(tick);
+  }
+  function spawn() {
+    if (!deck.length) deck = shuffle(MSG);
+    const m = deck.pop();
+    const el = document.createElement('div');
+    el.className = 'bub';
+    el.innerHTML = `<small>${esc(m.f)}</small>${esc(m.t)}`;
+    stage.appendChild(el);
+    const W = stage.clientWidth, bw = el.offsetWidth;
+    const x = 10 + Math.random() * Math.max(0, W - bw - 20);
+    const b = { el, m, x, y: -el.offsetHeight - 10, h: el.offsetHeight, done: false };
+    el.style.transform = `translate(${x}px, ${b.y}px)`;
+    el.addEventListener('pointerdown', (e) => { e.preventDefault(); hit(b); });
+    bubs.push(b);
+  }
+  function popText(x, y, txt, color) {
+    const p = document.createElement('div');
+    p.className = 'pop'; p.textContent = txt; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.color = color;
+    stage.appendChild(p); setTimeout(() => p.remove(), 700);
+  }
+  function hit(b) {
+    if (b.done || !running) return;
+    if (b.m.s) {
+      b.done = true;
+      const pts = 10 * combo;
+      score += pts; combo = Math.min(combo + 1, 5);
+      b.el.classList.add('zap');
+      b.el.style.transform = `translate(${-b.el.offsetWidth - 40}px, ${b.y - 80}px) rotate(-18deg) scale(.6)`;
+      popText(b.x + 40, Math.max(10, b.y), '+' + pts, 'var(--accent)');
+      $('#f-hint').textContent = combo > 1 ? `Комбо ×${combo}` : 'Отлично';
+      $('#f-score').textContent = score;
+      buzz(12);
+      setTimeout(() => b.el.remove(), 500);
+    } else {
+      combo = 1;
+      b.el.classList.remove('wobble'); void b.el.offsetWidth; b.el.classList.add('wobble');
+      $('#f-hint').textContent = 'Это нормальное сообщение, его пропускай';
+      buzz([20, 40, 20]);
+    }
+  }
+  function tick(now) {
+    if (!running) return;
+    const dt = Math.min(50, now - last) / 1000; last = now;
+    const el = now - t0, k = Math.min(1, el / DURATION);
+    $('#f-time').textContent = Math.max(0, Math.ceil((DURATION - el) / 1000));
+    const speed = 42 + 70 * k;
+    if (now >= spawnAt) { spawn(); spawnAt = now + (1650 - 900 * k); }
+    const floor = stage.clientHeight - 64;
+    for (const b of bubs) {
+      if (b.done) continue;
+      b.y += speed * dt;
+      b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
+      if (b.y + b.h * 0.5 > floor) {
+        b.done = true;
+        if (b.m.s) {
+          combo = 1; missed.push(b.m);
+          b.el.classList.add('miss');
+          $('#f-hint').textContent = 'Развод проскочил в чат';
+          buzz(30);
+        } else {
+          score += 2; $('#f-score').textContent = score;
+          b.el.classList.add('ok');
+          b.el.style.transform = `translate(${b.x}px, ${b.y + 60}px) scale(.8)`;
+        }
+        setTimeout(() => b.el.remove(), 500);
+      }
+    }
+    bubs = bubs.filter((b) => b.el.isConnected);
+    if (el >= DURATION) return end();
+    raf = requestAnimationFrame(tick);
+  }
+  function end() {
+    running = false; cancelAnimationFrame(raf);
+    bubs.forEach((b) => b.el.remove()); bubs = [];
+    const best = store.get('filter'), rec = score > best;
+    if (rec) store.set('filter', score);
+    $('#f-best').textContent = Math.max(best, score);
+    const uniq = [...new Map(missed.map((m) => [m.t, m])).values()].slice(0, 3);
+    const box = $('#f-end');
+    box.innerHTML = `<h2>${rec ? 'Новый рекорд!' : 'Время вышло'}</h2><div class="big">${score}</div>
+      ${uniq.length ? `<div class="recap recap--tight">${uniq.map((m) => `<div><b>${esc(m.t)}</b>${esc(m.why)}</div>`).join('')}</div>` : '<p>Ни один развод не проскочил. Сильный фильтр.</p>'}
+      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="f-again">Ещё раз</button></div>`;
+    box.hidden = false;
+    $('#f-again').onclick = start;
+    box.querySelector('[data-c]').onclick = close;
+    buzz([15, 60, 15]);
+  }
+  $('#f-go').onclick = start;
+  games.filter = {
+    enter() { $('#f-start').hidden = false; $('#f-end').hidden = true; $('#f-time').textContent = '60'; $('#f-score').textContent = '0'; },
+    leave() { running = false; cancelAnimationFrame(raf); bubs.forEach((b) => b.el.remove()); bubs = []; },
+  };
+})();
+
+/* ══════════ 2. ДЕТЕКТИВ ══════════ */
+(() => {
+  const VB_W = 360;
+  const CLUES = [
+    { id: 'sign', x: 92, y: 171, title: 'Табличка с улицей', why: 'В окне видно «ул. Садовая, дом 14». По ней найдут дом.' },
+    { id: 'geo', x: 268, y: 118, title: 'Геометка', why: 'Стикер «ТЦ Галактика» показывает, где Маша бывает.' },
+    { id: 'badge', x: 246, y: 327, title: 'Эмблема школы', why: 'На худи написано «Гимназия № 5». Теперь известна школа.' },
+    { id: 'box', x: 76, y: 414, title: 'Посылка с адресом', why: 'На наклейке фамилия, квартира и подъезд.' },
+    { id: 'time', x: 180, y: 480, title: 'Подпись про время', why: '«Каждое утро тут в 7:40» — расписание: когда и где её застать.' },
+  ];
+  const SCENE = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520" font-family="-apple-system, Segoe UI, Arial, sans-serif">
+    <defs>
+      <linearGradient id="wallG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b5d73"/><stop offset="1" stop-color="#2a4456"/></linearGradient>
+      <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf9a"/><stop offset="1" stop-color="#ff9f8a"/></linearGradient>
+    </defs>
+    <rect width="360" height="520" rx="20" fill="url(#wallG)"/>
+    <rect x="14" y="12" width="160" height="3" rx="1.5" fill="#fff" opacity=".9"/><rect x="186" y="12" width="160" height="3" rx="1.5" fill="#fff" opacity=".35"/>
+    <circle cx="30" cy="38" r="12" fill="#ff8fb1"/><text x="30" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#5c2238">М</text>
+    <text x="50" y="42" font-size="12" font-weight="700" fill="#fff">masha_k</text><text x="106" y="42" font-size="11" fill="#fff" opacity=".7">2 ч</text>
+    <rect x="22" y="78" width="150" height="128" rx="6" fill="#203445"/>
+    <rect x="28" y="84" width="138" height="116" rx="3" fill="url(#skyG)"/>
+    <circle cx="140" cy="108" r="12" fill="#fff3d6"/>
+    <rect x="34" y="124" width="40" height="76" fill="#7a5c6e"/><rect x="40" y="132" width="8" height="8" fill="#ffd98a"/><rect x="56" y="132" width="8" height="8" fill="#ffd98a"/><rect x="40" y="146" width="8" height="8" fill="#ffd98a"/>
+    <rect x="120" y="136" width="44" height="64" fill="#6a4f60"/><rect x="128" y="146" width="8" height="8" fill="#ffd98a"/>
+    <rect x="90" y="182" width="3" height="18" fill="#2c3e3e"/>
+    <rect x="58" y="160" width="68" height="23" rx="3" fill="#1e6e4a" stroke="#fff" stroke-width="1.2"/>
+    <text x="92" y="170" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">ул. Садовая</text>
+    <text x="92" y="179.5" text-anchor="middle" font-size="8" fill="#fff">дом 14</text>
+    <line x1="97" y1="84" x2="97" y2="158" stroke="#203445" stroke-width="4"/>
+    <g transform="rotate(-6 268 118)">
+      <rect x="208" y="100" width="122" height="34" rx="17" fill="#fff"/>
+      <path d="M226 106c-5 0-8 4-8 8 0 6 8 13 8 13s8-7 8-13c0-4-3-8-8-8z" fill="#ff5d8f"/><circle cx="226" cy="114" r="3" fill="#fff"/>
+      <text x="240" y="114" font-size="9" fill="#58636e">я тут</text>
+      <text x="240" y="126" font-size="10.5" font-weight="700" fill="#232a32">ТЦ Галактика</text>
+    </g>
+    <path d="M176 508 C176 388 196 318 246 318 C296 318 318 388 318 508 Z" fill="#3fd0cc"/>
+    <rect x="234" y="282" width="24" height="26" fill="#f2c4a4"/>
+    <path d="M212 318 q34 -14 68 0 l-10 14 h-48z" fill="#2fb3af"/>
+    <ellipse cx="246" cy="250" rx="40" ry="44" fill="#f2c4a4"/>
+    <path d="M204 248 C200 196 290 192 288 248 C288 230 270 214 246 214 C222 214 206 230 204 248z" fill="#5a3b2a"/>
+    <path d="M204 246 C198 290 206 316 214 326 L218 260z M288 246 C294 290 286 316 278 326 L274 260z" fill="#5a3b2a"/>
+    <circle cx="232" cy="254" r="4" fill="#232a32"/><circle cx="262" cy="254" r="4" fill="#232a32"/>
+    <path d="M234 274 q12 10 24 0" stroke="#b5654f" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="222" cy="268" r="6" fill="#ff9fb0" opacity=".5"/><circle cx="272" cy="268" r="6" fill="#ff9fb0" opacity=".5"/>
+    <rect x="216" y="340" width="60" height="26" rx="5" fill="#1e3f68" transform="translate(0,-26)"/>
+    <text x="246" y="325" text-anchor="middle" font-size="7.5" fill="#ffd98a" font-weight="700">ГИМНАЗИЯ</text>
+    <text x="246" y="335" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="800">№ 5</text>
+    <rect x="0" y="440" width="190" height="80" fill="#6b4a3a"/><rect x="0" y="436" width="196" height="8" rx="3" fill="#8a6150"/>
+    <rect x="22" y="384" width="112" height="54" rx="4" fill="#c99a68"/><rect x="106" y="384" width="12" height="54" fill="#b0855a"/>
+    <rect x="30" y="396" width="72" height="34" rx="3" fill="#fff"/>
+    <text x="35" y="406" font-size="7" fill="#58636e">Кому:</text>
+    <text x="35" y="415" font-size="7.5" font-weight="700" fill="#232a32">Кирилловой М.</text>
+    <text x="35" y="424" font-size="7" fill="#232a32">кв. 23, под. 2</text>
+    <rect x="76" y="466" width="208" height="28" rx="14" fill="rgba(0,0,0,.5)"/>
+    <text x="180" y="484" text-anchor="middle" font-size="11.5" font-weight="600" fill="#fff">каждое утро тут в 7:40 ☕</text>
+  </svg>`;
+  const box = $('#d-box'), stage = $('#d-stage');
+  let found = new Set(), active = false, lens, dim, zoomSvg, hintTimer, toastTimer;
+  const Z = 2, R = 64;
+
+  // Сцена вписывается в свободное место целиком, без искажения пропорций
+  function fit() {
+    const wrap = box.parentElement;
+    const s = Math.min((wrap.clientWidth - 24) / 360, wrap.clientHeight / 520);
+    box.style.width = 360 * s + 'px'; box.style.height = 520 * s + 'px';
+  }
+  window.addEventListener('resize', () => { if (current === 'detective') fit(); });
+  function build() {
+    fit();
+    box.innerHTML = SCENE + '<div class="dim"></div><div class="lens"></div>';
+    dim = box.querySelector('.dim'); lens = box.querySelector('.lens');
+    lens.innerHTML = SCENE; zoomSvg = lens.querySelector('svg');
+  }
+  function start() {
+    build(); found = new Set(); active = true;
+    $('#d-start').hidden = true; $('#d-end').hidden = true;
+    $('#d-count').textContent = '0 из 5';
+    $('#d-hint').textContent = 'Веди пальцем: лупа над пальцем';
+    clearTimeout(hintTimer); hintTimer = setTimeout(nudge, 25000);
+  }
+  function nudge() {
+    if (!active) return;
+    const c = CLUES.find((c) => !found.has(c.id));
+    if (!c) return;
+    $('#d-hint').textContent = c.y < 220 ? 'Подсказка: посмотри наверху' : c.y > 400 ? 'Подсказка: посмотри внизу' : 'Подсказка: посмотри на одежду';
+    hintTimer = setTimeout(nudge, 20000);
+  }
+  function toast(t) {
+    stage.querySelector('.toast')?.remove();
+    const d = document.createElement('div'); d.className = 'toast'; d.textContent = 'Нашла: ' + t; stage.appendChild(d);
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => d.remove(), 2400);
+  }
+  function move(e) {
+    if (!active) return;
+    const r = box.getBoundingClientRect();
+    const lift = e.pointerType === 'touch' ? 76 : 0;
+    const x = e.clientX - r.left, y = e.clientY - r.top - lift;
+    const s = r.width / VB_W;
+    dim.style.setProperty('--x', x + 'px'); dim.style.setProperty('--y', y + 'px');
+    lens.style.left = x + 'px'; lens.style.top = y + 'px';
+    zoomSvg.style.width = r.width * Z + 'px'; zoomSvg.style.height = r.height * Z + 'px';
+    zoomSvg.style.transform = `translate(${R - x * Z}px, ${R - y * Z}px)`;
+    const vx = x / s, vy = y / s;
+    for (const c of CLUES) {
+      if (!found.has(c.id) && Math.hypot(c.x - vx, c.y - vy) < 30) reveal(c, s);
+    }
+  }
+  function reveal(c, s) {
+    found.add(c.id);
+    const ring = document.createElement('div'); ring.className = 'found-ring';
+    ring.style.left = c.x * s + 'px'; ring.style.top = c.y * s + 'px';
+    box.appendChild(ring);
+    $('#d-count').textContent = `${found.size} из 5`;
+    toast(c.title.toLowerCase());
+    buzz([12, 40, 12]);
+    clearTimeout(hintTimer); hintTimer = setTimeout(nudge, 20000);
+    if (found.size === CLUES.length) { active = false; setTimeout(end, 1000); }
+  }
+  function end() {
+    clearTimeout(hintTimer);
+    dim.style.transition = 'opacity .5s'; dim.style.opacity = '0'; lens.style.display = 'none';
+    const el = $('#d-end');
+    el.innerHTML = `<h2>Все улики найдены</h2>
+      <p>Дом, школа, фамилия и расписание в одной сторис. Вместе это карта.</p>
+      <div class="recap recap--tight">${CLUES.map((c) => `<div><b>${c.title}</b>${c.why}</div>`).join('')}</div>
+      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="d-again">Ещё раз</button></div>`;
+    el.hidden = false;
+    $('#d-again').onclick = start; el.querySelector('[data-c]').onclick = close;
+  }
+  stage.addEventListener('pointermove', move);
+  stage.addEventListener('pointerdown', move);
+  $('#d-go').onclick = start;
+  games.detective = {
+    enter() { build(); active = false; $('#d-start').hidden = false; $('#d-end').hidden = true; $('#d-count').textContent = '0 из 5'; },
+    leave() { active = false; clearTimeout(hintTimer); },
+  };
+})();
+
+/* ══════════ 3. КРЕПОСТЬ ══════════ */
+(() => {
+  const BLOCKS = [
+    { v: 'кит', t: 'word' }, { v: 'облако', t: 'word' }, { v: 'гитара', t: 'word' }, { v: 'ракета', t: 'word' }, { v: 'луна', t: 'word' }, { v: 'пицца', t: 'word' },
+    { v: 'Маша', t: 'me' }, { v: '2014', t: 'me' }, { v: 'Барсик', t: 'me' },
+    { v: 'qwerty', t: 'common' }, { v: '123456', t: 'common' }, { v: 'пароль', t: 'common' },
+    { v: '57', t: 'num' }, { v: '903', t: 'num' },
+    { v: '!', t: 'sym' }, { v: '#', t: 'sym' }, { v: '_', t: 'sym' },
+  ];
+  // Сколько «бит» добавляет блок: случайное слово из большого словаря
+  // даёт много, всё, что робот знает о тебе или что у всех, почти ничего
+  const BITS = { word: 12, me: 2, common: 1, num: 6.5, sym: 4 };
+  let pass = [], busy = false;
+  const tray = $('#k-tray'), passEl = $('#k-pass'), tower = $('#k-tower'), scene = $('#k-scene');
+
+  function renderTray() {
+    const groups = [['word'], ['me', 'common'], ['num', 'sym']];
+    tray.innerHTML = groups.map((g) => `<div class="tray__row">${BLOCKS.filter((b) => g.includes(b.t)).map((b) =>
+      `<button class="blk t-${b.t}" data-v="${esc(b.v)}">${esc(b.v)}</button>`).join('')}</div>`).join('');
+    tray.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => add(BLOCKS.find((b) => b.v === btn.dataset.v)));
+  }
+  function plural(n) {
+    const a = n % 10, b = n % 100;
+    return a === 1 && b !== 11 ? 'символ' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? 'символа' : 'символов';
+  }
+  function render() {
+    passEl.innerHTML = pass.map((b, i) => `<button class="blk t-${b.t}" data-i="${i}" aria-label="Убрать ${esc(b.v)}">${esc(b.v)}</button>`).join('');
+    passEl.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => { if (busy) return; pass.splice(+btn.dataset.i, 1); clearVerdict(); render(); });
+    tower.className = 'tower';
+    tower.innerHTML = pass.map((b) => `<div class="brick t-${b.t}">${esc(b.v)}</div>`).join('');
+    const len = pass.reduce((n, b) => n + b.v.length, 0);
+    $('#k-len').textContent = `${len} ${plural(len)}`;
+  }
+  function add(b) {
+    if (busy || pass.length >= 7) return;
+    clearVerdict(); pass.push(b); buzz(6); render();
+  }
+  function clearVerdict() { scene.querySelector('.verdict')?.remove(); }
+  function bits() {
+    const seen = new Set();
+    let total = 0;
+    for (const b of pass) { total += seen.has(b.v) ? 1 : BITS[b.t]; seen.add(b.v); }
+    return total + (new Set(pass.map((b) => b.t)).size >= 3 ? 3 : 0);
+  }
+  function human(sec) {
+    if (sec < 1) return 'долю секунды';
+    if (sec < 60) return Math.round(sec) + ' сек';
+    if (sec < 3600) return Math.round(sec / 60) + ' мин';
+    if (sec < 86400) return Math.round(sec / 3600) + ' ч';
+    if (sec < 86400 * 365) return Math.round(sec / 86400) + ' дн.';
+    const y = sec / (86400 * 365);
+    if (y < 1000) return Math.round(y) + ' лет';
+    if (y < 1e6) return Math.round(y / 1000) + ' тыс. лет';
+    if (y < 1e9) return Math.round(y / 1e6) + ' млн лет';
+    return 'дольше, чем светят звёзды';
+  }
+  function attack() {
+    if (busy) return;
+    if (!pass.length) { passEl.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); return; }
+    busy = true; clearVerdict();
+    tower.className = 'tower';
+    [...tower.children].forEach((el) => { el.style.transform = ''; el.classList.remove('fall'); });
+    const robot = $('#k-robot');
+    robot.classList.remove('hit'); void robot.offsetWidth; robot.classList.add('hit');
+    tower.classList.add('shake');
+    buzz([30, 60, 30, 60, 30]);
+    const b = bits(), sec = Math.pow(2, b) / 1e9;
+    const me = pass.some((x) => x.t === 'me'), common = pass.some((x) => x.t === 'common');
+    setTimeout(() => {
+      tower.classList.remove('shake');
+      const bricks = [...tower.children];
+      let title, sub;
+      if (b < 40) {
+        bricks.forEach((el, i) => { const d = i % 2 ? 1 : -1; el.style.transform = `translate(${d * (60 + i * 15)}px, ${120 + i * 10}px) rotate(${d * 70}deg)`; el.classList.add('fall'); });
+        title = `Взломан за ${human(sec)}`;
+        sub = me ? 'Имя, год и кличку робот берёт прямо из твоего профиля.' : common ? 'Такие пароли робот пробует первыми.' : 'Слишком коротко. Добавь ещё слов.';
+        buzz(80);
+      } else if (b < 56) {
+        bricks.slice(-2).forEach((el, i) => { el.style.transform = `translate(${70 + i * 30}px, 90px) rotate(50deg)`; el.classList.add('fall'); });
+        title = `Продержался ${human(sec)}`;
+        sub = 'Уже неплохо. Ещё одно случайное слово, и робот сдастся.';
+      } else {
+        tower.classList.add('hold');
+        title = `Роботу нужно ${human(sec)}`;
+        sub = me || common ? 'Крепость стоит, но блоки «про тебя» лучше убрать.' : 'Несколько случайных слов — сильный пароль, и его легко запомнить.';
+        buzz([15, 50, 15]);
+      }
+      const v = document.createElement('div'); v.className = 'verdict'; v.innerHTML = `${esc(title)}<span>${esc(sub)}</span>`;
+      scene.appendChild(v);
+      busy = false;
+    }, 1100);
+  }
+  $('#k-attack').onclick = attack;
+  $('#k-clear').onclick = () => { if (busy) return; pass = []; clearVerdict(); render(); };
+  games.fort = { enter() { pass = []; busy = false; renderTray(); clearVerdict(); render(); } };
+})();
+
+/* ══════════ 4. СЕТЬ ══════════ */
+(() => {
+  const SITES = [
+    { b: 'ВКонтакте', real: 'vk.com', fake: ['vk-com.ru', 'vk.corn'], why: 'В vk.corn буквы «rn» прикидываются буквой «m».' },
+    { b: 'Госуслуги', real: 'gosuslugi.ru', fake: ['gosusiugi.ru', 'gosuslugi-ru.online'], why: 'В gosusiugi букву «l» заменили на «i».' },
+    { b: 'Сбер', real: 'sberbank.ru', fake: ['sber-bonus.ru', 'sberbank.ru.login.top'], why: 'Сайт — это то, что в самом конце адреса. sberbank.ru.login.top — сайт login.top.' },
+    { b: 'Telegram', real: 'telegram.org', fake: ['telegrarn.org', 'tg-premium.free'], why: 'В telegrarn снова «rn» вместо «m».' },
+    { b: 'Steam', real: 'steampowered.com', fake: ['steamcommunlty.com', 'steam-gift.ru'], why: 'В steamcommunlty «l» вместо «i», заметно только вблизи.' },
+    { b: 'Roblox', real: 'roblox.com', fake: ['rob1ox.com', 'roblox-robux.free'], why: 'В rob1ox единица вместо буквы «l».' },
+    { b: 'Ozon', real: 'ozon.ru', fake: ['0zon.ru', 'ozon-sale.shop'], why: 'В 0zon ноль вместо буквы «o».' },
+    { b: 'YouTube', real: 'youtube.com', fake: ['yuotube.com', 'youtube.com-video.ru'], why: 'В youtube.com-video.ru после «.com» адрес продолжается. Это чужой сайт.' },
+    { b: 'Wildberries', real: 'wildberries.ru', fake: ['wildberies.ru', 'wb-prize.site'], why: 'В wildberies пропала одна «r».' },
+    { b: 'Яндекс', real: 'ya.ru', fake: ['ya-ru.com', 'yandex.ru-id.net'], why: 'В ya-ru.com дефис вместо точки, и это уже другой сайт.' },
+  ];
+  const cv = $('#n-canvas'), stage = $('#n-stage');
+  const ctx = cv.getContext('2d');
+  let W = 0, H = 0, raf = 0, last = 0, running = false;
+  let lane = 1, px = 0, rows = [], score = 0, lives = 3, deck = [], speed = 0, mistakes = [], flash = 0, trail = [];
+
+  function size() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = stage.clientWidth; H = stage.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  const laneX = (i) => (W / 3) * (i + 0.5);
+  function newRow(y) {
+    if (!deck.length) deck = shuffle(SITES);
+    const s = deck.pop();
+    const labels = shuffle([s.real, ...s.fake]);
+    return { y, s, labels, real: labels.indexOf(s.real), passed: false, bad: -1 };
+  }
+  function start() {
+    $('#n-start').hidden = true; $('#n-end').hidden = true;
+    size(); lane = 1; px = laneX(1); score = 0; lives = 3; mistakes = []; deck = shuffle(SITES); speed = 62; trail = []; flash = 0;
+    rows = [newRow(-30)];
+    $('#n-score').textContent = '0'; $('#n-life').textContent = '●●●';
+    running = true; last = performance.now(); raf = requestAnimationFrame(tick);
+  }
+  // Нажатие слева или справа от сигнала двигает его на дорожку в ту сторону
+  function steerAt(clientX) {
+    if (!running) return;
+    const r = stage.getBoundingClientRect();
+    const d = clientX - r.left < px ? -1 : 1;
+    lane = Math.max(0, Math.min(2, lane + d)); buzz(5);
+  }
+  function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+  function tick(now) {
+    if (!running) return;
+    const dt = Math.min(50, now - last) / 1000; last = now;
+    const py = H - 70;
+    px += (laneX(lane) - px) * Math.min(1, dt * 14);
+    trail.push({ x: px, y: py }); if (trail.length > 14) trail.shift();
+    for (const r of rows) r.y += speed * dt;
+    const lastRow = rows[rows.length - 1];
+    if (lastRow.y > 200) rows.push(newRow(lastRow.y - 290));
+    for (const r of rows) {
+      if (!r.passed && r.y >= py - 8) {
+        r.passed = true;
+        if (lane === r.real) { score++; speed = Math.min(140, speed + 5); buzz(10); }
+        else { lives--; r.bad = lane; mistakes.push(r); flash = 1; speed = Math.max(55, speed - 12); buzz([30, 50, 30]); }
+        $('#n-score').textContent = score;
+        $('#n-life').textContent = '●'.repeat(Math.max(0, lives)) + '○'.repeat(3 - Math.max(0, lives));
+        if (lives <= 0) { draw(py); return end(); }
+      }
+    }
+    rows = rows.filter((r) => r.y < H + 60);
+    flash = Math.max(0, flash - dt * 2);
+    draw(py);
+    raf = requestAnimationFrame(tick);
+  }
+  function draw(py) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(160,230,228,.10)'; ctx.lineWidth = 1; ctx.setLineDash([6, 10]);
+    for (let i = 1; i < 3; i++) { ctx.beginPath(); ctx.moveTo((W / 3) * i, 0); ctx.lineTo((W / 3) * i, H); ctx.stroke(); }
+    ctx.setLineDash([]);
+    ctx.textAlign = 'center';
+    for (const r of rows) {
+      ctx.fillStyle = 'rgba(233,245,244,.8)'; ctx.font = '700 13px -apple-system, Segoe UI, Arial';
+      ctx.fillText('Куда: ' + r.s.b, W / 2, r.y - 28);
+      r.labels.forEach((lab, i) => {
+        const gw = W / 3 - 10, gx = (W / 3) * i + 5, gh = 40;
+        let fill = '#1f4049', stroke = 'rgba(160,230,228,.25)';
+        if (r.passed && i === r.real) { fill = '#1c5a43'; stroke = '#7fe0a6'; }
+        if (r.passed && r.bad === i) { fill = '#5a4224'; stroke = '#ffc27a'; }
+        rr(gx, r.y - 18, gw, gh, 12); ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = stroke; ctx.lineWidth = 1.5; ctx.stroke();
+        let fs = 13; ctx.font = `600 ${fs}px ui-monospace, Menlo, monospace`;
+        while (ctx.measureText(lab).width > gw - 10 && fs > 7.5) { fs -= 0.5; ctx.font = `600 ${fs}px ui-monospace, Menlo, monospace`; }
+        ctx.fillStyle = '#e9f5f4'; ctx.fillText(lab, gx + gw / 2, r.y + 6);
+      });
+    }
+    trail.forEach((t, i) => { ctx.beginPath(); ctx.arc(t.x, t.y + (trail.length - i) * 3, 3 + i * 0.5, 0, 7); ctx.fillStyle = `rgba(63,208,204,${(i / trail.length) * 0.35})`; ctx.fill(); });
+    const g = ctx.createRadialGradient(px, py, 2, px, py, 30); g.addColorStop(0, 'rgba(63,208,204,.9)'); g.addColorStop(1, 'rgba(63,208,204,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, py, 30, 0, 7); ctx.fill();
+    ctx.fillStyle = flash > 0 ? '#ffc27a' : '#e9f5f4'; ctx.beginPath(); ctx.arc(px, py, 11, 0, 7); ctx.fill();
+  }
+  function end() {
+    running = false; cancelAnimationFrame(raf);
+    const best = store.get('net'), rec = score > best; if (rec) store.set('net', score);
+    $('#n-best').textContent = Math.max(best, score);
+    const el = $('#n-end');
+    el.innerHTML = `<h2>${rec ? 'Новый рекорд!' : 'Сигнал заблудился'}</h2><div class="big">${score}</div>
+      <div class="recap recap--tight">${mistakes.slice(0, 2).map((r) => `<div><b>${esc(r.labels[r.bad])} → настоящий ${esc(r.s.real)}</b>${esc(r.s.why)}</div>`).join('')}</div>
+      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="n-again">Ещё раз</button></div>`;
+    el.hidden = false; $('#n-again').onclick = start; el.querySelector('[data-c]').onclick = close;
+  }
+  stage.querySelector('.pads').addEventListener('pointerdown', (e) => { e.preventDefault(); steerAt(e.clientX); });
+  window.addEventListener('keydown', (e) => {
+    if (current !== 'net' || !running) return;
+    if (e.key === 'ArrowLeft') { lane = Math.max(0, lane - 1); }
+    if (e.key === 'ArrowRight') { lane = Math.min(2, lane + 1); }
+  });
+  window.addEventListener('resize', () => { if (current === 'net') size(); });
+  $('#n-go').onclick = start;
+  games.net = {
+    enter() { $('#n-start').hidden = false; $('#n-end').hidden = true; $('#n-best').textContent = store.get('net'); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
+    leave() { running = false; cancelAnimationFrame(raf); },
+  };
+})();
+
+/* ══════════ 5. ОКНА ══════════ */
+(() => {
+  // 0 — всем, 1 — друзьям, 2 — никому
+  const NAMES = ['видно всем', 'видно друзьям', 'закрыто'];
+  const WINS = [
+    { id: 'photo', label: 'Фото', ico: 'твои фото' },
+    { id: 'chat', label: 'Личка', ico: 'писать тебе' },
+    { id: 'geo', label: 'Где я', ico: 'где ты сейчас' },
+  ];
+  const FRIENDS = ['Лёша', 'Катя', 'Дима', 'Аня', 'Саша', 'Вика'];
+  const DURATION = 50;
+  const stage = $('#w-stage'), grid = $('#w-grid');
+  let state, fr, pr, left, running, gen = 0, guests, leaks, stat, spawnT, clockT;
+
+  function buildGrid() {
+    grid.innerHTML = WINS.map((w) => `<button class="w s0" data-id="${w.id}" aria-label="${w.label}">
+      <span class="sh l"></span><span class="sh r"></span><span class="ico">${w.ico}</span>
+      <span class="lab">${w.label}<small>${NAMES[0]}</small></span></button>`).join('');
+    grid.querySelectorAll('.w').forEach((el) => el.addEventListener('click', () => {
+      const id = el.dataset.id; state[id] = (state[id] + 1) % 3; buzz(8); paint(el, id);
+    }));
+  }
+  function paint(el, id) {
+    el.className = 'w s' + state[id];
+    el.querySelector('small').textContent = NAMES[state[id]];
+  }
+  function meters() {
+    fr = Math.max(0, Math.min(100, fr)); pr = Math.max(0, Math.min(100, pr));
+    for (const [id, v] of [['#w-m-fr', fr], ['#w-m-pr', pr]]) {
+      const m = $(id); m.querySelector('.meter__fill').style.width = v + '%'; m.classList.toggle('low', v < 30);
+    }
+  }
+  function pointOf(winId) {
+    const el = grid.querySelector(`[data-id="${winId}"]`), s = stage.getBoundingClientRect(), r = el.getBoundingClientRect();
+    return { x: r.left - s.left + r.width / 2, y: r.bottom - s.top + 6, top: r.top - s.top };
+  }
+  function pop(x, y, txt, color) {
+    const p = document.createElement('div'); p.className = 'w-pop'; p.textContent = txt; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.color = color;
+    stage.appendChild(p); setTimeout(() => p.remove(), 900);
+  }
+  function spawn(myGen) {
+    if (!running || myGen !== gen) return;
+    const elapsed = DURATION - left;
+    const roll = Math.random();
+    const kind = elapsed > 12 && roll < 0.26 ? 'fake' : roll < 0.62 ? 'friend' : 'stranger';
+    // друзья смотрят фото, личку и иногда геометку; чужие заглядывают куда угодно
+    const win = kind === 'friend' ? ['photo', 'photo', 'chat', 'chat', 'geo'][Math.random() * 5 | 0] : WINS[Math.random() * WINS.length | 0].id;
+    const name = FRIENDS[Math.random() * FRIENDS.length | 0];
+    const tag = kind === 'friend' ? `${name} <i>${3 + (Math.random() * 20 | 0)} общих</i>` : kind === 'fake' ? `${name} <i>0 общих</i>` : `Не в друзьях`;
+    const pt = pointOf(win), W = stage.clientWidth;
+    const tx = Math.max(40, Math.min(W - 40, pt.x + (Math.random() * 40 - 20)));
+    const fromLeft = Math.random() < 0.5;
+    const g = { kind, win, el: document.createElement('div'), timers: [], dead: false, tx, ty: pt.y };
+    g.el.className = 'guest ' + kind;
+    g.el.innerHTML = `<div class="face">• •</div><div class="tag">${tag}</div>`;
+    g.el.style.transform = `translate(${fromLeft ? -50 : W + 50}px, ${pt.y}px)`;
+    stage.appendChild(g.el);
+    guests.push(g);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      g.el.style.transition = 'transform 1.8s cubic-bezier(.25,.7,.3,1)';
+      g.el.style.transform = `translate(${tx}px, ${pt.y}px)`;
+    }));
+    g.timers.push(setTimeout(() => resolve(g), 1900));
+    g.timers.push(setTimeout(() => leave(g, fromLeft), 3000));
+    g.el.addEventListener('pointerdown', (e) => { e.preventDefault(); tap(g); });
+    const wait = Math.max(750, 1700 - elapsed * 17);
+    spawnT = setTimeout(() => spawn(myGen), wait);
+  }
+  function mood(g, face, txt, color) {
+    g.el.querySelector('.face').textContent = face;
+    pop(g.tx, g.ty - 6, txt, color);
+  }
+  function resolve(g) {
+    if (!running || g.dead) return;
+    const st = state[g.win], wn = WINS.find((w) => w.id === g.win).label;
+    if (g.kind === 'friend') {
+      if (st <= 1) { fr += 7; mood(g, '^ ^', 'Посмотрел', 'var(--good)'); buzz(8); }
+      else { fr -= 13; stat.shut++; mood(g, '- -', 'Закрыто…', 'var(--soft)'); buzz([20, 40, 20]); }
+    } else if (g.kind === 'stranger') {
+      if (st === 0) { pr -= 12; leaks.push(wn); mood(g, '• •', 'Подсмотрел', 'var(--soft)'); buzz([30, 40, 30]); }
+      else mood(g, '- -', 'Не пустили', 'var(--good)');
+    } else {
+      if (st <= 1) { pr -= 22; stat.fake++; mood(g, '• •', 'Подсмотрел', 'var(--soft)'); buzz([30, 40, 30]); }
+      else mood(g, '- -', 'Не пустили', 'var(--good)');
+    }
+    meters();
+    if (fr <= 0 || pr <= 0) finish(false);
+  }
+  function tap(g) {
+    if (!running || g.dead) return;
+    if (g.kind === 'fake') { pr += 6; stat.caught++; pop(g.tx, g.ty - 6, 'Удалён', 'var(--good)'); buzz(12); }
+    else if (g.kind === 'friend') { fr -= 14; stat.offended++; pop(g.tx, g.ty - 6, 'Обиделся', 'var(--soft)'); buzz([20, 40, 20]); }
+    else { pop(g.tx, g.ty - 6, 'Ушёл', 'var(--muted)'); }
+    meters(); kill(g);
+    if (fr <= 0 || pr <= 0) finish(false);
+  }
+  function kill(g) {
+    g.dead = true; g.timers.forEach(clearTimeout); g.el.classList.add('gone');
+    setTimeout(() => g.el.remove(), 300);
+  }
+  function leave(g, fromLeft) {
+    if (g.dead) return;
+    g.timers.push(setTimeout(() => { g.dead = true; g.el.remove(); }, 1700));
+    g.el.style.transition = 'transform 1.5s ease-in';
+    g.el.style.transform = `translate(${fromLeft ? stage.clientWidth + 60 : -60}px, ${g.ty}px)`;
+  }
+  function stop() {
+    running = false; gen++; clearTimeout(spawnT); clearInterval(clockT);
+    (guests || []).forEach((g) => { g.timers.forEach(clearTimeout); g.el.remove(); });
+    guests = [];
+  }
+  function start() {
+    stop();
+    state = { photo: 0, chat: 0, geo: 0 };
+    fr = 80; pr = 80; left = DURATION; leaks = []; stat = { shut: 0, fake: 0, caught: 0, offended: 0 };
+    buildGrid(); meters();
+    $('#w-start').hidden = true; $('#w-end').hidden = true; $('#w-time').textContent = DURATION;
+    running = true;
+    const myGen = ++gen;
+    spawnT = setTimeout(() => spawn(myGen), 600);
+    clockT = setInterval(() => {
+      left--; $('#w-time').textContent = left;
+      if (left <= 0) finish(true);
+    }, 1000);
+  }
+  function finish(won) {
+    if (!running) return;
+    const frNow = fr, prNow = pr;
+    stop();
+    const score = Math.round(frNow + prNow) * (won ? 1 : 0);
+    const best = store.get('windows'), rec = won && score > best;
+    if (rec) store.set('windows', score);
+    $('#w-best').textContent = Math.max(best, score);
+    const spied = [...new Set(leaks)];
+    const lines = [];
+    if (spied.length) lines.push(`<div><b>Подсмотрели</b>Окна, открытые всем: ${spied.join(', ')}.</div>`);
+    if (stat.fake) lines.push(`<div><b>«Друг» с «0 общих»</b>Заглянул ${stat.fake} раз. Таких удаляй.</div>`);
+    else if (stat.shut) lines.push(`<div><b>Друзья застали закрытое окно</b>Фото и личку оставляй друзьям, а где ты сейчас — не показывай никому.</div>`);
+    if (!lines.length) lines.push('<div><b>Ни одной ошибки</b>Фото и личка для друзей, а «Где я» закрыто.</div>');
+    const title = won ? (rec ? 'Новый рекорд!' : 'Профиль в порядке') : pr <= 0 ? 'Секреты утекли' : 'Друзья ушли';
+    const el = $('#w-end');
+    el.innerHTML = `<h2>${title}</h2>${won ? `<div class="big">${score}</div>` : ''}
+      <div class="recap recap--tight">${lines.slice(0, 2).join('')}</div>
+      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="w-again">Ещё раз</button></div>`;
+    el.hidden = false; $('#w-again').onclick = start; el.querySelector('[data-c]').onclick = close;
+    buzz([15, 60, 15]);
+  }
+  $('#w-go').onclick = start;
+  games.windows = {
+    enter() { stop(); state = { photo: 0, chat: 0, geo: 0 }; fr = pr = 80; buildGrid(); meters(); $('#w-start').hidden = false; $('#w-end').hidden = true; $('#w-time').textContent = DURATION; $('#w-best').textContent = store.get('windows'); },
+    leave: stop,
+  };
+})();
+</script>
+
+</html>
