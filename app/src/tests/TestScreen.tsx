@@ -136,7 +136,7 @@ export function TestScreen({
             )}
           </div>
 
-          <button className="btn btn--wide" onClick={onExit}>
+          <button className="btn btn--primary btn--wide" onClick={onExit}>
             Готово
           </button>
         </div>

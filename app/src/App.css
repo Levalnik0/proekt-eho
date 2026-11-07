@@ -382,8 +382,12 @@ h2[tabindex='-1']:focus {
   color: var(--ink-muted);
 }
 
+/* Название и пояснение сверху, контакт под ними на всю ширину: в одну
+   строку длинный номер переносился на три, а подпись сжималась в столбик */
 .crisis__contact {
+  flex-direction: column;
   align-items: flex-start;
+  gap: 6px;
 }
 
 .crisis__contact b {
@@ -673,6 +677,8 @@ h2[tabindex='-1']:focus {
   display: inline-flex;
   align-items: center;
   font-weight: 700;
+  font-size: 20px;
+  white-space: nowrap;
   color: var(--echo-teal-text);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -928,11 +934,14 @@ h2[tabindex='-1']:focus {
   text-align: center;
 }
 
+/* Закрытая медаль: едва заметное место под неё, а не яркий серый квадрат.
+   Цвет берём от текста темы, поэтому в тёмных и светлых темах одинаково спокойно. */
 .medal:disabled,
 .medal--secret {
-  background: rgba(255, 255, 255, 0.45);
+  height: 96px;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
   box-shadow: none;
-  border: 1px dashed rgba(30, 63, 104, 0.14);
+  border: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
 /* Медаль: круг с фирменным градиентом и белым глифом.
@@ -951,7 +960,7 @@ h2[tabindex='-1']:focus {
 .medal-icon.is-locked {
   background: transparent;
   color: var(--ink-faint);
-  box-shadow: inset 0 0 0 1.5px rgba(30, 63, 104, 0.16);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 22%, transparent);
   opacity: 0.5;
 }
 
@@ -2552,9 +2561,12 @@ h2[tabindex='-1']:focus {
 
 /* Когда можно идти дальше, кнопка заметна: пояснение больше не исчезает само */
 .game__skip:not(:disabled) {
+  min-width: 160px;
+  font-size: 16px;
   color: var(--ink);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--echo-teal) 16%, transparent);
+  background: color-mix(in srgb, var(--echo-teal) 24%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--echo-teal) 55%, transparent);
 }
 
 /* «Развод или нет?» */
