@@ -1,12 +1,18 @@
 import { useState } from 'react';
+import { buzz, centerOf, hapticsEnabled, hapticsSupported, rings, setHaptics } from '../fx';
 import { useProgress } from '../progress/useProgress';
 import { THEMES, useTheme } from '../theme/useTheme';
 
-const ROLE_LABEL = { teen: 'Подросток', adult: 'Взрослый' } as const;
-
+/**
+ * Настройки. Здесь остались только вещи, которые работают: цвет и
+ * вибрация. Раньше были ещё «Уведомления», «Размер шрифта» и «Звук»
+ * с пометкой «станут рабочими на следующем шаге»: кнопки, которые ничего
+ * не делают, учат не доверять остальному.
+ */
 export function SettingsScreen() {
-  const { progress, reset, setRole } = useProgress();
+  const { progress, reset } = useProgress();
   const { theme, setTheme } = useTheme();
+  const [vibration, setVibration] = useState(hapticsEnabled);
   const [confirming, setConfirming] = useState(false);
 
   return (
@@ -16,32 +22,8 @@ export function SettingsScreen() {
       </div>
 
       <div className="panel">
-        <div className="panel__row">
-          <span>Кто с телефоном</span>
-          <button
-            className="link-btn"
-            onClick={() => setRole(progress.role === 'teen' ? 'adult' : 'teen')}
-          >
-            {progress.role ? ROLE_LABEL[progress.role] : 'Не выбрано'} · сменить
-          </button>
-        </div>
-        <div className="panel__row">
-          <span>Уведомления</span>
-          <b>Включены</b>
-        </div>
-        <div className="panel__row">
-          <span>Размер шрифта</span>
-          <b>Обычный</b>
-        </div>
-        <div className="panel__row">
-          <span>Звук в квестах</span>
-          <b>Включён</b>
-        </div>
-      </div>
-
-      <div className="panel">
         <div className="panel__row panel__row--theme">
-          <span>Тема оформления</span>
+          <span>Цвет</span>
         </div>
         <div className="theme-picker">
           {THEMES.map((t) => (
@@ -49,9 +31,14 @@ export function SettingsScreen() {
               key={t.id}
               className={`theme-swatch${theme === t.id ? ' is-active' : ''}`}
               style={{ ['--swatch' as string]: t.swatch }}
-              onClick={() => setTheme(t.id)}
+              onClick={(e) => {
+                const origin = centerOf(e.currentTarget);
+                buzz('select');
+                rings(origin.x, origin.y);
+                setTheme(t.id, origin);
+              }}
               aria-pressed={theme === t.id}
-              aria-label={`Тема «${t.label}»`}
+              aria-label={`Цвет «${t.label}»`}
             >
               <span className="theme-swatch__dot" />
               <span className="theme-swatch__label">{t.label}</span>
@@ -62,16 +49,29 @@ export function SettingsScreen() {
 
       <div className="panel">
         <div className="panel__row">
+          <span>Вибрация</span>
+          {hapticsSupported ? (
+            <button
+              className="toggle"
+              role="switch"
+              aria-checked={vibration}
+              aria-label="Вибрация"
+              onClick={() => {
+                setHaptics(!vibration);
+                setVibration(!vibration);
+              }}
+            />
+          ) : (
+            <b>нет на этом телефоне</b>
+          )}
+        </div>
+        <div className="panel__row">
           <span>Медалей получено</span>
           <b>{progress.badges.length}</b>
         </div>
         <div className="panel__row">
-          <span>О проекте</span>
-          <b>Эхо</b>
-        </div>
-        <div className="panel__row">
           <span>Версия</span>
-          <b>0.2.0</b>
+          <b>0.3.0</b>
         </div>
       </div>
 
@@ -79,7 +79,7 @@ export function SettingsScreen() {
       {confirming ? (
         <div className="panel">
           <div className="panel__row">
-            <span>Удалить медали и пройденные квесты?</span>
+            <span>Удалить медали и пройденное?</span>
           </div>
           <div className="panel__row">
             <button
@@ -102,7 +102,7 @@ export function SettingsScreen() {
         </button>
       )}
 
-      <div className="stub-note">Уведомления, шрифт и звук станут рабочими на следующем шаге.</div>
+      <div className="stub-note">Ответы не уходят никуда за пределы этого телефона.</div>
     </div>
   );
 }

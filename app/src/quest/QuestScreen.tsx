@@ -3,6 +3,7 @@ import { IconBack, IconCardAlert } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
 import { Glossed } from '../glossary/Glossed';
+import { buzz } from '../fx';
 import type { Quest, QuestChoice, QuestMessage, QuestNode } from './types';
 
 /** Пауза перед появлением сообщения — чтобы переписка шла в живом темпе.
@@ -32,6 +33,36 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
   const waiting = queue.length > 0;
   const feedRef = useRef<HTMLDivElement>(null);
 
+  // Давление: чем дольше на тебя давят, тем краснее края экрана и чаще
+  // «пульс» (на Android ещё и вибрация). Слов не нужно: ребёнок чувствует
+  // спешку раньше, чем прочитает разбор. Уровень считается сам: чем глубже
+  // в разговоре, тем выше; выход из разговора гасит всё до нуля.
+  const pressureOn = quest.pressure !== false;
+  const depth = useMemo(() => {
+    const d: Record<string, number> = { [quest.start]: 0 };
+    const queue = [quest.start];
+    while (queue.length) {
+      const id = queue.shift() as string;
+      for (const c of nodeById[id]?.choices ?? []) {
+        if (!(c.next in d)) {
+          d[c.next] = d[id] + 1;
+          queue.push(c.next);
+        }
+      }
+    }
+    return d;
+  }, [nodeById, quest.start]);
+  const maxDepth = Math.max(1, ...Object.values(depth));
+  const targetOf = (n: QuestNode) =>
+    n.pressure ??
+    (n.ending
+      ? n.ending.tone === 'hard'
+        ? 1
+        : 0
+      : Math.min(0.9, 0.25 + 0.65 * ((depth[n.id] ?? 0) / maxDepth)));
+  const [pressure, setPressure] = useState(0);
+  const [beat, setBeat] = useState(false);
+
   // Сообщения появляются по одному
   useEffect(() => {
     if (!queue.length) return;
@@ -43,12 +74,46 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
     return () => clearTimeout(timer);
   }, [queue]);
 
+  // Каждое сообщение собеседника добавляет давления, но не выше цели узла
+  useEffect(() => {
+    if (!pressureOn) return;
+    const last = shown[shown.length - 1];
+    if (last?.from !== 'them') return;
+    setPressure((p) => Math.min(targetOf(node), Math.max(p, 0.2) + 0.15));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shown.length]);
+
+  // «Пульс»: вибрация и вспышка кромки, всё чаще. Не быстрее двух раз
+  // в секунду: это безопасно для глаз, и при «меньше движения» вспышки нет.
+  useEffect(() => {
+    if (!pressureOn || pressure < 0.2) return;
+    const calmUi = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const id = window.setInterval(
+      () => {
+        buzz('beat');
+        if (calmUi) return;
+        setBeat(true);
+        window.setTimeout(() => setBeat(false), 180);
+      },
+      1700 - 1200 * pressure,
+    );
+    return () => window.clearInterval(id);
+  }, [pressure, pressureOn]);
+
   // Лента всегда прокручена к последнему сообщению
   useEffect(() => {
     feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight, behavior: 'smooth' });
   }, [shown, waiting, showDebrief]);
 
   const ending = !waiting ? node.ending : undefined;
+
+  // Финал: хороший выход гасит давление, провал оставляет его на максимуме
+  useEffect(() => {
+    if (!pressureOn || !ending) return;
+    setPressure(targetOf(node));
+    if (ending.tone !== 'hard') buzz('calm');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ending]);
 
   // Медали за финал: считаем прохождение и выдаём всё разом
   useEffect(() => {
@@ -81,10 +146,11 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
     setShown([]);
     setQueue(nodeById[quest.start].messages);
     setShowDebrief(false);
+    setPressure(0);
   }, [quest.start, nodeById]);
 
   return (
-    <div className="quest">
+    <div className={`quest${beat ? ' is-beat' : ''}`} style={{ ['--p' as string]: pressure }}>
       <div className="quest__bar">
         <button className="topbar__back" onClick={onExit} aria-label="Выйти из квеста">
           <IconBack size={22} />

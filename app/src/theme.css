@@ -117,41 +117,84 @@ button {
 
 /* ── Темы оформления ─────────────────────────────────────────────────
    Переключаются через [data-theme] на <html> (useTheme.ts).
-   Меняются только фирменные цвета, поверхности и текст — форма кнопок,
-   скругления и тени остаются теми же, что в «Океане» (тема по умолчанию,
-   отдельного блока не требует — это и есть :root выше).
+   «Светлая» — это :root выше, отдельного блока ей не нужно.
+   Остальные тёмные: фон, свечение и акценты окрашены в один оттенок.
+   Оттенок задаёт число --h, а поверхности и текст считаются из него,
+   поэтому новый цвет добавляется одной короткой строкой ниже.
+   Форма кнопок и скругления остаются прежними.
    Статусные цвета (предупреждение/опасность в .ending и .checker) нигде
    не трогаем: тревога должна выглядеть одинаково в любой теме.
    ------------------------------------------------------------------ */
 
+[data-theme='ocean'],
+[data-theme='coral'],
+[data-theme='pink'],
+[data-theme='violet'] {
+  --bg: hsl(var(--h) 42% 9%);
+  --bg-soft: hsl(var(--h) 38% 12%);
+  --surface: hsl(var(--h) 32% 16%);
+  --surface-bar: hsl(var(--h) 38% 11%);
+  /* Контраст к --surface: основной текст выше 12:1, подписи выше 6:1 */
+  --ink: hsl(var(--h) 30% 96%);
+  --ink-muted: hsl(var(--h) 18% 80%);
+  --ink-faint: hsl(var(--h) 16% 74%);
+  --sh-pill: 0 2px 6px rgba(0, 0, 0, 0.28), 0 8px 20px rgba(0, 0, 0, 0.32);
+  --sh-pill-active: 0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 8px rgba(0, 0, 0, 0.28);
+  --sh-logo: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --sh-bar: 0 -2px 14px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}
+
+[data-theme='ocean'] {
+  --h: 179;
+  --echo-teal: #3fd0cc;
+  --echo-teal-light: #8fe3e0;
+  --echo-navy: #9fe3e1;
+  --echo-navy-deep: #6fd0cd;
+  --echo-teal-text: #6fe0dc;
+  --grad-icon: linear-gradient(145deg, #4e9299 0%, #2f6f7c 100%);
+  --icon-glyph-dark: #4a8c96;
+}
+
+[data-theme='coral'] {
+  --h: 16;
+  --echo-teal: #ff7a45;
+  --echo-teal-light: #ffb08f;
+  --echo-navy: #ffb79a;
+  --echo-navy-deep: #ff9a70;
+  --echo-teal-text: #ff9a70;
+  --grad-icon: linear-gradient(145deg, #ea7e52 0%, #a8431f 100%);
+  --icon-glyph-dark: #a8431f;
+}
+
 [data-theme='pink'] {
-  --echo-teal: #d9607e;
-  --echo-teal-light: #ecb0c1;
-  --echo-navy: #7a2142;
-  --echo-navy-deep: #5c1731;
-  --echo-teal-text: #a8325a;
+  --h: 340;
+  --echo-teal: #ff5d8f;
+  --echo-teal-light: #ffa9c4;
+  --echo-navy: #ffb3cb;
+  --echo-navy-deep: #ff85a9;
+  --echo-teal-text: #ff85a9;
   --grad-icon: linear-gradient(145deg, #e0718d 0%, #93295a 100%);
   --icon-glyph-dark: #93295a;
 }
 
 [data-theme='violet'] {
-  --echo-teal: #8b6fd1;
-  --echo-teal-light: #bda8ea;
-  --echo-navy: #3c2766;
-  --echo-navy-deep: #2b1a4d;
-  --echo-teal-text: #6346ad;
+  --h: 258;
+  --echo-teal: #9b7cff;
+  --echo-teal-light: #c5b3ff;
+  --echo-navy: #cbbcff;
+  --echo-navy-deep: #ae96ff;
+  --echo-teal-text: #b4a0ff;
   --grad-icon: linear-gradient(145deg, #9b7fe0 0%, #5a3c99 100%);
   --icon-glyph-dark: #5a3c99;
 }
 
-[data-theme='coral'] {
-  --echo-teal: #e2693f;
-  --echo-teal-light: #f0a480;
-  --echo-navy: #7a2f17;
-  --echo-navy-deep: #5c2110;
-  --echo-teal-text: #b24a26;
-  --grad-icon: linear-gradient(145deg, #ea7e52 0%, #a8431f 100%);
-  --icon-glyph-dark: #a8431f;
+/* Волна смены цвета: старый и новый кадр не смешиваем, новый раскрывается
+   кругом из точки нажатия (useTheme.ts) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* Единственная тёмная тема: закрывает сразу и «чёрный», и «неоновый»

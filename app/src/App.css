@@ -2057,3 +2057,706 @@
 .tabbar__item:active {
   background: rgba(30, 63, 104, 0.05);
 }
+
+
+/* ═══ Цвет, плитки, игры ═══════════════════════════════════════════════
+   Всё ниже построено на тех же переменных тем: сменил цвет, и плитки,
+   свечение и игры перекрасились вместе с остальным приложением. */
+
+/* Свечение цвета темы сверху: так «весь экран» ощущается окрашенным,
+   хотя фон остаётся тёмным и текст читается */
+.app::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 300px;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    70% 100% at 50% 0%,
+    color-mix(in srgb, var(--echo-teal) 28%, transparent),
+    transparent 75%
+  );
+}
+
+.app__body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Эхо-кольца от нажатия: расходятся и гаснут */
+.echo-ring {
+  position: fixed;
+  z-index: 80;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--echo-teal);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: 0.85;
+  animation: echo-ring 1000ms ease-out forwards;
+}
+
+@keyframes echo-ring {
+  to {
+    transform: translate(-50%, -50%) scale(18);
+    opacity: 0;
+  }
+}
+
+/* ── Первый экран: свой цвет ─────────────────────────────────────── */
+
+.color-screen {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  text-align: center;
+}
+
+.color-screen__title {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 76px);
+  gap: 20px;
+}
+
+.color-dot {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 3px solid transparent;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.color-dot:active {
+  transform: scale(0.9);
+}
+
+.color-dot.is-active {
+  border-color: var(--ink);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--ink) 20%, transparent),
+    0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+.color-dot--day {
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.14),
+    0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* В настройках у «Неона» градиент: обводка из градиента не бывает,
+   поэтому активный цвет обводим цветом темы */
+.theme-swatch__dot {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--ink) 22%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.theme-swatch.is-active .theme-swatch__dot {
+  outline: 2px solid var(--echo-teal);
+}
+
+/* ── Главная ─────────────────────────────────────────────────────── */
+
+.home2 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home2__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home2__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+}
+
+.palette-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--echo-teal);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--echo-teal) 28%, transparent);
+  transition: transform 0.2s ease;
+}
+
+.palette-btn:active {
+  transform: scale(0.86) rotate(40deg);
+}
+
+.play-hero {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 164px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  text-align: left;
+  border-radius: 28px;
+  color: #fff;
+  background: var(--grad-icon);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--echo-teal) 34%, transparent);
+  transition: transform 0.14s ease;
+}
+
+.play-hero:active {
+  transform: scale(0.98);
+}
+
+.play-hero__kicker {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+
+.play-hero__title {
+  max-width: 82%;
+  font-size: 31px;
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.3px;
+}
+
+.play-hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.play-hero__mark {
+  position: absolute;
+  right: -14px;
+  bottom: -20px;
+  color: #fff;
+  opacity: 0.2;
+}
+
+.chip {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.chip--accent {
+  color: var(--echo-teal-text);
+  background: color-mix(in srgb, var(--echo-teal) 24%, transparent);
+}
+
+.home2__trust {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* ── Плитки: и на главной, и внутри разделов ─────────────────────── */
+
+.tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tiles--section {
+  margin-top: 6px;
+}
+
+.tile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 132px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  text-align: left;
+  border-radius: 26px;
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--echo-teal) 16%, var(--surface)) 0%,
+    var(--surface) 62%
+  );
+  border: 1px solid color-mix(in srgb, var(--echo-teal) 22%, transparent);
+  box-shadow: var(--sh-pill);
+  transition: transform 0.12s ease;
+}
+
+.tile:active {
+  transform: scale(0.96);
+}
+
+.tile__badge {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--grad-icon);
+  --icon-glyph-bg: var(--icon-glyph-dark);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tile__label {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.tile__count {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--echo-teal-text);
+}
+
+.tile__done {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--grad-icon);
+}
+
+/* ── Игры ────────────────────────────────────────────────────────── */
+
+.game {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: calc(var(--safe-top) + 14px) var(--pad-x) calc(var(--safe-bottom) + 16px);
+  animation: screen-in 0.32s cubic-bezier(0.22, 0.9, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.game__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.game__dots {
+  flex: 1;
+  display: flex;
+  gap: 5px;
+}
+
+.game__dots i {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ink) 16%, transparent);
+  transition: background 0.2s ease;
+}
+
+.game__dots i.is-now {
+  background: color-mix(in srgb, var(--ink) 46%, transparent);
+}
+
+.game__dots i.is-ok {
+  background: var(--echo-teal);
+}
+
+.game__dots i.is-bad {
+  background: #d6363c;
+}
+
+.game__score {
+  min-width: 28px;
+  text-align: right;
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.game__challenge {
+  align-self: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--echo-teal-text);
+  background: color-mix(in srgb, var(--echo-teal) 22%, transparent);
+}
+
+.game__skip {
+  align-self: center;
+  min-height: 44px;
+  padding: 8px 22px;
+  font-weight: 700;
+  color: var(--ink-muted);
+}
+
+.game__skip:disabled {
+  opacity: 0.3;
+}
+
+/* «Развод или нет?» */
+.swipe-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.swipe-card {
+  position: relative;
+  min-height: 240px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-radius: 28px;
+  background: var(--surface);
+  border: 3px solid transparent;
+  box-shadow: var(--sh-pill);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+  transition:
+    transform 0.25s ease,
+    border-color 0.2s ease;
+}
+
+.swipe-card.is-ok {
+  border-color: var(--echo-teal);
+}
+
+.swipe-card.is-bad {
+  border-color: #d6363c;
+}
+
+.swipe-card__from {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--echo-teal-text);
+}
+
+.swipe-card__text {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.swipe-stamp {
+  position: absolute;
+  top: 18px;
+  padding: 4px 12px;
+  border: 3px solid;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.swipe-stamp--scam {
+  right: 18px;
+  color: #d6363c;
+  transform: rotate(8deg);
+}
+
+.swipe-stamp--ok {
+  left: 18px;
+  color: var(--echo-teal-text);
+  transform: rotate(-8deg);
+}
+
+.swipe-why {
+  min-height: 56px;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.swipe-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.swipe-btn {
+  min-height: 64px;
+  border-radius: 22px;
+  font-size: 21px;
+  font-weight: 800;
+  color: #fff;
+  transition:
+    transform 0.12s ease,
+    opacity 0.2s ease;
+}
+
+.swipe-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.swipe-btn:disabled {
+  opacity: 0.45;
+}
+
+.swipe-btn--scam {
+  background: #c0272d;
+}
+
+.swipe-btn--ok {
+  background: var(--grad-icon);
+}
+
+/* Итог раунда */
+.game--result {
+  justify-content: center;
+}
+
+.game-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.game-result__score {
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -2px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.game-result__score span {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--ink-faint);
+}
+
+.game-result__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.game-result__chips {
+  min-height: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.game-result__actions {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-result__duel {
+  display: flex;
+  gap: 44px;
+}
+
+.game-result__duel div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-result__duel b {
+  font-size: 84px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.game-result__duel span {
+  font-weight: 700;
+  color: var(--ink-muted);
+}
+
+/* «Сленг-блиц» */
+.slang-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+
+.slang-word {
+  text-align: center;
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  animation: slang-pop 0.25s ease-out;
+}
+
+@keyframes slang-pop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.slang-opts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slang-opt {
+  width: 100%;
+  min-height: 66px;
+  padding: 12px 18px;
+  border-radius: 22px;
+  border: 3px solid transparent;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  transition:
+    transform 0.12s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.slang-opt:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.slang-opt.is-right {
+  border-color: var(--echo-teal);
+  background: color-mix(in srgb, var(--echo-teal) 22%, var(--surface));
+}
+
+.slang-opt.is-wrong {
+  border-color: #d6363c;
+  background: color-mix(in srgb, #d6363c 18%, var(--surface));
+}
+
+/* Переключатель в настройках */
+.toggle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 32px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 24%, transparent);
+  transition: background 0.2s ease;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.toggle[aria-checked='true'] {
+  background: var(--echo-teal);
+}
+
+.toggle[aria-checked='true']::after {
+  transform: translateX(20px);
+}
+
+/* ── Давление в переписке ────────────────────────────────────────────
+   Кромка экрана краснеет по мере того, как собеседник давит (--p от 0 до 1,
+   задаётся в QuestScreen). Красный нарочно статусный и не зависит от темы:
+   тревога выглядит одинаково везде. Силу держим до 0.55, чтобы текст у
+   краёв оставался читаемым. */
+.quest {
+  position: relative;
+}
+
+.quest::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 calc(24px + 110px * var(--p, 0)) calc(2px + 14px * var(--p, 0)) #d6363c;
+  opacity: calc(var(--p, 0) * 0.55);
+  transition:
+    opacity 0.5s ease,
+    filter 0.12s ease;
+}
+
+.quest.is-beat::after {
+  filter: brightness(1.7);
+}

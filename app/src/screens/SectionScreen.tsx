@@ -1,16 +1,36 @@
-import { IconBack } from '../components/icons';
+import type { ReactNode } from 'react';
+import {
+  IconAdultChild,
+  IconBack,
+  IconBubble,
+  IconCompass,
+  IconGamepad,
+  IconMagnifier,
+  IconMirror,
+  IconPerson,
+  IconTogether,
+} from '../components/icons';
+import { buzz } from '../fx';
 import { useProgress } from '../progress/useProgress';
-import type { Section } from '../routes';
+import type { Activity, Section } from '../routes';
 
-const KIND_LABEL: Record<string, string> = {
-  quest: 'Квест',
-  mirror: 'Угадай',
-  test: 'Тест',
-  coop: 'Вдвоём',
-  offline: 'Офлайн',
-  checker: 'Инструмент',
+const KIND_ICON: Record<Activity['kind'], (props: { size?: number }) => ReactNode> = {
+  quest: IconBubble,
+  mirror: IconMirror,
+  test: IconPerson,
+  game: IconGamepad,
+  coop: IconTogether,
+  offline: IconCompass,
+  checker: IconMagnifier,
+  section: IconAdultChild,
 };
 
+/**
+ * Раздел: сетка плиток, а не список. На каждой плитке значок и название
+ * из одного-двух слов. Подписей вроде «Переписка с выборами · 4 финала»
+ * здесь больше нет: они только мешали выбрать, да ещё и подсказывали
+ * развязку заранее.
+ */
 export function SectionScreen({
   section,
   onBack,
@@ -21,9 +41,8 @@ export function SectionScreen({
   onOpen: (route: string) => void;
 }) {
   const { progress } = useProgress();
-  const Icon = section.icon;
 
-  /** Пройденное помечаем — так виден прогресс и то, что осталось */
+  /** Пройденное помечаем галочкой: видно, что осталось */
   const isDone = (route: string) => {
     if (route.startsWith('test/')) return Boolean(progress.tests[route.slice(5)]);
     if (route.startsWith('quest/')) return Boolean(progress.runs[route.slice(6)]);
@@ -41,23 +60,39 @@ export function SectionScreen({
         <span className="topbar__spacer" />
       </div>
 
-      <div className={`section-hero section-hero--${section.look}`}>
-        <Icon size={34} />
-      </div>
-
-      <p className="section-lead">{section.lead}</p>
-
-      <ul className="activities stagger">
-        {section.activities.map((a) => (
-          <li key={a.route}>
-            <button className="activity" onClick={() => onOpen(a.route)}>
-              <span className="activity__kind">{KIND_LABEL[a.kind]}</span>
-              <span className="activity__label">{a.label}</span>
-              <span className="activity__hint">{a.hint}</span>
-              {isDone(a.route) && <span className="activity__done">пройдено</span>}
-            </button>
-          </li>
-        ))}
+      <ul className="tiles tiles--section stagger">
+        {section.activities.map((a) => {
+          const Icon = KIND_ICON[a.kind];
+          return (
+            <li key={a.route}>
+              <button
+                className="tile"
+                onClick={() => {
+                  buzz('tap');
+                  onOpen(a.route);
+                }}
+              >
+                <span className="tile__badge">
+                  <Icon size={26} />
+                </span>
+                <span className="tile__label">{a.label}</span>
+                {isDone(a.route) && (
+                  <span className="tile__done" role="img" aria-label="пройдено">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="m5 12.5 4.5 4.5L19 7.5"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

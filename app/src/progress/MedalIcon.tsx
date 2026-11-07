@@ -171,6 +171,10 @@ export const MEDAL_GLYPH: Record<string, string> = {
   'own-style': 'compass',
   'full-picture': 'medal',
   'decision-map': 'map',
+  'swipe-first': 'magnifier',
+  'swipe-perfect': 'target',
+  'slang-first': 'speech',
+  'family-round': 'handshake',
 };
 
 export function MedalIcon({

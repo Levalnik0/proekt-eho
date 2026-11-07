@@ -1,195 +1,72 @@
-import type { ReactNode } from 'react';
-import {
-  IconAdultChild,
-  IconCompass,
-  IconGamepad,
-  IconMagnifier,
-  IconRing,
-  IconTogether,
-} from './components/icons';
-
-export type SectionId = 'teen' | 'adult' | 'together' | 'quest48' | 'club' | 'checker';
+export type SectionId = 'games' | 'stories' | 'tests' | 'parents' | 'understand';
 
 /** Что можно запустить внутри раздела */
 export type Activity = {
   route: string;
+  /**
+   * Одно-два слова. На экране выбора читать нечего, только нажимать:
+   * подписей, меток и описаний здесь нарочно нет, глаза не должны разбегаться.
+   */
   label: string;
-  /** Подпись под названием */
-  hint: string;
-  kind: 'quest' | 'mirror' | 'test' | 'coop' | 'offline' | 'checker';
+  kind: 'quest' | 'mirror' | 'test' | 'game' | 'coop' | 'offline' | 'checker' | 'section';
 };
 
 export type Section = {
   id: SectionId;
   title: string;
-  icon: (props: { size?: number }) => ReactNode;
-  /** gradient — залитый круг с белым глифом, outline — белый круг с бирюзовым контуром */
-  look: 'gradient' | 'outline';
-  lead: string;
   activities: Activity[];
 };
 
 export const SECTIONS: Section[] = [
   {
-    id: 'teen',
-    title: '«Я подросток»',
-    icon: IconGamepad,
-    look: 'gradient',
-    lead: 'Опасные ситуации в формате переписки — четыре квеста и три теста про то, как устроен именно ты.',
+    id: 'games',
+    title: 'Игры',
     activities: [
-      {
-        route: 'quest/new-contact',
-        label: 'Квест «Новый контакт»',
-        hint: 'Переписка с выборами · 4 финала',
-        kind: 'quest',
-      },
-      {
-        route: 'quest/easy-job',
-        label: 'Квест «Лёгкий заработок»',
-        hint: 'Переписка с выборами · вербовка в «дропы»',
-        kind: 'quest',
-      },
-      {
-        route: 'quest/too-much-known',
-        label: 'Квест «Слишком много знают»',
-        hint: 'Переписка с выборами · геолокация и овершеринг',
-        kind: 'quest',
-      },
-      {
-        route: 'quest/own-people',
-        label: 'Квест «Свои»',
-        hint: 'Переписка с выборами · вовлечение в закрытую группу',
-        kind: 'quest',
-      },
-      {
-        route: 'mirror/teen',
-        label: 'А что ответит твой взрослый?',
-        hint: 'Угадай, что у него внутри',
-        kind: 'mirror',
-      },
-      {
-        route: 'test/trust-scale',
-        label: 'Шкала доверия',
-        hint: 'Тест · 5 вопросов',
-        kind: 'test',
-      },
-      {
-        route: 'test/pressure',
-        label: 'Реакция на давление',
-        hint: 'Тест · 5 вопросов',
-        kind: 'test',
-      },
-      {
-        route: 'test/recognition',
-        label: 'Потребность в признании',
-        hint: 'Тест · 5 вопросов',
-        kind: 'test',
-      },
+      { route: 'game/swipe', label: 'Развод или нет?', kind: 'game' },
+      { route: 'game/slang', label: 'Сленг-блиц', kind: 'game' },
     ],
   },
   {
-    id: 'adult',
-    title: '«Я взрослый»',
-    icon: IconAdultChild,
-    look: 'gradient',
-    lead: 'Здесь не проверяют вас. Здесь можно посмотреть на его день изнутри и проверить свои догадки.',
+    id: 'stories',
+    title: 'Истории',
     activities: [
-      {
-        route: 'quest/day-in-life',
-        label: 'Квест «День из жизни»',
-        hint: 'Один день от лица ребёнка',
-        kind: 'quest',
-      },
-      {
-        route: 'crisis-protocol',
-        label: 'Что делать прямо сейчас',
-        hint: 'Протокол на случай тревожных признаков · контакты',
-        kind: 'checker',
-      },
-      {
-        route: 'mirror/adult',
-        label: 'Как думаете, что он ответил?',
-        hint: 'Пять ситуаций · проверяют догадку',
-        kind: 'mirror',
-      },
-      {
-        route: 'test/reaction-style',
-        label: 'Стиль реакции',
-        hint: 'Тест · 5 вопросов',
-        kind: 'test',
-      },
-      {
-        route: 'test/digital-trust',
-        label: 'Уровень цифрового доверия',
-        hint: 'Тест · 5 вопросов',
-        kind: 'test',
-      },
-      {
-        route: 'test/generation-language',
-        label: 'Язык поколений',
-        hint: 'Тест · 5 вопросов',
-        kind: 'test',
-      },
+      { route: 'quest/new-contact', label: 'Новый контакт', kind: 'quest' },
+      { route: 'quest/easy-job', label: 'Лёгкий заработок', kind: 'quest' },
+      { route: 'quest/too-much-known', label: 'Слишком много знают', kind: 'quest' },
+      { route: 'quest/own-people', label: 'Свои', kind: 'quest' },
     ],
   },
   {
-    id: 'together',
-    title: '«Мы вместе»',
-    icon: IconTogether,
-    look: 'gradient',
-    lead: 'Одни выходные с двух сторон. Решения одного меняют то, что происходит у другого.',
+    id: 'tests',
+    title: 'Кто ты?',
     activities: [
-      {
-        route: 'coop/48',
-        label: 'Кооп-квест «48 часов»',
-        hint: 'Вдвоём · паузы для разговора · Карта решений',
-        kind: 'coop',
-      },
+      { route: 'test/trust-scale', label: 'Шкала доверия', kind: 'test' },
+      { route: 'test/pressure', label: 'Давление', kind: 'test' },
+      { route: 'test/recognition', label: 'Признание', kind: 'test' },
+      { route: 'mirror/teen', label: 'Угадай взрослого', kind: 'mirror' },
     ],
   },
   {
-    id: 'quest48',
-    title: '«Квест: 48 часов»',
-    icon: IconRing,
-    look: 'outline',
-    lead: 'Четыре точки за выходные, где взрослый и ребёнок выбирают каждый за себя.',
+    // Не «типы контента», а ситуации: родитель приходит с вопросом,
+    // а не за курсом. Сообщение, тревога, желание понять.
+    id: 'parents',
+    title: 'Родителям',
     activities: [
-      {
-        route: 'coop/48',
-        label: 'Начать квест',
-        hint: 'Телефон передаётся из рук в руки',
-        kind: 'coop',
-      },
+      { route: 'check-message', label: 'Проверить сообщение', kind: 'checker' },
+      { route: 'crisis-protocol', label: 'Что делать сейчас', kind: 'checker' },
+      { route: 'understand', label: 'Понять его', kind: 'section' },
+      { route: 'club-program', label: 'Клуб навигаторов', kind: 'offline' },
     ],
   },
   {
-    id: 'checker',
-    title: 'Проверка сообщения',
-    icon: IconMagnifier,
-    look: 'gradient',
-    lead: 'Пришло странное сообщение? Вставьте его — покажем, какие приёмы в нём спрятаны.',
+    id: 'understand',
+    title: 'Понять его',
     activities: [
-      {
-        route: 'check-message',
-        label: 'Разобрать сообщение',
-        hint: 'Работает без интернета · текст никуда не уходит',
-        kind: 'checker',
-      },
-    ],
-  },
-  {
-    id: 'club',
-    title: '«Клуб навигаторов»',
-    icon: IconCompass,
-    look: 'outline',
-    lead: 'Очные встречи в школах: играют не по одному, а вместе — и придумывают новые истории для приложения.',
-    activities: [
-      {
-        route: 'club-program',
-        label: 'Программа встречи',
-        hint: 'Сценарий на 90 минут для ведущего',
-        kind: 'offline',
-      },
+      { route: 'quest/day-in-life', label: 'День из жизни', kind: 'quest' },
+      { route: 'mirror/adult', label: 'Угадай ребёнка', kind: 'mirror' },
+      { route: 'test/reaction-style', label: 'Стиль реакции', kind: 'test' },
+      { route: 'test/digital-trust', label: 'Цифровое доверие', kind: 'test' },
+      { route: 'test/generation-language', label: 'Язык поколений', kind: 'test' },
     ],
   },
 ];

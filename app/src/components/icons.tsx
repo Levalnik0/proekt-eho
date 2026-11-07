@@ -222,3 +222,57 @@ export function IconChevron({ size = 20, className }: IconProps) {
     </svg>
   );
 }
+
+/** Облачко чата: раздел «Истории» */
+export function IconBubble({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M6 4h12a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3h-5.4L8 20.6V17H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z"
+      />
+      <circle cx="8.6" cy="10.5" r="1.15" fill="var(--icon-glyph-bg, #5a94a5)" />
+      <circle cx="12" cy="10.5" r="1.15" fill="var(--icon-glyph-bg, #5a94a5)" />
+      <circle cx="15.4" cy="10.5" r="1.15" fill="var(--icon-glyph-bg, #5a94a5)" />
+    </svg>
+  );
+}
+
+/** Зеркало: режимы «Угадай» */
+export function IconMirror({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <ellipse cx="12" cy="9.4" rx="6.2" ry="7" fill="currentColor" />
+      <path fill="currentColor" d="M10.3 16h3.4v2.3h2.2v2.4H8.1v-2.4h2.2V16Z" />
+      <path
+        d="M8.8 7.6a3.6 3.6 0 0 1 2.2-2"
+        stroke="var(--icon-glyph-bg, #5a94a5)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+/** Две стрелки в стороны: «смахни» */
+export function IconSwipe({ size = 24, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M4 8h13m-4-4 4 4-4 4M20 16H7m4 4-4-4 4-4"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
