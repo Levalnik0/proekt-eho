@@ -59,7 +59,6 @@ apply(current);
 const listeners = new Set<(t: ThemeId) => void>();
 
 export type Origin = { x: number; y: number };
-type ViewTransitionLike = { ready: Promise<void>; finished: Promise<void> };
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -72,56 +71,92 @@ function commit(next: ThemeId) {
     // приватный режим — тема не переживёт перезапуск, не страшно
   }
   markThemeChosen();
-  // Сразу, а не «когда-нибудь»: волна снимает кадр после смены темы
   flushSync(() => listeners.forEach((fn) => fn(next)));
+}
+
+let wave: { el: HTMLElement; anim: Animation; next: ThemeId } | null = null;
+
+/** Доводит текущую волну сразу, если человек нажал новый цвет посреди старой */
+function finishWave() {
+  if (!wave) return;
+  const { el, anim, next } = wave;
+  wave = null;
+  anim.cancel();
+  el.remove();
+  commit(next);
+  document.documentElement.classList.remove('theme-swap');
 }
 
 /**
  * Меняет тему. Если передана точка нажатия, от неё расходится круг нового
- * цвета (View Transitions API). Там, где браузер этого не умеет или человек
- * просил «меньше движения», тема меняется сразу, без волны.
+ * цвета, под ним незаметно меняется тема, и круг растворяется.
+ *
+ * Раньше волна была «снимок экрана плюс вырезанный круг» (View Transitions).
+ * Такой круг браузер перерисовывает сам, без видеокарты, и на середине
+ * волна замирала примерно на секунду. Теперь круг двигается только через
+ * transform и opacity: их ведёт видеокарта, и они не останавливаются, даже
+ * когда основной поток занят сменой темы.
  */
 function change(next: ThemeId, origin?: Origin) {
-  const doc = document as Document & {
-    startViewTransition?: (cb: () => void) => ViewTransitionLike;
-  };
-  if (!origin || !doc.startViewTransition || reducedMotion()) {
+  finishWave();
+  if (!origin || reducedMotion()) {
     commit(next);
     if (origin) rings(origin.x, origin.y);
     return;
   }
-  const root = document.documentElement;
-  root.classList.add('theme-swap');
-  const transition = doc.startViewTransition(() => commit(next));
-  transition.finished.finally(() => root.classList.remove('theme-swap'));
-  transition.ready
+
+  const host = (document.querySelector('.app') as HTMLElement | null) ?? document.body;
+  const r = appRect();
+  const x = origin.x - r.left;
+  const y = origin.y - r.top;
+  // До дальнего угла «телефона»: круг закрывает весь экран ровно в конце
+  const radius = reachFrom(origin.x, origin.y, r) + 2;
+
+  const el = document.createElement('div');
+  el.className = 'theme-wave';
+  // Атрибут даёт кругу переменные новой темы: он сразу нужного цвета
+  el.setAttribute('data-theme', next);
+  el.style.left = `${x - radius}px`;
+  el.style.top = `${y - radius}px`;
+  el.style.width = `${radius * 2}px`;
+  el.style.height = `${radius * 2}px`;
+  // Свечение сверху рисуем в координатах экрана, как у самого приложения
+  el.style.backgroundSize = `${r.width}px 300px`;
+  el.style.backgroundPosition = `${radius - x}px ${radius - y}px`;
+  host.appendChild(el);
+  rings(origin.x, origin.y);
+
+  const grow = el.animate([{ transform: 'scale(0)' }, { transform: 'scale(1)' }], {
+    duration: 620,
+    // Трогается сразу от пальца и мягко доезжает до края, без остановок
+    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    fill: 'forwards',
+  });
+  wave = { el, anim: grow, next };
+
+  grow.finished
     .then(() => {
-      // Кольца запускаем только сейчас, когда старый кадр уже снят.
-      // Раньше они попадали в этот снимок и за краем волны замирали,
-      // а потом «оживали»: казалось, что волна встала и поехала снова.
-      rings(origin.x, origin.y);
-      // Круг рассчитан до дальнего угла «телефона», а не всего окна:
-      // иначе он заливал экран на середине и дальше будто стоял на месте
-      const radius = reachFrom(origin.x, origin.y, appRect()) + 2;
-      root.animate(
-        {
-          clipPath: [
-            `circle(0px at ${origin.x}px ${origin.y}px)`,
-            `circle(${radius}px at ${origin.x}px ${origin.y}px)`,
-          ],
-        },
-        {
-          duration: 650,
-          // Трогается сразу от пальца, без раскачки, и мягко замедляется
-          // к самому краю. Кривая «медленный старт» ощущалась как задержка
-          // после нажатия, хотя кадров приложение не теряло.
-          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          pseudoElement: '::view-transition-new(root)',
-        },
-      );
+      if (wave?.el !== el) return;
+      wave = null;
+      // Экран полностью закрыт кругом: меняем тему под ним, переходов
+      // цвета у кнопок не нужно, иначе они «доезжали» бы после волны
+      const root = document.documentElement;
+      root.classList.add('theme-swap');
+      commit(next);
+      const fade = el.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: 260,
+        easing: 'ease-out',
+        fill: 'forwards',
+      });
+      fade.finished
+        .catch(() => undefined)
+        .finally(() => {
+          el.remove();
+          root.classList.remove('theme-swap');
+        });
     })
     .catch(() => {
-      // снимок кадра не удался: тема уже сменилась, волны просто не будет
+      // волну прервало новое нажатие: finishWave уже всё довёл
     });
 }
 

@@ -189,12 +189,31 @@ button {
   --icon-glyph-dark: #5a3c99;
 }
 
-/* Волна смены цвета: старый и новый кадр не смешиваем, новый раскрывается
-   кругом из точки нажатия (useTheme.ts) */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+/* Волна смены цвета (useTheme.ts): круг нового цвета расходится от пальца.
+   Двигается только transform и opacity: их ведёт видеокарта, поэтому
+   волна идёт ровно и не замирает посередине. Фон и свечение берутся из
+   переменных новой темы, атрибут data-theme ставится на сам круг. */
+.theme-wave {
+  position: absolute;
+  z-index: 70;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: scale(0);
+  will-change: transform, opacity;
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    70% 100% at 50% 0%,
+    color-mix(in srgb, var(--echo-teal) 28%, transparent),
+    transparent 75%
+  );
+  background-repeat: no-repeat;
+}
+
+/* У светлой темы нет своего блока (она в :root), а круг наследует
+   переменные текущей тёмной: задаём ему светлые цвета явно */
+.theme-wave[data-theme='day'] {
+  --bg: #e8e9eb;
+  --echo-teal: #45a9a8;
 }
 
 /* Единственная тёмная тема: закрывает сразу и «чёрный», и «неоновый»
