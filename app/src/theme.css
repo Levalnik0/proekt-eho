@@ -189,31 +189,65 @@ button {
   --icon-glyph-dark: #5a3c99;
 }
 
-/* Волна смены цвета (useTheme.ts): круг нового цвета расходится от пальца.
-   Двигается только transform и opacity: их ведёт видеокарта, поэтому
-   волна идёт ровно и не замирает посередине. Фон и свечение берутся из
-   переменных новой темы, атрибут data-theme ставится на сам круг. */
-.theme-wave {
+/* Волна смены цвета (useTheme.ts): через растущий круг видна копия экрана
+   уже в новом цвете, с теми же карточками. Двигается только transform:
+   его ведёт видеокарта, поэтому волна идёт ровно и не замирает. */
+.theme-wave-frame {
   position: absolute;
+  inset: 0;
   z-index: 70;
-  border-radius: 50%;
+  overflow: hidden;
   pointer-events: none;
-  transform: scale(0);
-  will-change: transform, opacity;
-  background-color: var(--bg);
-  background-image: radial-gradient(
-    70% 100% at 50% 0%,
-    color-mix(in srgb, var(--echo-teal) 28%, transparent),
-    transparent 75%
-  );
-  background-repeat: no-repeat;
 }
 
-/* У светлой темы нет своего блока (она в :root), а круг наследует
-   переменные текущей тёмной: задаём ему светлые цвета явно */
-.theme-wave[data-theme='day'] {
+.theme-wave {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: scale(0);
+  will-change: transform;
+}
+
+/* Копия экрана: без своей рамки и тени, без анимаций появления */
+.theme-clone {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  will-change: transform;
+  /* Цвета знака пересчитываем от новой темы, иначе он остался бы старым */
+  --logo-teal: var(--echo-teal);
+  --logo-navy: var(--echo-navy);
+}
+
+.theme-clone *,
+.theme-clone *::before,
+.theme-clone *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* У светлой темы нет своего блока (она в :root), а копия наследует
+   переменные текущей тёмной: задаём ей светлые цвета явно */
+.theme-clone[data-theme='day'] {
   --bg: #e8e9eb;
+  --bg-soft: #eff0f2;
+  --surface: #ffffff;
+  --surface-bar: #f7f7f7;
+  --ink: #232a32;
+  --ink-muted: #58636e;
+  --ink-faint: #5f6b78;
   --echo-teal: #45a9a8;
+  --echo-teal-light: #7ec0bf;
+  --echo-navy: #1e3f68;
+  --echo-navy-deep: #152f4a;
+  --echo-teal-text: #2c6e6d;
+  --grad-icon: linear-gradient(145deg, #4e9299 0%, #3d6f83 100%);
+  --icon-glyph-dark: #5a94a5;
+  --sh-pill: 0 2px 6px rgba(30, 63, 104, 0.06), 0 8px 20px rgba(30, 63, 104, 0.09);
+  --sh-pill-active: 0 1px 3px rgba(30, 63, 104, 0.1), 0 3px 8px rgba(30, 63, 104, 0.08);
+  --sh-logo: 0 4px 14px rgba(30, 63, 104, 0.12);
+  --sh-bar: 0 -2px 14px rgba(30, 63, 104, 0.07);
+  color-scheme: light;
 }
 
 /* Единственная тёмная тема: закрывает сразу и «чёрный», и «неоновый»

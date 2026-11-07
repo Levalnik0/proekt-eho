@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { appRect, reachFrom, rings } from '../fx';
+import { reachFrom, rings } from '../fx';
 
 /**
  * 'day' — светлая тема, это :root, отдельного CSS-блока не требует.
@@ -74,18 +74,23 @@ function commit(next: ThemeId) {
   flushSync(() => listeners.forEach((fn) => fn(next)));
 }
 
-let wave: { el: HTMLElement; anim: Animation; next: ThemeId } | null = null;
+let wave: { frame: HTMLElement; anims: Animation[]; next: ThemeId } | null = null;
 
 /** Доводит текущую волну сразу, если человек нажал новый цвет посреди старой */
 function finishWave() {
   if (!wave) return;
-  const { el, anim, next } = wave;
+  const { frame, anims, next } = wave;
   wave = null;
-  anim.cancel();
-  el.remove();
+  anims.forEach((a) => a.cancel());
+  frame.remove();
   commit(next);
   document.documentElement.classList.remove('theme-swap');
 }
+
+/** Плавное замедление к краю: быстро от пальца, мягко у края */
+const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+const WAVE_MS = 650;
+const STEPS = 60;
 
 /**
  * Меняет тему. Если передана точка нажатия, от неё расходится круг нового
@@ -105,55 +110,90 @@ function change(next: ThemeId, origin?: Origin) {
     return;
   }
 
-  const host = (document.querySelector('.app') as HTMLElement | null) ?? document.body;
-  const r = appRect();
-  const x = origin.x - r.left;
-  const y = origin.y - r.top;
+  const app = document.querySelector('.app') as HTMLElement | null;
+  if (!app) {
+    commit(next);
+    return;
+  }
+  const r = app.getBoundingClientRect();
+  const ox = origin.x - r.left;
+  const oy = origin.y - r.top;
   // До дальнего угла «телефона»: круг закрывает весь экран ровно в конце
   const radius = reachFrom(origin.x, origin.y, r) + 2;
 
-  const el = document.createElement('div');
-  el.className = 'theme-wave';
-  // Атрибут даёт кругу переменные новой темы: он сразу нужного цвета
-  el.setAttribute('data-theme', next);
-  el.style.left = `${x - radius}px`;
-  el.style.top = `${y - radius}px`;
-  el.style.width = `${radius * 2}px`;
-  el.style.height = `${radius * 2}px`;
-  // Свечение сверху рисуем в координатах экрана, как у самого приложения
-  el.style.backgroundSize = `${r.width}px 300px`;
-  el.style.backgroundPosition = `${radius - x}px ${radius - y}px`;
-  host.appendChild(el);
+  // Копия экрана в новом цвете: под волной видны те же карточки и кнопки,
+  // а не пустой фон. Атрибут data-theme даёт копии переменные новой темы.
+  const clone = app.cloneNode(true) as HTMLElement;
+  clone.querySelectorAll('.echo-ring, .theme-wave-frame').forEach((n) => n.remove());
+  clone.classList.add('theme-clone');
+  clone.setAttribute('data-theme', next);
+  clone.setAttribute('aria-hidden', 'true');
+  Object.assign(clone.style, {
+    position: 'absolute',
+    left: `${radius - ox}px`,
+    top: `${radius - oy}px`,
+    width: `${r.width}px`,
+    height: `${r.height}px`,
+    transformOrigin: `${ox}px ${oy}px`,
+  });
+
+  // Круг, через который видна копия
+  const circle = document.createElement('div');
+  circle.className = 'theme-wave';
+  Object.assign(circle.style, {
+    left: `${ox - radius}px`,
+    top: `${oy - radius}px`,
+    width: `${radius * 2}px`,
+    height: `${radius * 2}px`,
+  });
+  circle.appendChild(clone);
+
+  // Рамка ровно по экрану: круг не выходит за «телефон»
+  const frame = document.createElement('div');
+  frame.className = 'theme-wave-frame';
+  frame.appendChild(circle);
+  app.appendChild(frame);
+
+  // Копия должна стоять там же, где настоящий экран, даже если он прокручен
+  const scrollers = '.app__body, .quest__feed';
+  const from = app.querySelectorAll<HTMLElement>(scrollers);
+  clone.querySelectorAll<HTMLElement>(scrollers).forEach((el, i) => {
+    if (from[i]) el.scrollTop = from[i].scrollTop;
+  });
+
   rings(origin.x, origin.y);
 
-  const grow = el.animate([{ transform: 'scale(0)' }, { transform: 'scale(1)' }], {
-    duration: 620,
-    // Трогается сразу от пальца и мягко доезжает до края, без остановок
-    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-    fill: 'forwards',
-  });
-  wave = { el, anim: grow, next };
+  // Круг растёт, а копия внутри так же уменьшается: в сумме она стоит на
+  // месте. Оба движения только transform, их ведёт видеокарта, поэтому
+  // волна не замирает посередине. Шаги считаем заранее, чтобы масштабы
+  // в каждом кадре были точно обратными друг другу.
+  const outerKf: Keyframe[] = [];
+  const innerKf: Keyframe[] = [];
+  for (let i = 0; i <= STEPS; i++) {
+    const s = 0.02 + 0.98 * easeOut(i / STEPS);
+    outerKf.push({ transform: `scale(${s})` });
+    innerKf.push({ transform: `scale(${1 / s})` });
+  }
+  const opts: KeyframeAnimationOptions = { duration: WAVE_MS, easing: 'linear', fill: 'forwards' };
+  const grow = circle.animate(outerKf, opts);
+  const hold = clone.animate(innerKf, opts);
+  wave = { frame, anims: [grow, hold], next };
 
   grow.finished
     .then(() => {
-      if (wave?.el !== el) return;
+      if (wave?.frame !== frame) return;
       wave = null;
-      // Экран полностью закрыт кругом: меняем тему под ним, переходов
-      // цвета у кнопок не нужно, иначе они «доезжали» бы после волны
+      // Копия закрыла экран целиком: меняем тему на настоящем экране
+      // и убираем копию. Они совпадают до пикселя, подмены не видно.
       const root = document.documentElement;
       root.classList.add('theme-swap');
       commit(next);
-      const fade = el.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: 260,
-        easing: 'ease-out',
-        fill: 'forwards',
-      });
-      fade.finished
-        .catch(() => undefined)
-        .finally(() => {
-          el.remove();
-          root.classList.remove('theme-swap');
-        });
+      // Таймер, а не кадры отрисовки: если браузер придержит кадры,
+      // копия всё равно уберётся
+      window.setTimeout(() => {
+        frame.remove();
+        root.classList.remove('theme-swap');
+      }, 60);
     })
     .catch(() => {
       // волну прервало новое нажатие: finishWave уже всё довёл
