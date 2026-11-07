@@ -1216,6 +1216,45 @@ h2[tabindex='-1']:focus {
   text-align: center;
 }
 
+/* Короткие экраны не прижимаем к верху: вводный блок, итог и заслонка
+   встают по центру свободного места. Автоотступы только забирают то, что
+   осталось, поэтому длинный экран просто прокручивается, ничего не обрезая. */
+.screen:has(> .mirror-intro),
+.screen:has(> .mirror-result),
+.screen:has(> .handoff),
+.screen:has(> .gate) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.screen > .mirror-intro,
+.screen > .mirror-result,
+.screen > .handoff,
+.screen > .gate {
+  margin-block: auto;
+}
+
+/* Вопрос и ответы: вопрос в середине свободного места, ответы у нижнего
+   края, под большим пальцем, а не россыпью в верхней трети */
+.screen:has(> .situation) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.screen:has(> .situation) > .situation,
+.screen:has(> .situation) > .choices {
+  margin-top: auto;
+}
+
+/* Ввод кода: крупное поле по центру, как на экране входа */
+.gate .checker__input {
+  height: 60px;
+  text-align: center;
+  font-size: 22px;
+}
+
 .mirror-intro__kicker {
   font-size: 12.5px;
   letter-spacing: 0.6px;

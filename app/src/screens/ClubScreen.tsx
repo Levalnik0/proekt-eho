@@ -104,6 +104,7 @@ export function ClubScreen({
         </div>
 
         <form
+          className="gate"
           onSubmit={(e) => {
             e.preventDefault();
             // Код игр ведёт сразу в «Лабораторию», код встречи открывает программу
@@ -126,11 +127,11 @@ export function ClubScreen({
           />
           <p className="checker__privacy">Код скажет ведущий встречи.</p>
           {error && (
-            <p className="checker__privacy" style={{ color: 'var(--danger, #c0392b)' }}>
+            <p role="alert" className="checker__privacy" style={{ color: 'var(--danger, #c0392b)' }}>
               Не тот код. Ещё раз?
             </p>
           )}
-          <button type="submit" className="btn btn--primary">
+          <button type="submit" className="btn btn--primary btn--wide">
             Открыть
           </button>
         </form>
