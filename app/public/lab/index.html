@@ -98,6 +98,12 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .themes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 16px; }
 .thm { padding: 12px 8px; border-radius: 14px; background: var(--surface); font-weight: 700; font-size: 14px; border: 2px solid transparent; }
 .thm[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-2); }
+.r-pad { height: 168px; flex: none; display: grid; place-items: center; touch-action: none; user-select: none; -webkit-user-select: none; }
+.r-base { width: 132px; height: 132px; border-radius: 50%; background: var(--surface); border: 2px solid var(--line); display: grid; place-items: center; box-shadow: inset 0 0 24px rgba(0,0,0,.3); position: relative; }
+.r-base::before, .r-base::after { content: ""; position: absolute; background: var(--line); }
+.r-base::before { width: 2px; height: 70%; }
+.r-base::after { height: 2px; width: 70%; }
+.r-knob { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); box-shadow: 0 6px 16px rgba(0,0,0,.45); position: relative; z-index: 1; }
 .menu__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; min-height: 38px; }
 .overlay h2 { font-size: 26px; margin: 0 0 6px; text-wrap: balance; }
 .overlay .big { font-size: 56px; font-weight: 800; color: var(--accent); line-height: 1; margin: 6px 0; font-variant-numeric: tabular-nums; }
@@ -253,7 +259,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <span class="card__art" style="background:linear-gradient(145deg,#2f9e6e,#14503a)">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="11" y="5" width="18" height="30" rx="7" fill="#e9f5f4"/><rect x="14" y="11" width="12" height="7" rx="2" fill="#14503a"/><rect x="7" y="9" width="4" height="8" rx="1.5" fill="#7fe0a6"/><rect x="29" y="9" width="4" height="8" rx="1.5" fill="#7fe0a6"/><rect x="7" y="24" width="4" height="8" rx="1.5" fill="#7fe0a6"/><rect x="29" y="24" width="4" height="8" rx="1.5" fill="#7fe0a6"/></svg>
         </span>
-        <span><div class="card__name">Гонка слов</div><div class="card__how">Собирай машинкой слова своей темы</div></span>
+        <span><div class="card__name">Автодром слов</div><div class="card__how">Ездишь по арене и собираешь слова своей темы</div></span>
         <span class="card__go">›</span>
       </button>
     </div>
@@ -361,21 +367,21 @@ canvas { display: block; width: 100%; height: 100%; }
 
   <!-- ═════════ 6. ГОНКА СЛОВ ═════════ -->
   <section class="game" id="g-race" hidden>
-    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Гонка</span>
-      <span class="pill" id="r-time">40</span><span class="pill pill--accent" id="r-score">0</span></div>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Автодром</span>
+      <span class="pill" id="r-time">45</span><span class="pill pill--accent" id="r-score">0</span></div>
     <div class="stage" id="r-stage">
       <canvas id="r-canvas"></canvas>
       <div class="r-board" id="r-board"></div>
       <div class="r-theme" id="r-theme" hidden></div>
       <div class="overlay" id="r-start">
-        <h2>Гонка слов</h2>
+        <h2>Автодром слов</h2>
         <div data-how="race"></div>
         <div class="themes" id="r-themes"></div>
         <button class="btn btn--main btn--wide" id="r-go">Ехать</button>
       </div>
       <div class="overlay" id="r-end" hidden></div>
     </div>
-    <div class="hint" id="r-hint">Веди пальцем влево и вправо</div>
+    <div class="r-pad" id="r-pad" aria-label="Пульт: веди круг в нужную сторону"><div class="r-base"><div class="r-knob" id="r-knob"></div></div></div>
   </section>
 </div>
 
@@ -433,7 +439,7 @@ const HOWTO = {
   detective: ['<b>Води пальцем</b> по картинке: лупа ходит над пальцем и показывает мелочи.', 'Ищи то, по чему чужой человек поймёт, <b>где Маша живёт и учится</b>.', 'Найди все <b>5 улик</b>. Если застрял, через несколько секунд появится подсказка.'],
   fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
   net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b>: подделку выдаёт одна буква. Три ошибки и конец.'],
-  race: ['Веди пальцем <b>влево и вправо</b>: машинка едет за ним.', 'Собирай слова <b>только своей темы</b>. Чужое слово собьёт машинку на секунду.', 'Соперники <b>толкаются</b>, и тебя тоже могут сбить. Кто соберёт больше за 40 секунд, тот победил.'],
+  race: ['Веди <b>пультом</b> внизу: машинка едет по арене, куда направишь.', 'Подбирай слова <b>только своей темы</b>. Чужое слово затормозит машинку.', 'Соперники <b>толкаются</b>, и тебя тоже могут сбить. Кто соберёт больше за 45 секунд, тот победил.'],
   windows: ['К окнам твоего профиля приходят гости: <b>серые</b> незнакомцы, <b>бирюзовые</b> друзья.', '<b>Нажми на окно</b>, чтобы выбрать, кому оно открыто: всем, друзьям или никому.', 'Гость с подписью <b>«0 общих»</b> не друг: нажми на него, и он уйдёт.'],
 };
 const renderHow = (id) => `<ol class="howto">${HOWTO[id].map((t) => `<li><span>${t}</span></li>`).join('')}</ol>`;
@@ -1148,10 +1154,10 @@ function close() {
   };
 })();
 
-/* ══════════ 6. ГОНКА СЛОВ ══════════ */
+/* ══════════ 6. АВТОДРОМ СЛОВ ══════════ */
 (() => {
   // У каждой темы свой набор слов. В раунде они берутся вперемешку,
-  // поэтому завтра на трассе будут в основном другие слова.
+  // поэтому завтра на арене будут в основном другие слова.
   const THEMES = [
     { id: 'safe', name: 'Защита', words: [
       ['пароль', 'Ключ от аккаунта. Его знаешь только ты.'],
@@ -1267,19 +1273,19 @@ function close() {
     ] },
   ];
   const BOTS = [
-    { name: 'Лиса', color: '#ff8fb1', skill: 0.88, react: 0.3, speed: 270 },
-    { name: 'Кит', color: '#a996ff', skill: 0.74, react: 0.45, speed: 240 },
-    { name: 'Сова', color: '#ffc27a', skill: 0.58, react: 0.55, speed: 215 },
+    { name: 'Лиса', color: '#ff8fb1', skill: 0.85, speed: 0.74 },
+    { name: 'Кит', color: '#a996ff', skill: 0.7, speed: 0.64 },
+    { name: 'Сова', color: '#ffc27a', skill: 0.55, speed: 0.54 },
   ];
-  const DURATION = 40, LANES = 4, SPACING = 170, CW = 34, CH = 54;
-  const cv = $('#r-canvas'), stage = $('#r-stage'), ctx = cv.getContext('2d');
-  let W = 0, H = 0, carY = 0, raf = 0, last = 0, running = false, paused = false;
-  let cars = [], rows = [], decks = [], pops = [], elapsed = 0, rowId = 0, my = null, tx = 0;
-  let pickId = THEMES[0].id, collected = [], wrongHits = 0, boardKey = '', bumpAt = 0;
+  const DURATION = 45, CR = 17, MAXV = 190, ITEM_W = 92, ITEM_H = 40, HIT = 30;
+  const cv = $('#r-canvas'), stage = $('#r-stage'), ctx = cv.getContext('2d'), pad = $('#r-pad'), knob = $('#r-knob');
+  let W = 0, H = 0, raf = 0, last = 0, running = false, paused = false;
+  let cars = [], items = [], decks = [], pops = [], elapsed = 0, my = null, pickId = THEMES[0].id, collected = [], boardKey = '', bumpAt = 0;
+  const joy = { x: 0, y: 0 }, keys = { l: 0, r: 0, u: 0, d: 0 };
 
   function size() {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    W = stage.clientWidth; H = stage.clientHeight; carY = H - 84;
+    W = stage.clientWidth; H = stage.clientHeight;
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   function renderThemes() {
@@ -1292,62 +1298,76 @@ function close() {
     const w = d.list[d.i++];
     return { theme: tid, w: w[0], why: w[1] };
   }
-  function newRow(y) {
-    return { id: rowId++, y, prev: y, words: shuffle(THEMES.map((t) => t.id)).map(pick), mark: [null, null, null, null] };
+  // Слово появляется в свободном месте: не рядом с другими словами и машинками
+  function spawnItem(tid) {
+    const it = pick(tid);
+    for (let n = 0; n < 40; n++) {
+      const x = ITEM_W / 2 + 8 + Math.random() * (W - ITEM_W - 16), y = 70 + Math.random() * (H - 70 - ITEM_H);
+      if (items.every((o) => Math.hypot(o.x - x, o.y - y) > 80) && cars.every((c) => Math.hypot(c.x - x, c.y - y) > 70)) { it.x = x; it.y = y; break; }
+      it.x = x; it.y = y;
+    }
+    return it;
   }
-  const clampX = (x) => Math.max(CW / 2, Math.min(W - CW / 2, x));
+  const wrapA = (a) => { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; };
 
   function start() {
     $('#r-start').hidden = true; $('#r-end').hidden = true;
-    size(); elapsed = 0; rows = []; rowId = 0; collected = []; wrongHits = 0; pops = []; paused = false; boardKey = '';
+    size(); elapsed = 0; collected = []; pops = []; paused = false; boardKey = ''; items = [];
     decks = THEMES.map((t) => ({ id: t.id, list: shuffle(t.words), i: 0 }));
     const mine = THEMES.find((t) => t.id === pickId), others = shuffle(THEMES.filter((t) => t.id !== pickId));
-    const slots = shuffle([0, 1, 2, 3]), xs = [0.2, 0.4, 0.6, 0.8].map((f) => W * f);
-    cars = [{ name: 'Ты', color: '#3fd0cc', theme: mine.id, score: 0, x: xs[slots[0]], v: 0, stun: 0, me: true },
-      ...BOTS.map((b, i) => ({ name: b.name, color: b.color, theme: others[i].id, score: 0, x: xs[slots[i + 1]], v: 0, stun: 0, skill: b.skill, react: b.react, speed: b.speed, plan: {} }))];
-    my = cars[0]; tx = my.x;
-    rows.push(newRow(carY - 420));
+    const spots = shuffle([[0.25, 0.8], [0.75, 0.8], [0.25, 0.5], [0.75, 0.5]]);
+    const mk = (o, i) => ({ score: 0, vx: 0, vy: 0, ang: 0, slow: 0, think: 0, target: null, x: spots[i][0] * W, y: spots[i][1] * H, ...o });
+    cars = [mk({ name: 'Ты', color: '#3fd0cc', theme: mine.id, me: true }, 0),
+      ...BOTS.map((b, i) => mk({ name: b.name, color: b.color, theme: others[i].id, skill: b.skill, speed: b.speed }, i + 1))];
+    my = cars[0];
+    THEMES.forEach((t) => { for (let k = 0; k < 2; k++) items.push(spawnItem(t.id)); });
     const th = $('#r-theme'); th.hidden = false; th.innerHTML = `Твоя тема: <b>${mine.name}</b>`;
     $('#r-score').textContent = '0'; $('#r-time').textContent = DURATION;
     running = true; last = performance.now(); raf = requestAnimationFrame(tick);
   }
 
-  function steerBot(b, dt) {
-    if (b.stun > 0) b.stun -= dt;
-    // ближайший ряд, который машинка ещё не проехала
-    const r = rows.find((q) => q.y < carY - 14);
-    if (r && b.plan[r.id] === undefined && carY - r.y < 300 - b.react * 150) {
-      const good = r.words.findIndex((w) => w.theme === b.theme);
-      const lane = Math.random() < b.skill ? good : (good + 1 + (Math.random() * 3 | 0)) % LANES;
-      b.plan[r.id] = (lane + 0.5) * (W / LANES) + (Math.random() - 0.5) * 18;
+  function botInput(c, dt) {
+    c.think -= dt;
+    if (c.think <= 0 || (c.target && !items.includes(c.target))) {
+      c.think = 0.5 + Math.random() * 0.5;
+      const own = items.filter((i) => i.theme === c.theme);
+      let t = own.sort((a, b) => Math.hypot(a.x - c.x, a.y - c.y) - Math.hypot(b.x - c.x, b.y - c.y))[0];
+      if (Math.random() > c.skill) t = items[Math.random() * items.length | 0];
+      c.target = t;
     }
-    const target = r && b.plan[r.id] !== undefined ? b.plan[r.id] : b.x;
-    if (b.stun <= 0) { const d = target - b.x; b.x += Math.sign(d) * Math.min(Math.abs(d), b.speed * dt); }
-    b.x = clampX(b.x + b.v * dt); b.v *= Math.pow(0.02, dt);
+    if (!c.target) return [0, 0];
+    const dx = c.target.x - c.x, dy = c.target.y - c.y, d = Math.hypot(dx, dy) || 1;
+    return [dx / d + (Math.random() - 0.5) * 0.2, dy / d + (Math.random() - 0.5) * 0.2];
   }
   function collide() {
     for (let i = 0; i < cars.length; i++) {
       for (let j = i + 1; j < cars.length; j++) {
-        const a = cars[i], c = cars[j], dx = c.x - a.x, ad = Math.abs(dx);
-        if (ad < CW) {
-          const dir = dx >= 0 ? 1 : -1, push = (CW - ad) / 2 + 1;
-          a.x = clampX(a.x - dir * push); c.x = clampX(c.x + dir * push);
-          a.v -= dir * 150; c.v += dir * 150;
-          if ((a.me || c.me) && performance.now() - bumpAt > 280) { bumpAt = performance.now(); snd.bump(); buzz(10); }
+        const a = cars[i], b = cars[j];
+        let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+        if (d < CR * 2) {
+          if (d < 0.01) { dx = 1; dy = 0; d = 1; }
+          const nx = dx / d, ny = dy / d, push = (CR * 2 - d) / 2 + 0.5;
+          a.x -= nx * push; a.y -= ny * push; b.x += nx * push; b.y += ny * push;
+          a.vx -= nx * 170; a.vy -= ny * 170; b.vx += nx * 170; b.vy += ny * 170;
+          if ((a.me || b.me) && performance.now() - bumpAt > 280) { bumpAt = performance.now(); snd.bump(); buzz(12); }
         }
       }
     }
   }
-  function cross(r) {
-    const lw = W / LANES;
-    for (const c of cars) {
-      const lane = Math.max(0, Math.min(LANES - 1, Math.floor(c.x / lw))), w = r.words[lane];
-      if (w.theme === c.theme) {
-        c.score++; r.mark[lane] = c.color;
-        if (c.me) { collected.push(w); pops.push({ x: c.x, y: carY - 40, t: 0, txt: '+1', c: '#3fd0cc' }); snd.good(); buzz(10); $('#r-score').textContent = c.score; }
-      } else {
-        c.stun = c.me ? 0.6 : 0.5;
-        if (c.me) { wrongHits++; if (!r.mark[lane]) r.mark[lane] = '#ffc27a'; snd.bad(); buzz([20, 40, 20]); }
+  function pickups() {
+    for (let k = 0; k < items.length; k++) {
+      const it = items[k];
+      for (const c of cars) {
+        if (Math.hypot(it.x - c.x, it.y - c.y) > HIT) continue;
+        if (it.theme === c.theme) {
+          c.score++;
+          if (c.me) { collected.push(it); pops.push({ x: it.x, y: it.y, t: 0, txt: '+1', c: '#3fd0cc' }); snd.good(); buzz(10); $('#r-score').textContent = c.score; }
+        } else {
+          c.slow = 1.1;
+          if (c.me) { pops.push({ x: c.x, y: c.y - 20, t: 0, txt: 'чужое', c: '#ffc27a' }); snd.bad(); buzz([20, 40, 20]); }
+        }
+        items[k] = spawnItem(it.theme);
+        break;
       }
     }
   }
@@ -1355,18 +1375,23 @@ function close() {
     if (!running) return;
     if (paused) { last = now; raf = requestAnimationFrame(tick); return; }
     const dt = Math.min(0.05, (now - last) / 1000); last = now; elapsed += dt;
-    const speed = 150 + Math.min(45, elapsed * 1.2);
-    for (const r of rows) { r.prev = r.y; r.y += speed * dt; }
-    if (rows[rows.length - 1].y > -20) rows.push(newRow(rows[rows.length - 1].y - SPACING));
-    if (my.stun > 0) my.stun -= dt; else my.x += (tx - my.x) * Math.min(1, dt * 11);
-    my.x = clampX(my.x + my.v * dt); my.v *= Math.pow(0.02, dt);
-    for (const b of cars) if (!b.me) steerBot(b, dt);
-    collide();
-    for (const r of rows) if (r.prev < carY && r.y >= carY) cross(r);
-    rows = rows.filter((r) => r.y < H + 60);
-    pops.forEach((p) => { p.t += dt; p.y -= 40 * dt; }); pops = pops.filter((p) => p.t < 0.8);
+    let ix = joy.x + keys.r - keys.l, iy = joy.y + keys.d - keys.u; const im = Math.hypot(ix, iy); if (im > 1) { ix /= im; iy /= im; }
+    for (const c of cars) {
+      const [ax, ay] = c.me ? [ix, iy] : botInput(c, dt);
+      const k = (c.slow > 0 ? 0.45 : 1) * (c.me ? 1 : c.speed);
+      c.vx += (ax * MAXV * k - c.vx) * Math.min(1, dt * 5); c.vy += (ay * MAXV * k - c.vy) * Math.min(1, dt * 5);
+      c.x += c.vx * dt; c.y += c.vy * dt;
+      const m = CR + 2;
+      if (c.x < m) { c.x = m; c.vx = Math.abs(c.vx) * 0.3; } if (c.x > W - m) { c.x = W - m; c.vx = -Math.abs(c.vx) * 0.3; }
+      if (c.y < m) { c.y = m; c.vy = Math.abs(c.vy) * 0.3; } if (c.y > H - m) { c.y = H - m; c.vy = -Math.abs(c.vy) * 0.3; }
+      const sp = Math.hypot(c.vx, c.vy);
+      if (sp > 25) c.ang += wrapA(Math.atan2(c.vy, c.vx) + Math.PI / 2 - c.ang) * Math.min(1, dt * 10);
+      if (c.slow > 0) c.slow -= dt;
+    }
+    collide(); pickups();
+    pops.forEach((p) => { p.t += dt; p.y -= 36 * dt; }); pops = pops.filter((p) => p.t < 0.8);
     $('#r-time').textContent = Math.max(0, Math.ceil(DURATION - elapsed));
-    draw(speed); board();
+    draw(); board();
     if (elapsed >= DURATION) return end();
     raf = requestAnimationFrame(tick);
   }
@@ -1392,37 +1417,34 @@ function close() {
     lines.forEach((l, i) => ctx.fillText(l, cx, cy + (i - (lines.length - 1) / 2) * (fs + 2)));
   }
   function drawCar(c) {
-    const wob = c.stun > 0 ? Math.sin(performance.now() / 40) * 2 : 0, x = c.x + wob, y = carY;
-    ctx.globalAlpha = c.stun > 0 ? 0.65 : 1;
-    ctx.fillStyle = '#0c1a1d'; [[-20, -20], [14, -20], [-20, 8], [14, 8]].forEach(([dx, dy]) => { rr(x + dx, y + dy, 6, 14, 2); ctx.fill(); });
-    rr(x - CW / 2, y - CH / 2, CW, CH, 10); ctx.fillStyle = c.color; ctx.fill();
-    rr(x - 11, y - 14, 22, 12, 3); ctx.fillStyle = 'rgba(6,32,34,.75)'; ctx.fill();
-    rr(x - 8, y + 6, 16, 12, 3); ctx.fillStyle = 'rgba(6,32,34,.25)'; ctx.fill();
-    if (c.me) { rr(x - CW / 2 - 3, y - CH / 2 - 3, CW + 6, CH + 6, 12); ctx.strokeStyle = '#e9f5f4'; ctx.lineWidth = 2; ctx.stroke(); }
-    ctx.globalAlpha = 1;
+    const wob = c.slow > 0 ? Math.sin(performance.now() / 45) * 1.5 : 0;
+    ctx.save(); ctx.translate(c.x + wob, c.y); ctx.rotate(c.ang);
+    ctx.globalAlpha = c.slow > 0 ? 0.7 : 1;
+    ctx.fillStyle = '#0c1a1d'; [[-15, -13], [10, -13], [-15, 5], [10, 5]].forEach(([dx, dy]) => { rr(dx, dy, 5, 11, 2); ctx.fill(); });
+    rr(-11, -18, 22, 36, 8); ctx.fillStyle = c.color; ctx.fill();
+    rr(-7.5, -11, 15, 9, 3); ctx.fillStyle = 'rgba(6,32,34,.78)'; ctx.fill();
+    rr(-6, 5, 12, 8, 3); ctx.fillStyle = 'rgba(6,32,34,.25)'; ctx.fill();
+    if (c.me) { rr(-14, -21, 28, 42, 10); ctx.strokeStyle = '#e9f5f4'; ctx.lineWidth = 2; ctx.stroke(); }
+    ctx.restore(); ctx.globalAlpha = 1;
     ctx.fillStyle = '#e9f5f4'; ctx.font = '700 10.5px -apple-system, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(c.name, x, y + CH / 2 + 14);
+    ctx.fillText(c.name, c.x, c.y + 32);
   }
-  function draw(speed) {
+  function draw() {
     ctx.clearRect(0, 0, W, H);
-    const lw = W / LANES;
-    ctx.strokeStyle = 'rgba(160,230,228,.10)'; ctx.lineWidth = 1.5; ctx.setLineDash([16, 18]); ctx.lineDashOffset = -((elapsed * speed) % 34);
-    for (let i = 1; i < LANES; i++) { ctx.beginPath(); ctx.moveTo(lw * i, 0); ctx.lineTo(lw * i, H); ctx.stroke(); }
-    ctx.setLineDash([]);
-    for (const r of rows) {
-      r.words.forEach((w, l) => {
-        const x = l * lw + 4, cw = lw - 8, ch = 46, y = r.y - ch / 2, m = r.mark[l];
-        rr(x, y, cw, ch, 12); ctx.fillStyle = '#1b3a42'; ctx.fill();
-        if (m) { ctx.globalAlpha = 0.35; ctx.fillStyle = m; ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = m; ctx.lineWidth = 2; ctx.stroke(); }
-        else { ctx.strokeStyle = 'rgba(160,230,228,.22)'; ctx.lineWidth = 1.2; ctx.stroke(); }
-        label(w.w, x + cw / 2, r.y, cw - 8);
-      });
+    ctx.fillStyle = 'rgba(160,230,228,.07)';
+    for (let x = 20; x < W; x += 40) for (let y = 20; y < H; y += 40) ctx.fillRect(x, y, 2, 2);
+    for (const it of items) {
+      const s = 1 + Math.sin(elapsed * 4 + it.x) * 0.025;
+      ctx.save(); ctx.translate(it.x, it.y); ctx.scale(s, s);
+      rr(-ITEM_W / 2, -ITEM_H / 2, ITEM_W, ITEM_H, 13); ctx.fillStyle = '#1b3a42'; ctx.fill();
+      ctx.strokeStyle = 'rgba(160,230,228,.3)'; ctx.lineWidth = 1.4; ctx.stroke();
+      label(it.w, 0, 0, ITEM_W - 12); ctx.restore();
     }
     cars.forEach(drawCar);
-    pops.forEach((p) => { ctx.globalAlpha = 1 - p.t / 0.8; ctx.fillStyle = p.c; ctx.font = '800 18px -apple-system, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.fillText(p.txt, p.x, p.y); ctx.globalAlpha = 1; });
+    pops.forEach((p) => { ctx.globalAlpha = 1 - p.t / 0.8; ctx.fillStyle = p.c; ctx.font = '800 17px -apple-system, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.fillText(p.txt, p.x, p.y); ctx.globalAlpha = 1; });
   }
   function end() {
-    running = false; cancelAnimationFrame(raf);
+    running = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; knob.style.transform = '';
     const place = 1 + cars.filter((c) => c.score > my.score).length;
     const best = store.get('race'), rec = my.score > best; if (rec) store.set('race', my.score);
     const order = [...cars].sort((a, b) => b.score - a.score);
@@ -1438,19 +1460,30 @@ function close() {
     el.querySelector('[data-c]').onclick = close;
     buzz([15, 60, 15]); place === 1 ? snd.win() : snd.good();
   }
-  function steer(e) { const r = stage.getBoundingClientRect(); tx = clampX(e.clientX - r.left); }
-  stage.addEventListener('pointerdown', (e) => { if (running) steer(e); });
-  stage.addEventListener('pointermove', (e) => { if (running) steer(e); });
-  window.addEventListener('keydown', (e) => {
-    if (current !== 'race' || !running) return;
-    if (e.key === 'ArrowLeft') tx = clampX(tx - 60);
-    if (e.key === 'ArrowRight') tx = clampX(tx + 60);
-  });
+
+  // Пульт: круг внизу. Куда сдвинул, туда и едет машинка; чем дальше, тем быстрее
+  let padId = null;
+  function padMove(e) {
+    const r = pad.getBoundingClientRect(), base = pad.querySelector('.r-base').getBoundingClientRect();
+    let dx = e.clientX - (base.left + base.width / 2), dy = e.clientY - (base.top + base.height / 2);
+    const R = base.width / 2 - 10, d = Math.hypot(dx, dy);
+    if (d > R) { dx = dx / d * R; dy = dy / d * R; }
+    joy.x = dx / R; joy.y = dy / R; knob.style.transform = `translate(${dx}px, ${dy}px)`;
+    return r;
+  }
+  pad.addEventListener('pointerdown', (e) => { padId = e.pointerId; try { pad.setPointerCapture(e.pointerId); } catch (err) {} padMove(e); });
+  pad.addEventListener('pointermove', (e) => { if (e.pointerId === padId) padMove(e); });
+  const padEnd = (e) => { if (e.pointerId === padId) { padId = null; joy.x = joy.y = 0; knob.style.transform = ''; } };
+  pad.addEventListener('pointerup', padEnd); pad.addEventListener('pointercancel', padEnd);
+  // На компьютере можно ездить стрелками или WASD
+  const KEYMAP = { ArrowLeft: 'l', a: 'l', ArrowRight: 'r', d: 'r', ArrowUp: 'u', w: 'u', ArrowDown: 'd', s: 'd' };
+  window.addEventListener('keydown', (e) => { if (current === 'race' && KEYMAP[e.key]) { keys[KEYMAP[e.key]] = 1; e.preventDefault(); } });
+  window.addEventListener('keyup', (e) => { if (KEYMAP[e.key]) keys[KEYMAP[e.key]] = 0; });
   window.addEventListener('resize', () => { if (current === 'race') size(); });
   $('#r-go').onclick = start;
   games.race = {
     enter() { running = false; $('#r-start').hidden = false; $('#r-end').hidden = true; $('#r-theme').hidden = true; $('#r-board').innerHTML = ''; renderThemes(); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
-    leave() { running = false; paused = false; cancelAnimationFrame(raf); },
+    leave() { running = false; paused = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; },
     pause() { if (running) paused = true; },
     resume() { if (running) { paused = false; last = performance.now(); } },
   };
