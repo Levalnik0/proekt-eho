@@ -80,6 +80,8 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .overlay { justify-content: flex-start; }
 .overlay::before, .overlay::after { content: ""; flex: 1 0 0; }
 .overlay[hidden] { display: none !important; }
+/* Кнопки итога и старта всегда видны, даже если текст длиннее экрана */
+[id$="-end"].overlay .row, #r-start .btn--main#r-go { position: sticky; bottom: -12px; background: var(--bg); padding: 10px 0 2px; z-index: 2; }
 [id$="-end"].overlay { background: var(--bg); justify-content: center; }
 .recap--tight div { padding: 12px 14px; }
 .howto { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 12px; counter-reset: s; }
@@ -142,7 +144,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .scene-wrap { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 12px; }
 .scene-box { position: relative; width: 300px; height: 433px; }
 .scene-box > svg { width: 100%; height: 100%; display: block; border-radius: 20px; }
-.dim { position: absolute; inset: 0; border-radius: 20px; background: rgba(4,12,14,.86); pointer-events: none;
+.dim { position: absolute; inset: 0; border-radius: 20px; background: rgba(4,12,14,.94); pointer-events: none;
   -webkit-mask: radial-gradient(circle 64px at var(--x, -200px) var(--y, -200px), transparent 96%, #000 100%);
   mask: radial-gradient(circle 64px at var(--x, -200px) var(--y, -200px), transparent 96%, #000 100%); }
 .lens { position: absolute; width: 128px; height: 128px; margin: -64px 0 0 -64px; border-radius: 50%; overflow: hidden; pointer-events: none;
@@ -156,7 +158,9 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ── 3. Крепость ── */
 .fort { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
-.fort__scene { position: relative; flex: 1; min-height: 190px; display: flex; align-items: flex-end; justify-content: center; gap: 22px; padding: 70px 0 14px; }
+.fort > * { flex-shrink: 0; }
+.fort__scene { position: relative; flex: 1 0 auto; min-height: 290px; display: flex; align-items: flex-end; justify-content: center; gap: 22px; padding: 84px 0 14px; }
+.fort .blk { min-height: 44px; }
 .tower { position: relative; width: 150px; display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; min-height: 30px; }
 .tower::after { content: ""; position: absolute; bottom: -8px; left: -20px; right: -20px; height: 8px; border-radius: 4px; background: var(--surface-2); }
 .brick { width: 100%; height: 26px; border-radius: 7px; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--accent-ink);
@@ -210,7 +214,7 @@ canvas { display: block; width: 100%; height: 100%; }
 .guest .face { width: 44px; height: 44px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; color: #0c1a1d; box-shadow: 0 4px 12px rgba(0,0,0,.35); transition: transform .2s; }
 .guest.friend .face, .guest.fake .face { background: var(--accent); }
 .guest.stranger .face { background: #9fb2b1; }
-.guest .tag { display: inline-block; margin-top: 3px; padding: 2px 6px; border-radius: 8px; background: rgba(12,26,29,.85); font-size: 10.5px; line-height: 1.25; color: var(--ink); white-space: nowrap; }
+.guest .tag { display: inline-block; margin-top: 3px; padding: 2px 6px; border-radius: 8px; background: rgba(12,26,29,.85); font-size: 12px; line-height: 1.25; color: var(--ink); white-space: nowrap; }
 .guest .tag i { font-style: normal; color: var(--muted); }
 .guest.gone { opacity: 0; transition: opacity .25s, margin-top .25s; margin-top: -14px; pointer-events: none; }
 .guest.bump .face { transform: scale(1.25); }
@@ -394,7 +398,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <div class="pass" id="k-pass"></div>
         <div class="tray" id="k-tray"></div>
         <div class="legend"><span><i class="t-word"></i>слово</span><span><i class="t-me"></i>про тебя</span><span><i class="t-common"></i>популярное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span></div>
-        <div class="fort__actions"><button class="btn" id="k-clear">Новый набор</button><button class="btn btn--main" id="k-attack">Запустить робота</button></div>
+        <div class="fort__actions"><button class="btn" id="k-clear">Другие блоки</button><button class="btn btn--main" id="k-attack">Запустить робота</button></div>
       </div>
     </div>
   </section>
@@ -750,7 +754,7 @@ function close() {
   }
   $('#f-go').onclick = start;
   games.filter = {
-    enter() { $('#f-start').hidden = false; $('#f-end').hidden = true; $('#f-time').textContent = '60'; $('#f-score').textContent = '0'; },
+    enter() { $('#f-start').hidden = false; $('#f-end').hidden = true; $('#f-time').textContent = '60'; $('#f-score').textContent = '0'; $('#f-hint').textContent = 'Комбо растёт, если не ошибаешься'; },
     leave() { running = false; paused = false; cancelAnimationFrame(raf); bubs.forEach((b) => b.el.remove()); bubs = []; },
     pause() { if (running && !paused) { paused = true; pausedAt = performance.now(); } },
     resume() { if (running && paused) { const d = performance.now() - pausedAt; t0 += d; spawnAt += d; last = performance.now(); paused = false; } },
@@ -847,7 +851,7 @@ function close() {
   }
   function toast(t) {
     stage.querySelector('.toast')?.remove();
-    const d = document.createElement('div'); d.className = 'toast'; d.textContent = 'Нашла: ' + t; stage.appendChild(d);
+    const d = document.createElement('div'); d.className = 'toast'; d.textContent = 'Найдено: ' + t; stage.appendChild(d);
     clearTimeout(toastTimer); toastTimer = setTimeout(() => d.remove(), 2400);
   }
   function move(e) {
@@ -874,7 +878,7 @@ function close() {
     toast(c.title.toLowerCase());
     buzz([12, 40, 12]); snd.good();
     clearTimeout(hintTimer); hintTimer = setTimeout(nudge, 20000);
-    if (found.size === CLUES.length) { active = false; setTimeout(end, 1000); }
+    if (found.size === CLUES.length) { active = false; clearTimeout(end.t); end.t = setTimeout(end, 1000); }
   }
   function end() {
     clearTimeout(hintTimer); snd.win(); buzz([15, 60, 15]);
@@ -891,8 +895,9 @@ function close() {
   stage.addEventListener('pointerdown', move);
   $('#d-go').onclick = start;
   games.detective = {
-    enter() { build(); active = false; $('#d-start').hidden = false; $('#d-end').hidden = true; $('#d-count').textContent = '0 из 5'; },
-    leave() { active = false; clearTimeout(hintTimer); },
+    enter() { clearTimeout(end.t); build(); active = false; $('#d-start').hidden = false; $('#d-end').hidden = true; $('#d-count').textContent = '0 из 5'; },
+    // Если выйти сразу после последней улики, итог не должен появиться в скрытой игре
+    leave() { active = false; clearTimeout(hintTimer); clearTimeout(end.t); },
   };
 })();
 
@@ -1197,7 +1202,7 @@ function close() {
   }
   function mood(g, face, txt, color) {
     g.el.querySelector('.face').textContent = face;
-    pop(g.tx, g.ty - 6, txt, color);
+    pop(g.tx, g.ty - 62, txt, color);
   }
   function resolve(g) {
     if (!running || g.dead) return;
@@ -1217,9 +1222,9 @@ function close() {
   }
   function tap(g) {
     if (!running || g.dead) return;
-    if (g.kind === 'fake') { pr += 6; stat.caught++; pop(g.tx, g.ty - 6, 'Удалён', 'var(--good)'); buzz(12); snd.zap(); }
-    else if (g.kind === 'friend') { fr -= 14; stat.offended++; pop(g.tx, g.ty - 6, 'Обиделся', 'var(--soft)'); buzz([20, 40, 20]); snd.bad(); }
-    else { pop(g.tx, g.ty - 6, 'Ушёл', 'var(--muted)'); }
+    if (g.kind === 'fake') { pr += 6; stat.caught++; pop(g.tx, g.ty - 62, 'Удалён', 'var(--good)'); buzz(12); snd.zap(); }
+    else if (g.kind === 'friend') { fr -= 14; stat.offended++; pop(g.tx, g.ty - 62, 'Обиделся', 'var(--soft)'); buzz([20, 40, 20]); snd.bad(); }
+    else { pop(g.tx, g.ty - 62, 'Ушёл', 'var(--muted)'); }
     meters(); kill(g);
     if (fr <= 0 || pr <= 0) finish(false);
   }
@@ -1410,9 +1415,9 @@ function close() {
     priv: { c: '#5bb8ff', shape: 'square' },
   };
   const BOTS = [
-    { name: 'Лиса', color: '#ff8fb1', skill: 0.85, speed: 0.74 },
-    { name: 'Кит', color: '#a996ff', skill: 0.7, speed: 0.64 },
-    { name: 'Сова', color: '#ffc27a', skill: 0.55, speed: 0.54 },
+    { name: 'Лиса', color: '#ff8fb1', skill: 0.85, speed: 0.66 },
+    { name: 'Кит', color: '#a996ff', skill: 0.7, speed: 0.57 },
+    { name: 'Сова', color: '#ffc27a', skill: 0.55, speed: 0.48 },
   ];
   const DURATION = 45, CR = 17, MAXV = 190, ITEM_W = 92, ITEM_H = 40, HIT = 30;
   const cv = $('#r-canvas'), stage = $('#r-stage'), ctx = cv.getContext('2d'), pad = $('#r-pad'), knob = $('#r-knob');
@@ -1440,9 +1445,9 @@ function close() {
   // Слово появляется в свободном месте: не рядом с другими словами и машинками
   function spawnItem(tid) {
     const it = pick(tid);
-    for (let n = 0; n < 40; n++) {
-      const x = ITEM_W / 2 + 8 + Math.random() * (W - ITEM_W - 16), y = 70 + Math.random() * (H - 70 - ITEM_H);
-      if (items.every((o) => Math.hypot(o.x - x, o.y - y) > 80) && cars.every((c) => Math.hypot(c.x - x, c.y - y) > 70)) { it.x = x; it.y = y; break; }
+    for (let n = 0; n < 80; n++) {
+      const x = ITEM_W / 2 + 8 + Math.random() * (W - ITEM_W - 16), y = 84 + Math.random() * (H - 84 - ITEM_H);
+      if (items.every((o) => Math.abs(o.x - x) > ITEM_W + 6 || Math.abs(o.y - y) > ITEM_H + 6) && cars.every((c) => Math.hypot(c.x - x, c.y - y) > 70)) { it.x = x; it.y = y; break; }
       it.x = x; it.y = y;
     }
     return it;
@@ -1522,7 +1527,9 @@ function close() {
       c.x += c.vx * dt; c.y += c.vy * dt;
       const m = CR + 2;
       if (c.x < m) { c.x = m; c.vx = Math.abs(c.vx) * 0.3; } if (c.x > W - m) { c.x = W - m; c.vx = -Math.abs(c.vx) * 0.3; }
-      if (c.y < m) { c.y = m; c.vy = Math.abs(c.vy) * 0.3; } if (c.y > H - m) { c.y = H - m; c.vy = -Math.abs(c.vy) * 0.3; }
+      // Сверху арену закрывают табло и подпись темы, под ними машинку не видно
+      const top = 62 + CR;
+      if (c.y < top) { c.y = top; c.vy = Math.abs(c.vy) * 0.3; } if (c.y > H - m) { c.y = H - m; c.vy = -Math.abs(c.vy) * 0.3; }
       const sp = Math.hypot(c.vx, c.vy);
       if (sp > 25) c.ang += wrapA(Math.atan2(c.vy, c.vx) + Math.PI / 2 - c.ang) * Math.min(1, dt * 10);
       if (c.slow > 0) c.slow -= dt;
@@ -1620,7 +1627,7 @@ function close() {
   function padMove(e) {
     const r = pad.getBoundingClientRect(), base = pad.querySelector('.r-base').getBoundingClientRect();
     let dx = e.clientX - (base.left + base.width / 2), dy = e.clientY - (base.top + base.height / 2);
-    const R = base.width / 2 - 10, d = Math.hypot(dx, dy);
+    const R = base.width / 2 - knob.offsetWidth / 2 - 2, d = Math.hypot(dx, dy);
     if (d > R) { dx = dx / d * R; dy = dy / d * R; }
     joy.x = dx / R; joy.y = dy / R; knob.style.transform = `translate(${dx}px, ${dy}px)`;
     return r;
@@ -1640,7 +1647,7 @@ function close() {
   paintHard();
   $('#r-go').onclick = start;
   games.race = {
-    enter() { running = false; $('#r-start').hidden = false; $('#r-end').hidden = true; $('#r-theme').hidden = true; $('#r-board').innerHTML = ''; renderThemes(); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
+    enter() { running = false; $('#r-start').hidden = false; $('#r-end').hidden = true; $('#r-theme').hidden = true; $('#r-board').innerHTML = ''; $('#r-time').textContent = DURATION; $('#r-score').textContent = '0'; renderThemes(); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
     leave() { running = false; paused = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; },
     pause() { if (running) paused = true; },
     resume() { if (running) { paused = false; last = performance.now(); } },
