@@ -7,7 +7,12 @@
 export const LAB_CODE = 'игролаб';
 const KEY = 'echo.lab.unlocked';
 
+// Если хранилище недоступно (приватный режим), запоминаем открытие хотя бы
+// до закрытия вкладки, иначе после ввода кода показывалась бы главная
+let openedNow = false;
+
 export function labUnlocked(): boolean {
+  if (openedNow) return true;
   try {
     return localStorage.getItem(KEY) === '1';
   } catch {
@@ -19,6 +24,7 @@ export function labUnlocked(): boolean {
 export function tryUnlockLab(code: string): boolean {
   const ok = code.trim().toLowerCase() === LAB_CODE;
   if (ok) {
+    openedNow = true;
     try {
       localStorage.setItem(KEY, '1');
     } catch {

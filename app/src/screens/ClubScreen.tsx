@@ -115,7 +115,7 @@ export function ClubScreen({
           }}
         >
           <input
-            className="checker__input"
+            className="checker__input" aria-label="Код" autoCapitalize="off" autoCorrect="off" spellCheck={false}
             value={code}
             onChange={(e) => {
               setCode(e.target.value);
@@ -177,7 +177,7 @@ export function ClubScreen({
         }}
       >
         <input
-          className="checker__input"
+          className="checker__input" aria-label="Код" autoCapitalize="off" autoCorrect="off" spellCheck={false}
           value={code}
           onChange={(e) => {
             setCode(e.target.value);

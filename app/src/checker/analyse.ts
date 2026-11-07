@@ -22,7 +22,30 @@ const SIGNALS = (flagsData.signals as Signal[]).map((s) => ({
  * Приводим слово к сравнимому виду: русский текст пишут как попало —
  * с «ё», без неё, капслоком, с лишними знаками.
  */
-const norm = (s: string) => s.toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ');
+// Длина строки не меняется (пробелы и переводы строк заменяются 1 к 1),
+// иначе найденное место не совпадёт с местом в исходном тексте и цитата съедет
+const norm = (s: string) => s.toLowerCase().replace(/ё/g, 'е').replace(/\s/g, ' ');
+
+const LETTER = /[a-zа-я0-9]/;
+
+/**
+ * Ищет основу слова с начала слова: «суд» не должно находиться
+ * в «обсуждаем». У коротких основ (до 5 букв) после них может быть
+ * не больше трёх букв, иначе «приз» найдётся в «признании».
+ */
+function findStem(text: string, stem: string): number {
+  let at = text.indexOf(stem);
+  while (at !== -1) {
+    if (at === 0 || !LETTER.test(text[at - 1])) {
+      if (stem.length > 5) return at;
+      let extra = 0;
+      while (at + stem.length + extra < text.length && LETTER.test(text[at + stem.length + extra])) extra++;
+      if (extra <= 3) return at;
+    }
+    at = text.indexOf(stem, at + 1);
+  }
+  return -1;
+}
 
 /**
  * Разбор ищет не точные фразы, а КОРНИ слов и структурные признаки.
@@ -42,7 +65,7 @@ export function analyse(raw: string): Hit[] {
   for (const flag of FLAGS) {
     const quotes: string[] = [];
     for (const stem of flag.stems) {
-      const at = text.indexOf(norm(stem));
+      const at = findStem(text, norm(stem));
       if (at === -1) continue;
       const quote = expand(raw, at, norm(stem).length);
       if (quote && !quotes.some((q) => norm(q) === norm(quote))) quotes.push(quote);

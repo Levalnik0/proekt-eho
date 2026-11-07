@@ -6,7 +6,9 @@ type Store = Partial<Record<GameId, number>>;
 
 function read(): Store {
   try {
-    return JSON.parse(localStorage.getItem(KEY) ?? '{}') as Store;
+    const parsed: unknown = JSON.parse(localStorage.getItem(KEY) ?? '{}');
+    // Если в хранилище лежит что-то не то (null, строка), считаем, что рекордов нет
+    return typeof parsed === 'object' && parsed !== null ? (parsed as Store) : {};
   } catch {
     return {};
   }

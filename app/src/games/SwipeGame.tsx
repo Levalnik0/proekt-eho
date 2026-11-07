@@ -76,14 +76,19 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
     setDragging(true);
     e.currentTarget.setPointerCapture(e.pointerId);
   };
+  // Смещение держим и в ref: при быстром «щелчке» pointerup приходит раньше
+  // перерисовки, и значение из state ещё старое
+  const dxNow = useRef(0);
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (start.current === null) return;
-    setDx(e.clientX - start.current);
+    dxNow.current = e.clientX - start.current;
+    setDx(dxNow.current);
   };
   const onUp = () => {
     if (start.current === null) return;
-    const moved = dx;
+    const moved = dxNow.current;
     start.current = null;
+    dxNow.current = 0;
     setDragging(false);
     if (Math.abs(moved) > SWIPE_AT) answer(moved < 0);
     else setDx(0);

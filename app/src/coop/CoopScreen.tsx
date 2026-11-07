@@ -52,7 +52,9 @@ export function CoopScreen({ coop, onExit }: { coop: Coop; onExit: () => void })
           state: stateOf(a.teen, a.adult),
         })),
       });
-      const given = award(['decision-map', 'ally']);
+      // «Союзник» — если хоть в одном шаге пошли навстречу друг другу
+      const together = all.some((a) => stateOf(a.teen, a.adult) === 'together');
+      const given = award(['decision-map', together ? 'ally' : undefined]);
       if (given.length) setFresh(given);
       setPhase({ kind: 'map' });
     },
