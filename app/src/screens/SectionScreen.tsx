@@ -4,16 +4,22 @@ import {
   IconBack,
   IconBubble,
   IconCompass,
+  IconDuel,
+  IconFilter,
+  IconFort,
   IconGamepad,
   IconMagnifier,
   IconMirror,
+  IconNet,
   IconPerson,
+  IconRace,
+  IconSwipe,
   IconTogether,
+  IconWindows,
 } from '../components/icons';
 import { buzz } from '../fx';
-import { labUnlocked } from '../games/lab';
 import { useProgress } from '../progress/useProgress';
-import type { Activity, Section } from '../routes';
+import { tileStyle, type Activity, type Section } from '../routes';
 
 const KIND_ICON: Record<Activity['kind'], (props: { size?: number }) => ReactNode> = {
   quest: IconBubble,
@@ -24,6 +30,19 @@ const KIND_ICON: Record<Activity['kind'], (props: { size?: number }) => ReactNod
   offline: IconCompass,
   checker: IconMagnifier,
   section: IconAdultChild,
+};
+
+/** Свой значок у каждой игры: иначе все плитки раздела «Игры» выглядят одинаково */
+const ROUTE_ICON: Record<string, (props: { size?: number }) => ReactNode> = {
+  'game/swipe': IconSwipe,
+  'game/slang': IconBubble,
+  'game/lab/duel': IconDuel,
+  'game/lab/race': IconRace,
+  'game/lab/filter': IconFilter,
+  'game/lab/fort': IconFort,
+  'game/lab/detective': IconMagnifier,
+  'game/lab/net': IconNet,
+  'game/lab/windows': IconWindows,
 };
 
 /**
@@ -62,18 +81,13 @@ export function SectionScreen({
       </div>
 
       <ul className="tiles tiles--section stagger">
-        {[
-          ...section.activities,
-          // После ввода кода в «Клубе» в играх появляется «Лаборатория»
-          ...(section.id === 'games' && labUnlocked()
-            ? [{ route: 'game/lab', label: 'Лаборатория', kind: 'game' as const }]
-            : []),
-        ].map((a) => {
-          const Icon = KIND_ICON[a.kind];
+        {section.activities.map((a, index) => {
+          const Icon = ROUTE_ICON[a.route] ?? KIND_ICON[a.kind];
           return (
             <li key={a.route}>
               <button
                 className="tile"
+                style={tileStyle(index)}
                 onClick={() => {
                   buzz('tap');
                   onOpen(a.route);

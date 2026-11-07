@@ -276,3 +276,86 @@ export function IconSwipe({ size = 24, className }: IconProps) {
     </svg>
   );
 }
+
+/* ── Значки игр: у каждой своя форма, чтобы плитки не сливались ── */
+
+const GLYPH = 'var(--icon-glyph-bg, #5a94a5)';
+
+/** Две башни из блоков: «Дуэль паролей» */
+export function IconDuel({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <rect x="3" y="11" width="8" height="9.5" rx="1.8" fill="currentColor" />
+      <rect x="13" y="4.5" width="8" height="16" rx="1.8" fill="currentColor" />
+      <rect x="5" y="13.3" width="4" height="1.8" rx="0.9" fill={GLYPH} />
+      <rect x="5" y="16.6" width="4" height="1.8" rx="0.9" fill={GLYPH} />
+      <rect x="15" y="7" width="4" height="1.8" rx="0.9" fill={GLYPH} />
+      <rect x="15" y="10.6" width="4" height="1.8" rx="0.9" fill={GLYPH} />
+      <rect x="15" y="14.2" width="4" height="1.8" rx="0.9" fill={GLYPH} />
+    </svg>
+  );
+}
+
+/** Машинка сверху: «Автодром слов» */
+export function IconRace({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <rect x="8" y="2.5" width="8" height="19" rx="3.6" fill="currentColor" />
+      <rect x="9.8" y="6.8" width="4.4" height="3.6" rx="1.1" fill={GLYPH} />
+      <rect x="9.8" y="15" width="4.4" height="2.4" rx="1" fill={GLYPH} opacity="0.55" />
+      <rect x="4.6" y="5" width="2.2" height="4.6" rx="1" fill="currentColor" />
+      <rect x="17.2" y="5" width="2.2" height="4.6" rx="1" fill="currentColor" />
+      <rect x="4.6" y="14.4" width="2.2" height="4.6" rx="1" fill="currentColor" />
+      <rect x="17.2" y="14.4" width="2.2" height="4.6" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Два пузыря сообщений: «Фильтр» */
+export function IconFilter({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <rect x="2.5" y="3.5" width="14" height="7.5" rx="3.75" fill="currentColor" />
+      <rect x="7.5" y="13" width="14" height="7.5" rx="3.75" fill="currentColor" opacity="0.7" />
+      <rect x="5.4" y="6.4" width="6.5" height="1.7" rx="0.85" fill={GLYPH} />
+      <rect x="10.4" y="15.9" width="6.5" height="1.7" rx="0.85" fill={GLYPH} />
+    </svg>
+  );
+}
+
+/** Башня с зубцами: «Крепость» */
+export function IconFort({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <rect x="4.5" y="3.5" width="3.6" height="4.6" rx="0.8" fill="currentColor" />
+      <rect x="10.2" y="3.5" width="3.6" height="4.6" rx="0.8" fill="currentColor" />
+      <rect x="15.9" y="3.5" width="3.6" height="4.6" rx="0.8" fill="currentColor" />
+      <rect x="4.5" y="9.4" width="15" height="5" rx="1.2" fill="currentColor" />
+      <rect x="4.5" y="15.7" width="15" height="5" rx="1.2" fill="currentColor" />
+      <rect x="9.4" y="11" width="5.2" height="1.8" rx="0.9" fill={GLYPH} />
+    </svg>
+  );
+}
+
+/** Три ворот и сигнал: «Сеть» */
+export function IconNet({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <rect x="2.6" y="3.6" width="5.6" height="8" rx="2.2" stroke="currentColor" strokeWidth="2" />
+      <rect x="9.2" y="3.6" width="5.6" height="8" rx="2.2" fill="currentColor" />
+      <rect x="15.8" y="3.6" width="5.6" height="8" rx="2.2" stroke="currentColor" strokeWidth="2" />
+      <circle cx="12" cy="17.6" r="3.4" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Домик с окнами: «Окна» */
+export function IconWindows({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path d="M3 11.2 12 3.4l9 7.8V20.6H3Z" fill="currentColor" />
+      <rect x="6.4" y="12.4" width="4" height="4" rx="1" fill={GLYPH} />
+      <rect x="13.6" y="12.4" width="4" height="4" rx="1" fill={GLYPH} opacity="0.5" />
+    </svg>
+  );
+}

@@ -111,7 +111,10 @@ export default function App() {
   }, [back]);
 
   // Неизвестный адрес не должен молча показывать главную с мусором в строке
-  const labOpen = path === 'game/lab' && labUnlocked();
+  // Игры теперь открыты всем: маршрут game/lab/<игра> запускает нужную сразу,
+  // game/lab (меню всех игр) остаётся для тех, кто знает код в «Клубе»
+  const labGame = path.startsWith('game/lab/') ? path.slice('game/lab/'.length) : null;
+  const labOpen = labGame !== null || (path === 'game/lab' && labUnlocked());
   const known =
     isTab ||
     Boolean(section || quest || mirror || test || coop) ||
@@ -190,7 +193,7 @@ export default function App() {
         <iframe
           ref={labFrame}
           title="Лаборатория игр"
-          src={`${import.meta.env.BASE_URL}lab/index.html`}
+          src={`${import.meta.env.BASE_URL}lab/index.html${labGame ? `?game=${encodeURIComponent(labGame)}` : ''}`}
           style={{ border: 0, width: '100%', height: '100%', display: 'block' }}
         />
       </div>

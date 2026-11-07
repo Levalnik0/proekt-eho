@@ -1,3 +1,18 @@
+import type { CSSProperties } from 'react';
+
+/**
+ * Цвета плиток. У каждой плитки свой цвет, иначе все значки сливаются
+ * в одинаковые кружки и по ним не понять, что где. Белый значок на каждом
+ * читается (контраст не меньше 4,3 к 1).
+ */
+const TILE_COLORS = ['#c2571a', '#6d4fc2', '#b83a6a', '#1f7f88', '#a8661a', '#2a7d48'];
+export const tileStyle = (index: number): CSSProperties => {
+  const c = TILE_COLORS[index % TILE_COLORS.length];
+  return {
+    ['--tile-bg' as string]: `linear-gradient(145deg, ${c}, color-mix(in srgb, ${c} 68%, #000))`,
+  };
+};
+
 export type SectionId = 'games' | 'stories' | 'tests' | 'parents' | 'understand';
 
 /** Что можно запустить внутри раздела */
@@ -23,7 +38,16 @@ export const SECTIONS: Section[] = [
     title: 'Игры',
     activities: [
       { route: 'game/swipe', label: 'Развод или нет?', kind: 'game' },
+      // Игры на отдельной странице (рамка в App.tsx): теперь открыты всем,
+      // без кода. Лучшие стоят выше: их дети называют «самыми моими»
+      { route: 'game/lab/duel', label: 'Дуэль паролей', kind: 'game' },
+      { route: 'game/lab/race', label: 'Автодром слов', kind: 'game' },
+      { route: 'game/lab/filter', label: 'Фильтр', kind: 'game' },
       { route: 'game/slang', label: 'Сленг-блиц', kind: 'game' },
+      { route: 'game/lab/fort', label: 'Крепость', kind: 'game' },
+      { route: 'game/lab/detective', label: 'Детектив', kind: 'game' },
+      { route: 'game/lab/net', label: 'Сеть', kind: 'game' },
+      { route: 'game/lab/windows', label: 'Окна', kind: 'game' },
     ],
   },
   {

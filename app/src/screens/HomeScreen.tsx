@@ -11,6 +11,7 @@ import {
 } from '../components/icons';
 import { buzz, centerOf, rings } from '../fx';
 import { bestOf } from '../games/storage';
+import { tileStyle } from '../routes';
 import { useProgress } from '../progress/useProgress';
 import { useTheme } from '../theme/useTheme';
 
@@ -20,6 +21,8 @@ const TESTS = ['trust-scale', 'pressure', 'recognition'];
 type Tile = {
   route: string;
   label: string;
+  /** Что внутри, три-четыре слова: по одному слову плитки не отличить */
+  sub: string;
   Icon: (props: { size?: number }) => ReactNode;
   /** Сколько пройдено: число вместо слова «пройдено» */
   count?: string;
@@ -40,22 +43,24 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
   const tests = TESTS.filter((id) => progress.tests[id]).length;
 
   const tiles: Tile[] = [
-    { route: 'games', label: 'Игры', Icon: IconGamepad },
+    { route: 'games', label: 'Игры', sub: '9 игр на скорость', Icon: IconGamepad },
     {
       route: 'stories',
       label: 'Истории',
+      sub: 'чат с мошенником',
       Icon: IconBubble,
       count: stories ? `${stories}/${STORIES.length}` : undefined,
     },
     {
       route: 'tests',
       label: 'Кто ты?',
+      sub: 'тесты про тебя',
       Icon: IconPerson,
       count: tests ? `${tests}/${TESTS.length}` : undefined,
     },
-    { route: 'check-message', label: 'Проверить', Icon: IconMagnifier },
-    { route: 'parents', label: 'Родителям', Icon: IconAdultChild },
-    { route: 'coop/48', label: 'Вместе', Icon: IconTogether },
+    { route: 'check-message', label: 'Проверить', sub: 'сообщение на развод', Icon: IconMagnifier },
+    { route: 'parents', label: 'Родителям', sub: 'помощь и разговор', Icon: IconAdultChild },
+    { route: 'coop/48', label: 'Вместе', sub: 'квест на двоих', Icon: IconTogether },
   ];
 
   return (
@@ -77,6 +82,9 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
         />
       </header>
 
+      {/* Одна строка о том, что это: без неё мама не понимала, зачем приложение */}
+      <p className="home2__lead">Как не попасться на развод в сети. Для детей 10–12 лет и родителей.</p>
+
       <button
         className="play-hero"
         onClick={(e) => {
@@ -97,10 +105,11 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
       </button>
 
       <ul className="tiles stagger">
-        {tiles.map(({ route, label, Icon, count }) => (
+        {tiles.map(({ route, label, sub, Icon, count }, index) => (
           <li key={route}>
             <button
               className="tile"
+              style={tileStyle(index)}
               onClick={() => {
                 buzz('tap');
                 onOpen(route);
@@ -110,6 +119,7 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
                 <Icon size={26} />
               </span>
               <span className="tile__label">{label}</span>
+              <span className="tile__sub">{sub}</span>
               {count && <span className="tile__count">{count}</span>}
             </button>
           </li>

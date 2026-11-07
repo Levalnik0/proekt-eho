@@ -287,8 +287,8 @@ canvas { display: block; width: 100%; height: 100%; }
   <!-- ═════════ МЕНЮ ═════════ -->
   <div class="menu" id="menu">
     <div class="menu__top"><button class="back" id="lab-exit" hidden aria-label="Назад в приложение">‹</button><span></span><button class="snd" aria-label="Звук"></button></div>
-    <h1>Лаборатория</h1>
-    <p class="sub">Новые игры в пробной версии. Поиграй и скажи, какие оставить.</p>
+    <h1>Мини-игры</h1>
+    <p class="sub">Все игры в одном месте. Рекорды остаются в этом телефоне.</p>
     <div class="cards">
       <button class="card" data-open="filter">
         <span class="card__art" style="background:linear-gradient(145deg,#2a8f8c,#18515a)">
@@ -615,12 +615,16 @@ function open(id) {
     if (!seen) showHow('fort');
   }
 }
+// Приложение запускает игру сразу по адресу ?game=...: тогда «назад» ведёт
+// не в меню этой страницы, а обратно в раздел «Игры»
+const direct = new URLSearchParams(location.search).get('game');
 function close() {
   if (!current) return;
   document.getElementById('howto').hidden = true;
   games[current].leave && games[current].leave();
   $('#g-' + current).hidden = true;
   current = null;
+  if (direct && window.parent !== window) window.parent.postMessage({ echoLab: 'exit' }, location.origin);
 }
 
 /* ══════════ 1. ФИЛЬТР ══════════ */
@@ -1949,6 +1953,9 @@ function close() {
     resume() { if (phase === 'build' && !ticker) { t0 += performance.now() - pausedAt; ticker = setInterval(tick, 250); } },
   };
 })();
+
+// Игра, которую просило приложение (?game=duel и т. п.), стартует сразу
+if (direct && games[direct]) open(direct);
 </script>
 
 </html>
