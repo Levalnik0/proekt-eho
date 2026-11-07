@@ -34,6 +34,17 @@ export function CheckerScreen({ onExit }: { onExit: () => void }) {
     [award, badgeId],
   );
 
+  // На телефоне вставить одним нажатием проще, чем долгим тапом по полю
+  const canPaste = typeof navigator !== 'undefined' && Boolean(navigator.clipboard?.readText);
+  const paste = async () => {
+    try {
+      const value = await navigator.clipboard.readText();
+      if (value.trim()) setText(value);
+    } catch {
+      // человек не разрешил доступ к буферу: вставит в поле сам
+    }
+  };
+
   return (
     <div className="screen">
       <div className="topbar">
@@ -44,24 +55,24 @@ export function CheckerScreen({ onExit }: { onExit: () => void }) {
         <span className="topbar__spacer" />
       </div>
 
+      {/* На входе ничего лишнего: поле, «Вставить», одна строка про
+          приватность и кнопка. Объяснения — в разборе, после проверки. */}
       {!checked && (
         <>
-          <p className="section-lead">
-            Вставьте сообщение, которое показалось странным. Разберём, какие приёмы в нём есть.
-          </p>
-
           <textarea
             className="checker__input"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Вставьте или перепечатайте сообщение…"
+            placeholder="Вставь сюда сообщение, которое насторожило"
             rows={6}
             aria-label="Текст сообщения для проверки"
           />
 
-          <div className="checker__privacy">
-            Текст остаётся на этом телефоне и никуда не отправляется.
-          </div>
+          {canPaste && (
+            <button className="checker__paste" onClick={paste}>
+              Вставить из буфера
+            </button>
+          )}
 
           <button
             className="btn btn--primary btn--wide"
@@ -71,18 +82,16 @@ export function CheckerScreen({ onExit }: { onExit: () => void }) {
             Проверить
           </button>
 
-          <div className="checker__samples-title">Или посмотрите на примере</div>
-          <ul className="activities stagger">
+          <div className="checker__privacy">Текст не уходит с телефона</div>
+
+          <div className="checker__samples-title">Примеры</div>
+          <div className="example-chips">
             {SAMPLES.map((s) => (
-              <li key={s.label}>
-                <button className="activity" onClick={() => run(s.text)}>
-                  <span className="activity__kind">Пример</span>
-                  <span className="activity__label">{s.label}</span>
-                  <span className="activity__hint">{s.text.slice(0, 58)}…</span>
-                </button>
-              </li>
+              <button key={s.label} className="example-chip" onClick={() => run(s.text)}>
+                {s.label}
+              </button>
             ))}
-          </ul>
+          </div>
         </>
       )}
 

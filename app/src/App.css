@@ -2765,3 +2765,38 @@
   gap: 8px;
   margin: 4px 0 20px;
 }
+
+/* «Проверить»: вставка одним нажатием и примеры короткими кнопками */
+.checker__paste {
+  align-self: flex-start;
+  min-height: 44px;
+  margin: 8px 0 4px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--echo-teal-text);
+  background: color-mix(in srgb, var(--echo-teal) 16%, transparent);
+}
+
+.example-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.example-chip {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: var(--sh-pill);
+  transition: transform 0.12s ease;
+}
+
+.example-chip:active {
+  transform: scale(0.96);
+}
