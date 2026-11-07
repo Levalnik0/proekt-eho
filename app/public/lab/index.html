@@ -212,6 +212,41 @@ canvas { display: block; width: 100%; height: 100%; }
 .guest.gone { opacity: 0; transition: opacity .25s, margin-top .25s; margin-top: -14px; pointer-events: none; }
 .guest.bump .face { transform: scale(1.25); }
 .w-pop { position: absolute; z-index: 7; font-weight: 800; font-size: 14px; pointer-events: none; transform: translateX(-50%); animation: pop .9s ease-out forwards; white-space: nowrap; text-shadow: 0 1px 6px rgba(0,0,0,.6); }
+/* ── 7. Дуэль паролей ── */
+.duel { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+.u-rivals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 2px 16px 10px; }
+.u-r { padding: 7px 8px; border-radius: 12px; background: var(--surface); font-size: 11.5px; color: var(--muted); line-height: 1.3; min-width: 0; }
+.u-r b { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--ink); }
+.u-r b i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none; }
+.u-r span { display: block; overflow-wrap: anywhere; }
+.u-r em { font-style: normal; color: var(--ink); font-weight: 700; }
+.u-mine { margin: 0 16px 8px; font-size: 13px; color: var(--muted); }
+.u-mine b { color: var(--ink); }
+.t-own { background: #8fd3ff; }
+.u-own { display: flex; gap: 8px; padding: 4px 16px 6px; }
+.u-own input, .u-field input { flex: 1; min-width: 0; height: 46px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 16px; }
+.u-own input::placeholder, .u-field input::placeholder { color: var(--muted); }
+.u-own .btn { min-height: 46px; padding: 0 16px; }
+.u-fields { display: grid; gap: 8px; margin: 0 0 12px; }
+.u-field { display: grid; grid-template-columns: 92px 1fr; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+.u-warn { font-size: 13px; color: var(--soft); margin: 0 0 12px; line-height: 1.4; }
+.u-arena { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 4px 10px 12px; background: var(--bg); overflow-y: auto; }
+.u-arena[hidden] { display: none !important; }
+.u-robotrow { position: relative; height: 70px; flex: none; }
+.u-robotrow svg { position: absolute; top: 4px; left: 0; width: 46px; transition: left .55s cubic-bezier(.4,0,.2,1); }
+.u-robotrow svg.hit { animation: hit .25s ease 3; }
+.u-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; flex: 1; }
+.u-col { display: flex; flex-direction: column; align-items: stretch; min-width: 0; }
+.u-name { text-align: center; font-weight: 700; font-size: 13px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.u-name i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 4px; }
+.u-tow { position: relative; flex: 1; min-height: 190px; display: flex; flex-direction: column-reverse; justify-content: flex-start; gap: 3px; padding-bottom: 8px; border-bottom: 6px solid var(--surface-2); border-radius: 0 0 4px 4px; }
+.u-b { height: 24px; flex: none; border-radius: 7px; display: grid; place-items: center; font-size: 11.5px; font-weight: 700; color: var(--accent-ink); padding: 0 3px; overflow: hidden; white-space: nowrap; animation: drop .35s cubic-bezier(.3,1.5,.5,1); transition: transform .9s cubic-bezier(.5,0,.8,.6), opacity .9s; }
+.u-b.fall { opacity: 0; }
+.u-tow.shake { animation: shake .5s ease 2; }
+.u-tow.hold .u-b { box-shadow: 0 0 12px rgba(127,224,166,.55); }
+.u-res { min-height: 52px; margin-top: 8px; text-align: center; font-size: 12.5px; line-height: 1.3; color: var(--muted); }
+.u-res b { display: block; color: var(--ink); font-size: 13px; }
+.u-res .medal { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-weight: 800; font-size: 12px; margin-bottom: 3px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 </style>
 
@@ -263,6 +298,13 @@ canvas { display: block; width: 100%; height: 100%; }
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="11" y="5" width="18" height="30" rx="7" fill="#e9f5f4"/><rect x="14" y="11" width="12" height="7" rx="2" fill="#14503a"/><rect x="7" y="9" width="4" height="8" rx="1.5" fill="#7fe0a6"/><rect x="29" y="9" width="4" height="8" rx="1.5" fill="#7fe0a6"/><rect x="7" y="24" width="4" height="8" rx="1.5" fill="#7fe0a6"/><rect x="29" y="24" width="4" height="8" rx="1.5" fill="#7fe0a6"/></svg>
         </span>
         <span><div class="card__name">Автодром слов</div><div class="card__how">Ездишь по арене и собираешь слова своей темы</div></span>
+        <span class="card__go">›</span>
+      </button>
+      <button class="card" data-open="duel">
+        <span class="card__art" style="background:linear-gradient(145deg,#7b6bd8,#2f2a66)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="16" width="12" height="18" rx="3" fill="#e9f5f4"/><rect x="5" y="9" width="12" height="5" rx="2" fill="#ffc27a"/><rect x="23" y="12" width="12" height="22" rx="3" fill="#3fd0cc"/><rect x="23" y="5" width="12" height="5" rx="2" fill="#a996ff"/></svg>
+        </span>
+        <span><div class="card__name">Дуэль паролей</div><div class="card__how">У каждого свои данные. Чей пароль крепче?</div></span>
         <span class="card__go">›</span>
       </button>
     </div>
@@ -387,6 +429,51 @@ canvas { display: block; width: 100%; height: 100%; }
     </div>
     <div class="r-pad" id="r-pad" aria-label="Пульт: веди круг в нужную сторону"><div class="r-base"><div class="r-knob" id="r-knob"></div></div></div>
   </section>
+
+  <!-- ═════════ 7. ДУЭЛЬ ПАРОЛЕЙ ═════════ -->
+  <section class="game" id="g-duel" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Дуэль паролей</span>
+      <span class="pill pill--accent" id="u-time">45</span></div>
+    <div class="stage" id="u-stage" style="touch-action:auto">
+      <div class="duel" id="u-main">
+        <div class="u-rivals" id="u-rivals"></div>
+        <div class="u-mine" id="u-mine"></div>
+        <div class="pass" id="u-pass"></div>
+        <div class="tray" id="u-tray"></div>
+        <form class="u-own" id="u-own" autocomplete="off">
+          <input id="u-own-in" maxlength="8" placeholder="Своё слово или цифры" enterkeyhint="done" autocapitalize="off" spellcheck="false">
+          <button class="btn" type="submit">Добавить</button>
+        </form>
+        <div class="legend"><span><i class="t-word"></i>слово</span><span><i class="t-me"></i>про тебя</span><span><i class="t-common"></i>популярное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span><span><i class="t-own"></i>своё</span></div>
+        <div class="fort__actions"><button class="btn btn--main btn--wide" id="u-done">Готово, проверить</button></div>
+      </div>
+      <div class="u-arena" id="u-arena" hidden>
+        <div class="u-robotrow">
+          <svg id="u-robot" viewBox="0 0 86 100" role="img" aria-label="Робот-подборщик">
+            <line x1="43" y1="6" x2="43" y2="18" stroke="#9fbcbb" stroke-width="3"/><circle cx="43" cy="6" r="5" fill="#ffc27a"/>
+            <rect x="16" y="18" width="54" height="40" rx="14" fill="#2b5662"/>
+            <circle cx="33" cy="38" r="7" fill="#e9f5f4"/><circle cx="53" cy="38" r="7" fill="#e9f5f4"/>
+            <circle cx="34" cy="39" r="3" fill="#0c1a1d"/><circle cx="54" cy="39" r="3" fill="#0c1a1d"/>
+            <rect x="22" y="62" width="42" height="30" rx="10" fill="#1f4049"/>
+            <text x="43" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#3fd0cc" font-family="monospace">0101</text>
+          </svg>
+        </div>
+        <div class="u-cols" id="u-cols"></div>
+      </div>
+      <div class="overlay" id="u-start">
+        <h2>Дуэль паролей</h2>
+        <div data-how="duel"></div>
+        <div class="u-fields">
+          <label class="u-field">Имя<input id="u-name" maxlength="10" placeholder="придумай" autocomplete="off"></label>
+          <label class="u-field">Питомец<input id="u-pet" maxlength="10" placeholder="придумай" autocomplete="off"></label>
+          <label class="u-field">Число<input id="u-num" maxlength="4" inputmode="numeric" placeholder="год или цифры" autocomplete="off"></label>
+        </div>
+        <p class="u-warn">Это игра: придумай вымышленные данные. Настоящие имя, кличку и даты лучше не вводить. Ничего не сохраняется.</p>
+        <div class="row"><button class="btn" id="u-rand">Случайный профиль</button><button class="btn btn--main" id="u-go">В дуэль</button></div>
+      </div>
+      <div class="overlay" id="u-end" hidden></div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -444,6 +531,7 @@ const HOWTO = {
   fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
   net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b>: подделку выдаёт одна буква. Три ошибки и конец.'],
   race: ['Веди <b>пультом</b> внизу: машинка едет по арене, куда направишь.', 'Твоя машинка цвета твоей темы. <b>Собирай слова такого же цвета.</b> Чужого цвета не трогай: затормозит.', 'Соперники <b>толкаются</b>, и тебя тоже могут сбить. Кто соберёт больше за 45 секунд, тот победил.'],
+  duel: ['У каждого игрока свой профиль: имя, питомец, число. <b>Робот-взломщик знает их все.</b>', '<b>Собери пароль</b> из блоков за 45 секунд. Можно добавить своё слово или цифры. Блоки «про тебя» и «популярное» слабые.', 'Робот по очереди взламывает все пароли. <b>Выигрывает самый крепкий.</b>'],
   windows: ['К окнам твоего профиля приходят гости: <b>серые</b> незнакомцы, <b>бирюзовые</b> друзья.', '<b>Нажми на окно</b>, чтобы выбрать, кому оно открыто: всем, друзьям или никому.', 'Гость с подписью <b>«0 общих»</b> не друг: нажми на него, и он уйдёт.'],
 };
 const renderHow = (id) => `<ol class="howto">${HOWTO[id].map((t) => `<li><span>${t}</span></li>`).join('')}</ol>`;
@@ -1526,6 +1614,251 @@ function close() {
     leave() { running = false; paused = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; },
     pause() { if (running) paused = true; },
     resume() { if (running) { paused = false; last = performance.now(); } },
+  };
+})();
+
+/* ══════════ 7. ДУЭЛЬ ПАРОЛЕЙ ══════════ */
+(() => {
+  // Игрок в дуэли — это запись { id, name, color, me, profile, blocks, pass, bot }.
+  // Сейчас соперники-боты (bot != null) сами добавляют блоки по таймеру.
+  // Когда появится онлайн, у живых игроков bot будет null, а pass станет
+  // обновляться сообщениями с сервера. Всё остальное (подсчёт, взлом, итоги)
+  // работает с одним и тем же списком игроков и менять не придётся.
+  const DURATION = 45, MAXB = 7;
+  const POOL = {
+    word: ['кит', 'облако', 'гитара', 'ракета', 'луна', 'пицца', 'арбуз', 'мост', 'лампа', 'ёжик', 'шторм', 'компас', 'маяк', 'башня', 'пингвин', 'радуга', 'дракон', 'бублик', 'вулкан', 'зонтик', 'комета', 'баобаб', 'самокат', 'чайник', 'медуза', 'фонарь', 'кактус', 'парус', 'молния', 'тыква', 'глобус', 'сапог'],
+    common: ['qwerty', '123456', 'пароль', '111111', 'admin', 'password', '000000', 'привет', '12345', 'qwerty123'],
+    num: ['57', '903', '48', '716', '25', '391', '64', '182', '305', '77'],
+    sym: ['!', '#', '_', '$', '%', '*', '@', '-'],
+  };
+  const COUNT = { word: 6, common: 2, num: 3, sym: 3 };
+  const NAMES = ['Вика', 'Тимур', 'Соня', 'Артём', 'Лера', 'Егор', 'Алиса', 'Макс', 'Дана', 'Ян', 'Рома', 'Ника'];
+  const PETS = ['Бублик', 'Пушок', 'Рекс', 'Снежок', 'Гоша', 'Тоша', 'Персик', 'Мотя', 'Лаки', 'Чапа', 'Барон', 'Зефир'];
+  const YEARS = ['2010', '2011', '2012', '2013', '2014', '1010', '0707', '1505'];
+  const RIVALS = [
+    { id: 'fox', name: 'Лиса', color: '#ffc27a', skill: 0.9 },
+    { id: 'whale', name: 'Кит', color: '#6ea8ff', skill: 0.6 },
+    { id: 'owl', name: 'Сова', color: '#c8a2ff', skill: 0.3 },
+  ];
+  // Сколько «бит» добавляет блок. Случайное слово даёт много,
+  // всё про владельца и всё популярное почти ничего.
+  const BITS = { word: 12, me: 2, common: 1, num: 6.5, sym: 4 };
+  const pick = (a) => a[Math.random() * a.length | 0];
+
+  let players = [], me = null, phase = 'idle', t0 = 0, pausedAt = 0, ticker = null, timers = [], profile = { name: '', pet: '', num: '' };
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const clearAll = () => { timers.forEach(clearTimeout); timers = []; clearInterval(ticker); ticker = null; };
+  const fmtProfile = (p) => [p.name, p.pet, p.num].filter(Boolean).join(' · ');
+
+  const lower = (s) => s.toLowerCase();
+  function matchesProfile(v, prof) {
+    const s = lower(v);
+    return [prof.name, prof.pet, prof.num].filter((x) => x && x.length >= 2).map(lower).some((x) => s.includes(x) || (s.length >= 3 && x.includes(s)));
+  }
+  function isCommon(v) {
+    const s = lower(v);
+    return POOL.common.includes(s) || /^(.)\1{2,}$/.test(s) || (s.length >= 3 && ('0123456789'.includes(s) || '9876543210'.includes(s))) || (s.length >= 4 && 'qwertyuiop'.includes(s));
+  }
+  // Блок, который игрок ввёл сам: слабый, если это его данные или популярная строка
+  function ownBlock(v, prof) {
+    if (matchesProfile(v, prof)) return { v, t: 'me' };
+    if (isCommon(v)) return { v, t: 'common' };
+    const digits = /^\d+$/.test(v), letters = /^[^\d]+$/.test(v);
+    const bits = digits ? v.length * 2.2 : letters ? (v.length >= 5 ? 12 : v.length * 2.5) : Math.min(v.length * 3.2, 14);
+    return { v, t: 'own', bits };
+  }
+  function blocksFor(prof) {
+    const me = [prof.name, prof.pet, prof.num].filter(Boolean).map((v) => ({ v, t: 'me' }));
+    const rest = Object.keys(COUNT).flatMap((t) => shuffle(POOL[t]).slice(0, COUNT[t]).map((v) => ({ v, t })));
+    return [...rest.filter((b) => b.t === 'word'), ...me, ...rest.filter((b) => b.t !== 'word')];
+  }
+  function bitsOf(p) {
+    const seen = new Set();
+    let total = 0;
+    for (const b of p.pass) { total += seen.has(b.v) ? 1 : (b.bits ?? BITS[b.t]); seen.add(b.v); }
+    return total + (new Set(p.pass.map((b) => b.t)).size >= 3 ? 3 : 0);
+  }
+  function human(sec) {
+    if (sec < 1) return 'долю секунды';
+    if (sec < 60) return Math.round(sec) + ' сек';
+    if (sec < 3600) return Math.round(sec / 60) + ' мин';
+    if (sec < 86400) return Math.round(sec / 3600) + ' ч';
+    if (sec < 86400 * 365) return Math.round(sec / 86400) + ' дн.';
+    const y = sec / (86400 * 365);
+    if (y < 1000) return Math.round(y) + ' лет';
+    if (y < 1e6) return Math.round(y / 1000) + ' тыс. лет';
+    if (y < 1e9) return Math.round(y / 1e6) + ' млн лет';
+    return 'дольше, чем светят звёзды';
+  }
+  const secOf = (p) => Math.pow(2, bitsOf(p)) / 1e9;
+
+  // Бот заранее решает, что соберёт: умелый берёт случайные слова, неумелый — своё имя и популярное
+  function planFor(p, skill) {
+    const n = 4 + (Math.random() * 3 | 0), used = new Set(), out = [];
+    const strong = ['word', 'word', 'word', 'num', 'sym'], weak = ['me', 'common', 'me', 'num'];
+    for (let i = 0; i < n; i++) {
+      const t = pick(Math.random() < skill ? strong : weak);
+      const pool = p.blocks.filter((b) => b.t === t && !used.has(b.v));
+      const b = pool.length ? pick(pool) : p.blocks.find((x) => !used.has(x.v));
+      if (b) { used.add(b.v); out.push(b); }
+    }
+    return out;
+  }
+
+  function newRound() {
+    const taken = new Set([lower(profile.name), lower(profile.pet)]);
+    const fresh = (list) => { let v; do { v = pick(list); } while (taken.has(lower(v))); taken.add(lower(v)); return v; };
+    me = { id: 'me', name: 'Ты', color: '#3fd0cc', me: true, profile: { ...profile }, pass: [], bot: null };
+    me.blocks = blocksFor(me.profile);
+    players = [me, ...RIVALS.map((r) => {
+      const prof = { name: fresh(NAMES), pet: fresh(PETS), num: pick(YEARS) };
+      const p = { id: r.id, name: r.name, color: r.color, profile: prof, pass: [], bot: { skill: r.skill } };
+      p.blocks = blocksFor(prof);
+      p.plan = planFor(p, r.skill);
+      const gap = DURATION * 0.72 / p.plan.length;
+      p.times = p.plan.map((_, k) => gap * (k + 1) * (0.8 + Math.random() * 0.4));
+      return p;
+    })];
+  }
+
+  const passEl = $('#u-pass'), trayEl = $('#u-tray'), timeEl = $('#u-time');
+  function renderRivals() {
+    $('#u-rivals').innerHTML = players.filter((p) => !p.me).map((p) =>
+      `<div class="u-r" style="--c:${p.color}"><b><i></i>${esc(p.name)}</b><span>${esc(fmtProfile(p.profile))}</span><span>блоков: <em>${p.pass.length}</em></span></div>`).join('');
+  }
+  function renderTray() {
+    const groups = [['word'], ['me', 'common'], ['num', 'sym']];
+    trayEl.innerHTML = groups.map((g) => `<div class="tray__row">${me.blocks.map((b, i) => [b, i]).filter(([b]) => g.includes(b.t)).map(([b, i]) =>
+      `<button class="blk t-${b.t}" data-i="${i}">${esc(b.v)}</button>`).join('')}</div>`).join('');
+    trayEl.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => add(me.blocks[+btn.dataset.i]));
+  }
+  function renderPass() {
+    passEl.innerHTML = me.pass.map((b, i) => `<button class="blk t-${b.t}" data-i="${i}" aria-label="Убрать ${esc(b.v)}">${esc(b.v)}</button>`).join('');
+    passEl.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => { if (phase !== 'build') return; me.pass.splice(+btn.dataset.i, 1); renderPass(); });
+  }
+  function add(b) {
+    if (phase !== 'build') return;
+    if (me.pass.length >= MAXB) { passEl.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); return; }
+    me.pass.push(b); buzz(6); snd.step(me.pass.length); renderPass();
+  }
+
+  function tick() {
+    if (phase !== 'build') return;
+    const e = (performance.now() - t0) / 1000;
+    timeEl.textContent = Math.max(0, Math.ceil(DURATION - e));
+    players.forEach((p) => { if (p.bot) while (p.pass.length < p.plan.length && p.times[p.pass.length] <= e) p.pass.push(p.plan[p.pass.length]); });
+    renderRivals();
+    if (e >= DURATION) finishBuild();
+  }
+
+  function start() {
+    const clean = (s) => s.trim().replace(/\s+/g, ' ');
+    profile = { name: clean($('#u-name').value) || pick(NAMES), pet: clean($('#u-pet').value) || pick(PETS), num: $('#u-num').value.replace(/\D/g, '') || pick(YEARS) };
+    $('#u-name').value = profile.name; $('#u-pet').value = profile.pet; $('#u-num').value = profile.num;
+    newRound();
+    $('#u-start').hidden = true; $('#u-end').hidden = true; $('#u-arena').hidden = true; $('#u-main').style.display = '';
+    $('#u-mine').innerHTML = `Твой профиль: <b>${esc(fmtProfile(profile))}</b>`;
+    renderRivals(); renderTray(); renderPass();
+    phase = 'build'; t0 = performance.now(); timeEl.textContent = DURATION;
+    clearAll(); ticker = setInterval(tick, 250);
+  }
+
+  function finishBuild() {
+    if (phase !== 'build') return;
+    phase = 'attack'; clearAll();
+    players.forEach((p) => { if (p.bot) p.pass = p.plan.slice(); });
+    attackAll();
+  }
+
+  function attackAll() {
+    $('#u-main').style.display = 'none'; $('#u-arena').hidden = false; timeEl.textContent = '0';
+    const order = [...players.filter((p) => !p.me), me];
+    const ranked = [...players].sort((a, b) => bitsOf(b) - bitsOf(a));
+    const place = (p) => ranked.indexOf(p) + 1;
+    $('#u-cols').innerHTML = order.map((p) => `<div class="u-col" style="--c:${p.color}"><div class="u-name"><i></i>${esc(p.name)}</div>
+      <div class="u-tow" data-p="${p.id}">${p.pass.map((b) => `<div class="u-b t-${b.t}">${esc(b.v)}</div>`).join('')}</div><div class="u-res" data-r="${p.id}"></div></div>`).join('');
+    const robot = $('#u-robot');
+    const STEP = 2100;
+    order.forEach((p, i) => {
+      const t = i * STEP + 300;
+      later(() => { robot.style.left = `calc(${i * 25}% + 12.5% - 23px)`; }, t);
+      later(() => {
+        const tow = $(`.u-tow[data-p="${p.id}"]`);
+        robot.classList.remove('hit'); void robot.getBoundingClientRect(); robot.classList.add('hit');
+        tow.classList.add('shake'); buzz([20, 40, 20]); snd.robot();
+      }, t + 650);
+      later(() => {
+        const tow = $(`.u-tow[data-p="${p.id}"]`), res = $(`[data-r="${p.id}"]`), bricks = [...tow.children], b = bitsOf(p);
+        tow.classList.remove('shake');
+        const weak = p.pass.find((x) => x.t === 'me') || p.pass.find((x) => x.t === 'common');
+        let title, sub;
+        if (b < 40) {
+          bricks.forEach((el, k) => { const d = k % 2 ? 1 : -1; el.style.transform = `translate(${d * 30}px, ${90 + k * 8}px) rotate(${d * 60}deg)`; el.classList.add('fall'); });
+          title = `Взломан за ${human(secOf(p))}`;
+          sub = weak ? (weak.t === 'me' ? `«${weak.v}» из профиля` : `«${weak.v}» все пробуют`) : 'слишком коротко';
+          p.me ? snd.lose() : snd.bad();
+        } else if (b < 56) {
+          bricks.slice(-2).forEach((el, k) => { el.style.transform = `translate(${40 + k * 16}px, 80px) rotate(50deg)`; el.classList.add('fall'); });
+          title = `Держится ${human(secOf(p))}`; sub = weak ? `слабое место: «${weak.v}»` : 'ещё слово, и сдастся';
+        } else {
+          tow.classList.add('hold');
+          title = `Нужно ${human(secOf(p))}`; sub = weak ? 'крепко, но убери слабое' : 'случайные слова';
+        }
+        res.innerHTML = `<b>${esc(title)}</b>${esc(sub)}`;
+      }, t + 1500);
+    });
+    later(() => {
+      order.forEach((p) => { const r = $(`[data-r="${p.id}"]`); r.insertAdjacentHTML('afterbegin', `<span class="medal">${place(p)}</span>`); });
+      buzz([15, 50, 15]);
+    }, order.length * STEP + 200);
+    later(() => showEnd(ranked), order.length * STEP + 1500);
+  }
+
+  function showEnd(ranked) {
+    phase = 'done';
+    const place = ranked.indexOf(me) + 1, won = place === 1;
+    let wins = store.get('duel'); if (won) { wins++; store.set('duel', wins); }
+    const weakMe = me.pass.find((x) => x.t === 'me'), weakCom = me.pass.find((x) => x.t === 'common'), b = bitsOf(me);
+    const tip = !me.pass.length ? ['Пароль пустой', 'Без пароля робот заходит сразу. Собери хотя бы три блока.']
+      : weakMe ? [esc(weakMe.v), 'Это из твоего профиля. Робот проверяет такое первым, поэтому пароль про тебя слабый.']
+      : weakCom ? [esc(weakCom.v), 'Популярные пароли робот пробует в первую очередь.']
+      : b < 56 ? ['Добавь слово', 'Каждое случайное слово делает пароль крепче в тысячи раз.']
+      : ['Крепкий пароль', 'Несколько случайных слов запоминаются легко, а ломаются годами.'];
+    const top = ranked[0];
+    const second = won ? ['Данные у всех разные', 'У соперников робот знал другие имена, но блоки «про тебя» слабые у любого, чьи бы они ни были.']
+      : ['Пароль победителя: ' + esc(top.name), esc(top.pass.map((x) => x.v).join(' '))];
+    const el = $('#u-end');
+    el.innerHTML = `<h2>${won ? 'Победа!' : place + ' место'}</h2>
+      <div class="recap recap--tight"><div>${ranked.map((p, i) => `<b style="display:inline">${i + 1}. ${esc(p.name)}</b> · ${human(secOf(p))}`).join('<br>')}</div>
+      <div><b>${tip[0]}</b>${tip[1]}</div><div><b>${second[0]}</b>${second[1]}</div></div>
+      <div class="chips"><span class="chip">побед: <b>${wins}</b></span></div>
+      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="u-again">Ещё раз</button></div>`;
+    el.hidden = false;
+    el.querySelector('[data-c]').onclick = close;
+    $('#u-again').onclick = () => { el.hidden = true; $('#u-arena').hidden = true; $('#u-main').style.display = ''; $('#u-start').hidden = false; phase = 'idle'; };
+    buzz([15, 60, 15]); won ? snd.win() : snd.good();
+  }
+
+  $('#u-own').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = $('#u-own-in'), v = input.value.trim();
+    if (phase !== 'build' || !v) return;
+    add(ownBlock(v, me.profile));
+    input.value = '';
+  });
+  $('#u-done').onclick = () => {
+    if (phase !== 'build') return;
+    if (!me.pass.length) { passEl.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); return; }
+    finishBuild();
+  };
+  $('#u-num').addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, ''); });
+  $('#u-rand').onclick = () => { $('#u-name').value = pick(NAMES); $('#u-pet').value = pick(PETS); $('#u-num').value = pick(YEARS); };
+  $('#u-go').onclick = start;
+  games.duel = {
+    enter() { clearAll(); phase = 'idle'; $('#u-start').hidden = false; $('#u-end').hidden = true; $('#u-arena').hidden = true; $('#u-main').style.display = 'none'; timeEl.textContent = DURATION; },
+    leave() { clearAll(); phase = 'idle'; },
+    pause() { if (phase === 'build') { pausedAt = performance.now(); clearInterval(ticker); ticker = null; } },
+    resume() { if (phase === 'build' && !ticker) { t0 += performance.now() - pausedAt; ticker = setInterval(tick, 250); } },
   };
 })();
 </script>
