@@ -2756,32 +2756,6 @@
   transform: translateX(20px);
 }
 
-/* ── Давление в переписке ────────────────────────────────────────────
-   Кромка экрана краснеет по мере того, как собеседник давит (--p от 0 до 1,
-   задаётся в QuestScreen). Красный нарочно статусный и не зависит от темы:
-   тревога выглядит одинаково везде. Силу держим до 0.55, чтобы текст у
-   краёв оставался читаемым. */
-.quest {
-  position: relative;
-}
-
-.quest::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  border-radius: inherit;
-  box-shadow: inset 0 0 calc(24px + 110px * var(--p, 0)) calc(2px + 14px * var(--p, 0)) #d6363c;
-  opacity: calc(var(--p, 0) * 0.55);
-  transition:
-    opacity 0.5s ease,
-    filter 0.12s ease;
-}
-
-.quest.is-beat::after {
-  filter: brightness(1.7);
-}
 
 /* Метки на входе в тест и «Угадай»: вместо абзацев перед началом */
 .intro-chips {

@@ -47,12 +47,6 @@ export type QuestNode = {
   messages: QuestMessage[];
   choices?: QuestChoice[];
   ending?: QuestEnding;
-  /**
-   * Уровень давления на этом шаге, от 0 до 1: от него экран краснеет и
-   * «бьётся». Если не задан, считается сам: чем глубже в разговоре,
-   * тем выше, а хороший выход гасит до нуля.
-   */
-  pressure?: number;
 };
 
 export type Quest = {
@@ -62,8 +56,6 @@ export type Quest = {
   contact: string;
   contactNote: string;
   start: string;
-  /** false отключает эффект давления: нужен там, где никто не давит (день взрослого) */
-  pressure?: boolean;
   nodes: QuestNode[];
   /** Разбор: показывается после любого финала */
   redFlags: RedFlag[];
