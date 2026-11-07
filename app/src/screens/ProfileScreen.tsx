@@ -48,9 +48,11 @@ export function ProfileScreen() {
                 className={`medal${got ? ' is-got' : ''}`}
                 onClick={() => got && setOpen(b.id)}
                 disabled={!got}
+                aria-label={got ? b.title : 'Медаль ещё не открыта'}
               >
                 <MedalIcon badgeId={b.id} size={46} locked={!got} />
-                <span className="medal__title">{got ? b.title : 'Ещё не открыта'}</span>
+                {/* У закрытых медалей названия нет: двадцать восемь одинаковых подписей только мешали */}
+                <span className="medal__title">{got ? b.title : ''}</span>
               </button>
             </li>
           );

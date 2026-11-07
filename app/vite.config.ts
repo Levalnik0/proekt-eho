@@ -33,6 +33,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // «Лаборатория» — отдельная страница. Если открыть её по прямой ссылке,
+        // воркер не должен подменять её главной страницей приложения.
+        navigateFallbackDenylist: [/\/lab\//],
       },
     }),
   ],

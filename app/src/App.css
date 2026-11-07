@@ -406,10 +406,10 @@
 }
 
 .theme-picker {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 2px 14px 16px;
-  overflow-x: auto;
 }
 
 .theme-swatch {
@@ -439,7 +439,7 @@
 }
 
 .theme-swatch__label {
-  font-size: 11.5px;
+  font-size: 13px;
   color: var(--ink-muted);
   white-space: nowrap;
 }
@@ -2042,16 +2042,40 @@
 
 .tabbar__item {
   flex: 1;
-  height: 52px;
-  display: grid;
-  place-items: center;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   border-radius: 16px;
   color: var(--ink-faint);
   transition: color 0.15s ease;
 }
 
+/* Подпись под значком: компас или медаль детям ничего не говорят без слова */
+.tabbar__label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
 .tabbar__item.is-active {
   color: var(--echo-navy);
+  background: color-mix(in srgb, var(--echo-teal) 16%, transparent);
+}
+
+/* Текст только для скринридера */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .tabbar__item:active {

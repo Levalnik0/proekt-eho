@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { TabBar } from './components/TabBar';
 import { HomeScreen } from './screens/HomeScreen';
@@ -31,7 +31,7 @@ import testsTeen from './data/tests-teen.json';
 import testsAdult from './data/tests-adult.json';
 import coop48 from './data/coop-48.json';
 import { useProgress } from './progress/useProgress';
-import { SECTION_BY_ID, TABS, type SectionId, type Tab } from './routes';
+import { SECTION_BY_ID, TABS, type Section, type Tab } from './routes';
 import { themeChosen } from './theme/useTheme';
 import { useHashRoute } from './useHashRoute';
 
@@ -61,6 +61,9 @@ const ADULT_ROUTES = [
 ];
 const TEEN_ROUTES = ['games', 'stories', 'tests'];
 
+/** Экраны с таб-баром, которые не разделы и не вкладки из списка TABS */
+const OTHER = ['profile', 'settings', 'club', 'check-message', 'crisis-protocol'];
+
 export default function App() {
   const { route, go, back } = useHashRoute();
   const { progress, award, setRole } = useProgress();
@@ -69,28 +72,54 @@ export default function App() {
   // Ссылка может нести параметры: #/game/swipe?beat=8 («Друг набрал 8»)
   const [path, query = ''] = route.split('?');
   const params = new URLSearchParams(query);
+  // Ссылку может подделать кто угодно, поэтому «друг набрал» ограничиваем размером раунда
   const beatParam = Number(params.get('beat'));
-  const beat = params.has('beat') && Number.isFinite(beatParam) ? beatParam : undefined;
+  const beat =
+    params.has('beat') && Number.isInteger(beatParam) && beatParam >= 0 && beatParam <= 10
+      ? beatParam
+      : undefined;
 
+  // Имена из адреса ищем только среди своих ключей: иначе #/quest/constructor
+  // нашёл бы функцию из прототипа объекта и приложение упало бы
+  const own = <T,>(m: Record<string, T>, key: string | null): T | undefined =>
+    key !== null && Object.hasOwn(m, key) ? m[key] : undefined;
   const seg = (prefix: string) => (path.startsWith(prefix) ? path.slice(prefix.length) : null);
-  const quest = QUESTS[seg('quest/') ?? ''];
-  const mirror = MIRRORS[seg('mirror/') ?? ''];
-  const test = TESTS[seg('test/') ?? ''];
-  const coop = COOPS[seg('coop/') ?? ''];
+  const quest = own(QUESTS, seg('quest/'));
+  const mirror = own(MIRRORS, seg('mirror/'));
+  const test = own(TESTS, seg('test/'));
+  const coop = own(COOPS, seg('coop/'));
 
   const isTab = (TABS as string[]).includes(path);
-  const section = SECTION_BY_ID[path as SectionId];
+  const section = own(SECTION_BY_ID as Record<string, Section>, path);
   // На внутренних экранах в таб-баре остаётся подсвеченной «Главная»
   const activeTab: Tab = isTab ? (path as Tab) : 'home';
 
-  // Страница «Лаборатории» живёт в рамке и сама просит вернуться в приложение
+  // Страница «Лаборатории» живёт в рамке и сама просит вернуться в приложение.
+  // Слушаем только эту рамку, а не любое окно с тем же адресом
+  const labFrame = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
-      if (e.origin === window.location.origin && e.data?.echoLab === 'exit') back();
+      if (
+        e.source === labFrame.current?.contentWindow &&
+        e.origin === window.location.origin &&
+        e.data?.echoLab === 'exit'
+      )
+        back();
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
   }, [back]);
+
+  // Неизвестный адрес не должен молча показывать главную с мусором в строке
+  const labOpen = path === 'game/lab' && labUnlocked();
+  const known =
+    isTab ||
+    Boolean(section || quest || mirror || test || coop) ||
+    labOpen ||
+    ['game/swipe', 'game/slang', ...OTHER].includes(path);
+  useEffect(() => {
+    if (!known) window.location.replace('#/home');
+  }, [known]);
 
   // Первая медаль взрослому: просто за то, что зашёл посмотреть
   useEffect(() => {
@@ -137,10 +166,11 @@ export default function App() {
   }
 
   // «Лаборатория»: пять новых игр на отдельной странице, открывается кодом
-  if (path === 'game/lab' && labUnlocked()) {
+  if (labOpen) {
     return (
       <div className="app">
         <iframe
+          ref={labFrame}
           title="Лаборатория игр"
           src={`${import.meta.env.BASE_URL}lab/index.html`}
           style={{ border: 0, width: '100%', height: '100%', display: 'block' }}
@@ -177,21 +207,19 @@ export default function App() {
     );
   }
 
-  const OTHER = ['profile', 'settings', 'club', 'club-program', 'check-message', 'crisis-protocol'];
-
   return (
     <div className="app">
       <main className="app__body">
         {path === 'profile' && <ProfileScreen />}
         {path === 'settings' && <SettingsScreen />}
-        {(path === 'club' || path === 'club-program') && <ClubScreen onBack={back} onOpenLab={() => go('game/lab')} />}
+        {path === 'club' && <ClubScreen onBack={back} onOpenLab={() => go('game/lab')} />}
         {path === 'check-message' && <CheckerScreen onExit={back} />}
         {path === 'crisis-protocol' && <CrisisScreen onBack={back} />}
         {section && <SectionScreen section={section} onBack={back} onOpen={go} />}
         {!section && !OTHER.includes(path) && <HomeScreen onOpen={go} />}
       </main>
 
-      <TabBar active={activeTab} onSelect={(tab) => go(tab)} />
+      <TabBar active={activeTab} onSelect={(tab) => go(tab, { replace: true })} />
     </div>
   );
 }

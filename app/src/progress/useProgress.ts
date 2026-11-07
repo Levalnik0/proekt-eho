@@ -37,12 +37,14 @@ function read(): Progress {
     const raw = localStorage.getItem(KEY);
     if (!raw) return EMPTY;
     const p = JSON.parse(raw) as Partial<Progress>;
+    // Хранилище мог испортить кто угодно, поэтому форму проверяем, а не верим
+    const isObj = (v: unknown) => typeof v === 'object' && v !== null && !Array.isArray(v);
     return {
-      role: p.role ?? null,
-      badges: p.badges ?? [],
-      runs: p.runs ?? {},
-      tests: p.tests ?? {},
-      coop: p.coop,
+      role: p.role === 'adult' || p.role === 'teen' ? p.role : null,
+      badges: Array.isArray(p.badges) ? p.badges.filter((x): x is string => typeof x === 'string') : [],
+      runs: isObj(p.runs) ? (p.runs as Progress['runs']) : {},
+      tests: isObj(p.tests) ? (p.tests as Progress['tests']) : {},
+      coop: isObj(p.coop) ? p.coop : undefined,
     };
   } catch {
     return EMPTY;
@@ -61,6 +63,16 @@ function commit(next: Progress) {
     // приватный режим — прогресс просто не переживёт перезапуск
   }
   listeners.forEach((fn) => fn(next));
+}
+
+// Приложение открыто в двух окнах: изменения одного должны дойти до другого,
+// иначе второе перезапишет медали устаревшими данными
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key !== KEY) return;
+    current = read();
+    listeners.forEach((fn) => fn(current));
+  });
 }
 
 export function useProgress() {

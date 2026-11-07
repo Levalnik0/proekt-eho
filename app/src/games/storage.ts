@@ -31,6 +31,18 @@ export function saveBest(game: GameId, score: number): boolean {
   return prev !== undefined;
 }
 
+/** Стирает рекорды игр и рекорды «Лаборатории» (ключи echo.proto.*) */
+export function resetGames() {
+  try {
+    localStorage.removeItem(KEY);
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith('echo.proto.'))
+      .forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // приватный режим: стирать нечего
+  }
+}
+
 export function shuffle<T>(list: readonly T[]): T[] {
   const a = [...list];
   for (let i = a.length - 1; i > 0; i--) {

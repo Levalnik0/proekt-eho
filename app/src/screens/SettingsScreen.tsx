@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { buzz, centerOf, hapticsEnabled, hapticsSupported, setHaptics } from '../fx';
+import { resetGames } from '../games/storage';
 import { useProgress } from '../progress/useProgress';
 import { THEMES, useTheme } from '../theme/useTheme';
 
@@ -79,13 +80,14 @@ export function SettingsScreen() {
       {confirming ? (
         <div className="panel">
           <div className="panel__row">
-            <span>Удалить медали и пройденное?</span>
+            <span>Удалить медали, пройденное и рекорды?</span>
           </div>
           <div className="panel__row">
             <button
               className="btn"
               onClick={() => {
                 reset();
+                resetGames();
                 setConfirming(false);
               }}
             >
@@ -102,7 +104,10 @@ export function SettingsScreen() {
         </button>
       )}
 
-      <div className="stub-note">Ответы не уходят никуда за пределы этого телефона.</div>
+      <div className="stub-note">
+        Ответы хранятся только в этом телефоне и никуда не отправляются. Если телефоном
+        пользуется кто-то ещё, он может их увидеть: кнопка «Сбросить прогресс» всё удалит.
+      </div>
     </div>
   );
 }

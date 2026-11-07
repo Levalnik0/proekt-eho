@@ -34,7 +34,7 @@
 
   /* Градиент круглых иконок. Затемнён: на прежнем светлом крае
      белый глиф имел контраст 2.4:1 и сливался с фоном. */
-  --grad-icon: linear-gradient(145deg, #4e9299 0%, #3d6f83 100%);
+  --grad-icon: linear-gradient(145deg, #3a7f86 0%, #2f5f73 100%);
   /* Тёмный край градиента отдельным токеном: им вырезаются прорези
      в глифе (--icon-glyph-bg в App.css), чтобы они не слипались
      с подложкой. У каждой темы — свой. */
@@ -71,6 +71,11 @@ html,
 body,
 #root {
   height: 100%;
+}
+
+/* Масштаб пальцами разрешён (доступность), а двойное касание не увеличивает страницу */
+html {
+  touch-action: manipulation;
 }
 
 body {
@@ -152,7 +157,7 @@ button {
   --echo-navy: #9fe3e1;
   --echo-navy-deep: #6fd0cd;
   --echo-teal-text: #6fe0dc;
-  --grad-icon: linear-gradient(145deg, #4e9299 0%, #2f6f7c 100%);
+  --grad-icon: linear-gradient(145deg, #2f7f88 0%, #245f6c 100%);
   --icon-glyph-dark: #4a8c96;
 }
 
@@ -163,7 +168,7 @@ button {
   --echo-navy: #ffb79a;
   --echo-navy-deep: #ff9a70;
   --echo-teal-text: #ff9a70;
-  --grad-icon: linear-gradient(145deg, #ea7e52 0%, #a8431f 100%);
+  --grad-icon: linear-gradient(145deg, #b9501f 0%, #8f3414 100%);
   --icon-glyph-dark: #a8431f;
 }
 
@@ -174,7 +179,7 @@ button {
   --echo-navy: #ffb3cb;
   --echo-navy-deep: #ff85a9;
   --echo-teal-text: #ff85a9;
-  --grad-icon: linear-gradient(145deg, #e0718d 0%, #93295a 100%);
+  --grad-icon: linear-gradient(145deg, #b83a6a 0%, #8a2255 100%);
   --icon-glyph-dark: #93295a;
 }
 
@@ -185,7 +190,7 @@ button {
   --echo-navy: #cbbcff;
   --echo-navy-deep: #ae96ff;
   --echo-teal-text: #b4a0ff;
-  --grad-icon: linear-gradient(145deg, #9b7fe0 0%, #5a3c99 100%);
+  --grad-icon: linear-gradient(145deg, #7a5ccf 0%, #543a99 100%);
   --icon-glyph-dark: #5a3c99;
 }
 
@@ -241,7 +246,7 @@ button {
   --echo-navy: #1e3f68;
   --echo-navy-deep: #152f4a;
   --echo-teal-text: #2c6e6d;
-  --grad-icon: linear-gradient(145deg, #4e9299 0%, #3d6f83 100%);
+  --grad-icon: linear-gradient(145deg, #3a7f86 0%, #2f5f73 100%);
   --icon-glyph-dark: #5a94a5;
   --sh-pill: 0 2px 6px rgba(30, 63, 104, 0.06), 0 8px 20px rgba(30, 63, 104, 0.09);
   --sh-pill-active: 0 1px 3px rgba(30, 63, 104, 0.1), 0 3px 8px rgba(30, 63, 104, 0.08);
@@ -265,7 +270,7 @@ button {
   --echo-navy: #ff57c7;
   --echo-navy-deep: #c93ea0;
   --echo-teal-text: #3be0cf;
-  --grad-icon: linear-gradient(145deg, #38e8d8 0%, #c850ff 100%);
+  --grad-icon: linear-gradient(145deg, #0b7f77 0%, #8a2fc4 100%);
   --icon-glyph-dark: #8a3fc9;
   color-scheme: dark;
 }

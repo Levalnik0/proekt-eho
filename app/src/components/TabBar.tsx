@@ -21,6 +21,7 @@ export function TabBar({ active, onSelect }: { active: Tab; onSelect: (t: Tab) =
             {tab === 'club' && <IconCompass size={24} />}
             {tab === 'profile' && <IconMedal size={24} />}
             {tab === 'settings' && <IconGear size={24} />}
+            <span className="tabbar__label">{TAB_LABEL[tab]}</span>
           </button>
         );
       })}
