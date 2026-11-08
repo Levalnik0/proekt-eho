@@ -38,7 +38,7 @@ export function resetGames() {
   try {
     localStorage.removeItem(KEY);
     Object.keys(localStorage)
-      .filter((k) => k.startsWith('echo.proto.'))
+      .filter((k) => k.startsWith('echo.proto.') || k.startsWith('echo.lab.how.') || k === 'echo.lab.race.hard')
       .forEach((k) => localStorage.removeItem(k));
   } catch {
     // приватный режим: стирать нечего

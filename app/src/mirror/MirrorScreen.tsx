@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { IconBack } from '../components/icons';
 import { Glossed } from '../glossary/Glossed';
 import { BadgeCard } from '../progress/BadgeCard';
+import { shuffle } from '../games/storage';
 import { useProgress } from '../progress/useProgress';
 import type { Mirror } from './types';
 
@@ -46,6 +47,8 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
 
   const q = phase.kind === 'ask' || phase.kind === 'reveal' ? mirror.questions[phase.i] : null;
   const step = q ? mirror.questions.indexOf(q) + 1 : 0;
+  // Порядок вариантов перемешан: по месту ответ не угадать
+  const options = useMemo(() => (q ? shuffle(q.options) : []), [q]);
 
   return (
     <div className="screen screen--mirror">
@@ -82,7 +85,7 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
           <div className="mirror-ask">{q.ask}</div>
 
           <ul className="choices stagger">
-            {q.options.map((o) => {
+            {options.map((o) => {
               const chosen = picked[q.id] === o.id;
               const isKid = o.id === q.kidAnswer;
               const revealed = phase.kind === 'reveal';
@@ -140,10 +143,12 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
               <b>Что уже работает</b>
               <span>{result.strength}</span>
             </div>
-            <div className="result-block result-block--try">
-              <b>Можно попробовать на этой неделе</b>
-              <span>{result.growth}</span>
-            </div>
+            {result.growth && (
+              <div className="result-block result-block--try">
+                <b>Можно попробовать на этой неделе</b>
+                <span>{result.growth}</span>
+              </div>
+            )}
           </div>
 
           <p className="mirror-basis">{mirror.intro.note}</p>

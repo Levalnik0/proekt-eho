@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
+import { shuffle } from '../games/storage';
 import { useProgress } from '../progress/useProgress';
 import { DecisionMap } from './DecisionMap';
 import type { CoopState } from '../progress/useProgress';
@@ -39,6 +40,13 @@ export function CoopScreen({ coop, onExit }: { coop: Coop; onExit: () => void })
   const [pending, setPending] = useState<CoopOption | null>(null);
   const [fresh, setFresh] = useState<string[]>([]);
   const { award, saveCoop } = useProgress();
+  // Порядок вариантов перемешан: иначе «открытый» ответ всегда стоит первым и его легко найти
+  const options = useMemo(
+    () => (phase.kind === 'choose' ? shuffle(coop.steps[phase.step][phase.turn].options) : []),
+    // фаза меняется объектом, а перемешивать надо только при смене шага или хода
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [phase.kind === 'choose' ? `${phase.step}-${phase.turn}` : '', coop],
+  );
 
   const finish = useCallback(
     (all: Answer[]) => {
@@ -145,7 +153,7 @@ export function CoopScreen({ coop, onExit }: { coop: Coop; onExit: () => void })
           <div className="situation">{coop.steps[phase.step].scene}</div>
           <div className="mirror-ask">{coop.steps[phase.step][phase.turn].prompt}</div>
           <ul className="choices stagger">
-            {coop.steps[phase.step][phase.turn].options.map((o) => (
+            {options.map((o) => (
               <li key={o.text}>
                 <button className="choice" onClick={() => pick(phase.step, phase.turn, o)}>
                   {o.text}

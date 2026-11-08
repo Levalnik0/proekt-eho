@@ -140,7 +140,7 @@ export default function App() {
       heading.tabIndex = -1;
       heading.focus({ preventScroll: true });
     }
-  }, [path]);
+  }, [path, colorDone]);
 
   // Первая медаль взрослому: просто за то, что зашёл посмотреть
   useEffect(() => {

@@ -17,8 +17,6 @@ export const MEDAL_GLYPH: Record<string, string> = {
   'geo-aware': 'pinDots',
   bullseye: 'target',
   surprised: 'flashlight',
-  paused: 'hourglass',
-  listener: 'ear',
   translator: 'speech',
   ally: 'handshake',
   'checker-adult': 'eye',

@@ -110,7 +110,7 @@ function DetailDialog({
         {locked ? (
           // Закрытая медаль подсказывает, как её получить, а не просто «ещё нет»
           <div className="badge-pop__block">
-            <b>Как получить</b>
+            <b>За что дают</b>
             <span>{detail.reason}</span>
           </div>
         ) : (

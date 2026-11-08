@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { ShareButton } from '../components/ShareButton';
+import { shuffle } from '../games/storage';
 import { useProgress } from '../progress/useProgress';
 import type { PsyTest } from './types';
 
@@ -72,6 +73,8 @@ export function TestScreen({
 
   const q = step >= 0 && step < test.questions.length ? test.questions[step] : null;
   const done = step >= test.questions.length;
+  // Порядок вариантов перемешан: иначе по месту ответа легко угадать, какой тип он даёт
+  const options = useMemo(() => (q ? shuffle(q.options) : []), [q]);
 
   return (
     <div className="screen">
@@ -107,7 +110,7 @@ export function TestScreen({
         <>
           <div className="situation">{q.text}</div>
           <ul className="choices stagger">
-            {q.options.map((o) => (
+            {options.map((o) => (
               <li key={o.text}>
                 <button className="choice" onClick={() => answer(o.key)}>
                   {o.text}
@@ -137,7 +140,7 @@ export function TestScreen({
             )}
           </div>
 
-          <ShareButton text={`Я прошёл тест «${test.title}» в «Эхо»: ${winner.title}.`} />
+          <ShareButton text={`Мой результат в тесте «${test.title}» в «Эхо»: ${winner.title.split('—').pop()?.trim()}.`} />
           <button className="btn btn--primary btn--wide" onClick={onExit}>
             Готово
           </button>
