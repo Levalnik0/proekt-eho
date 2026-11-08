@@ -3,6 +3,7 @@ import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
 import { buzz } from '../fx';
+import { sound } from '../sound';
 import words from '../data/slang.json';
 import { saveBest, shuffle } from './storage';
 
@@ -48,6 +49,8 @@ export function SlangGame({ onExit }: { onExit: () => void }) {
     setPicked(option);
     if (ok) setScore((s) => s + 1);
     buzz(ok ? 'good' : 'bad');
+    if (ok) sound.good();
+    else sound.bad();
     timer.current = window.setTimeout(() => {
       setPicked(null);
       setI((n) => n + 1);
@@ -58,6 +61,7 @@ export function SlangGame({ onExit }: { onExit: () => void }) {
   useEffect(() => {
     if (!done) return;
     if (player === 1) setRecord(saveBest('slang', score));
+    if (score >= 8) sound.win();
     const given = award(['slang-first', player === 2 ? 'family-round' : undefined]);
     if (given.length) setFresh(given);
     // eslint-disable-next-line react-hooks/exhaustive-deps

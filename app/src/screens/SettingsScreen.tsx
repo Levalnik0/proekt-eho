@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { buzz, centerOf, hapticsEnabled, hapticsSupported, setHaptics } from '../fx';
 import { resetGames } from '../games/storage';
+import { setSound, soundEnabled } from '../sound';
 import { useProgress } from '../progress/useProgress';
 import { THEMES, useTheme } from '../theme/useTheme';
 
@@ -14,6 +15,7 @@ export function SettingsScreen() {
   const { progress, reset } = useProgress();
   const { theme, setTheme } = useTheme();
   const [vibration, setVibration] = useState(hapticsEnabled);
+  const [sounds, setSounds] = useState(soundEnabled);
   const [confirming, setConfirming] = useState(false);
 
   return (
@@ -65,6 +67,19 @@ export function SettingsScreen() {
           ) : (
             <b>нет на этом телефоне</b>
           )}
+        </div>
+        <div className="panel__row">
+          <span>Звук в играх</span>
+          <button
+            className="toggle"
+            role="switch"
+            aria-checked={sounds}
+            aria-label="Звук в играх"
+            onClick={() => {
+              setSound(!sounds);
+              setSounds(!sounds);
+            }}
+          />
         </div>
         <div className="panel__row">
           <span>Медалей получено</span>

@@ -3,6 +3,7 @@ import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
 import { buzz } from '../fx';
+import { sound } from '../sound';
 import cards from '../data/swipe.json';
 import { saveBest, shuffle } from './storage';
 
@@ -30,6 +31,8 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
   const [dx, setDx] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [record, setRecord] = useState(false);
+  /** Сколько верных ответов подряд */
+  const [streak, setStreak] = useState(0);
   const [copied, setCopied] = useState(false);
   const [fresh, setFresh] = useState<string[]>([]);
   const start = useRef<number | null>(null);
@@ -61,6 +64,9 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
     setMarks((m) => [...m, ok]);
     setDx(0);
     buzz(ok ? 'good' : 'bad');
+    if (ok) sound.good();
+    else sound.bad();
+    setStreak((s) => (ok ? s + 1 : 0));
     // Дальше человек идёт сам, кнопкой: пояснение не исчезает, пока его читают
   }
 
@@ -68,6 +74,7 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
   useEffect(() => {
     if (!done) return;
     setRecord(saveBest('swipe', score));
+    if (score >= 8) sound.win();
     const given = award(['swipe-first', score === ROUND ? 'swipe-perfect' : undefined]);
     if (given.length) setFresh(given);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,6 +110,7 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
     setMarks([]);
     setShown(null);
     setRecord(false);
+    setStreak(0);
     setFresh([]);
   }
 
@@ -195,6 +203,10 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
         <div className="game__challenge">Друг набрал {beat}. Побей!</div>
       )}
 
+      <div className="game__streak" role="status">
+        {streak >= 2 ? `Серия ×${streak}` : ''}
+      </div>
+
       <div className="swipe-stage">
         <div
           className={`swipe-card${shown === true ? ' is-ok' : ''}${shown === false ? ' is-bad' : ''}`}
@@ -228,7 +240,7 @@ export function SwipeGame({ onExit, beat }: { onExit: () => void; beat?: number 
         <div className="swipe-why" aria-live="polite">
           {shown !== null && (
             <>
-              <b>{shown ? 'Верно. ' : 'Не совсем. '}</b>
+              <b>{shown ? '✓ Верно. ' : '✕ Не совсем. '}</b>
               {card.why}
             </>
           )}
