@@ -3,6 +3,7 @@ import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
 import { buzz } from '../fx';
+import { ShareButton } from '../components/ShareButton';
 import { sound } from '../sound';
 import words from '../data/slang.json';
 import { saveBest, shuffle } from './storage';
@@ -127,6 +128,7 @@ export function SlangGame({ onExit }: { onExit: () => void }) {
                 Ещё раунд
               </button>
             )}
+            <ShareButton text={`Сленг-блиц в «Эхо»: я набрал ${score} из ${ROUND}. Побей!`} />
             <button className="btn btn--wide" onClick={onExit}>
               Назад
             </button>

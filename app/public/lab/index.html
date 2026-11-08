@@ -452,7 +452,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="r-theme" id="r-theme" hidden></div>
       <div class="overlay" id="r-start">
         <h2>Автодром слов</h2>
-        <div data-how="race"></div>
+        <p>Веди пульт и собирай слова своего цвета. Чужих не трогай: затормозишь. Все правила под «?».</p>
         <div class="themes" id="r-themes"></div>
         <button class="thm thm--hard" id="r-hard" aria-pressed="false">Режим эксперта: слова без цвета</button>
         <button class="btn btn--main btn--wide" id="r-go">Ехать</button>
@@ -1459,7 +1459,7 @@ function close() {
   const wrapA = (a) => { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; };
 
   function start() {
-    $('#r-start').hidden = true; $('#r-end').hidden = true;
+    $('#r-start').hidden = true; $('#r-end').hidden = true; pad.style.visibility = 'visible';
     size(); elapsed = 0; collected = []; pops = []; paused = false; boardKey = ''; items = [];
     decks = THEMES.map((t) => ({ id: t.id, list: shuffle(t.words), i: 0 }));
     const mine = THEMES.find((t) => t.id === pickId), others = shuffle(THEMES.filter((t) => t.id !== pickId));
@@ -1609,7 +1609,7 @@ function close() {
     pops.forEach((p) => { ctx.globalAlpha = 1 - p.t / 0.8; ctx.fillStyle = p.c; ctx.font = '800 17px -apple-system, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.fillText(p.txt, p.x, p.y); ctx.globalAlpha = 1; });
   }
   function end() {
-    running = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; knob.style.transform = '';
+    running = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; knob.style.transform = ''; pad.style.visibility = 'hidden';
     const place = 1 + cars.filter((c) => c.score > my.score).length;
     const best = store.get('race'), rec = my.score > best; if (rec) store.set('race', my.score);
     const order = [...cars].sort((a, b) => b.score - a.score);
@@ -1651,7 +1651,7 @@ function close() {
   paintHard();
   $('#r-go').onclick = start;
   games.race = {
-    enter() { running = false; $('#r-start').hidden = false; $('#r-end').hidden = true; $('#r-theme').hidden = true; $('#r-board').innerHTML = ''; $('#r-time').textContent = DURATION; $('#r-score').textContent = '0'; renderThemes(); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
+    enter() { running = false; pad.style.visibility = 'hidden'; $('#r-start').hidden = false; $('#r-end').hidden = true; $('#r-theme').hidden = true; $('#r-board').innerHTML = ''; $('#r-time').textContent = DURATION; $('#r-score').textContent = '0'; renderThemes(); requestAnimationFrame(() => { size(); ctx.clearRect(0, 0, W, H); }); },
     leave() { running = false; paused = false; cancelAnimationFrame(raf); joy.x = joy.y = 0; },
     pause() { if (running) paused = true; },
     resume() { if (running) { paused = false; last = performance.now(); } },

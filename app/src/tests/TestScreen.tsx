@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { IconBack } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
+import { ShareButton } from '../components/ShareButton';
 import { useProgress } from '../progress/useProgress';
 import type { PsyTest } from './types';
 
@@ -136,6 +137,7 @@ export function TestScreen({
             )}
           </div>
 
+          <ShareButton text={`Я прошёл тест «${test.title}» в «Эхо»: ${winner.title}.`} />
           <button className="btn btn--primary btn--wide" onClick={onExit}>
             Готово
           </button>
