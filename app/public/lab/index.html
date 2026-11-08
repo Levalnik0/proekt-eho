@@ -59,10 +59,10 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* ── Общий каркас игры ── */
 .game { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); z-index: 5; }
 .game[hidden] { display: none !important; }
-.bar { display: flex; align-items: center; gap: 10px; padding: 10px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px)); }
+.bar { display: flex; align-items: center; gap: 6px; padding: 10px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px)); }
 .back { width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-size: 22px; }
 .bar__title { font-weight: 700; font-size: 17px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pill { padding: 6px 10px; border-radius: 999px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.pill { padding: 6px 8px; border-radius: 999px; background: var(--surface); font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 600; }
 .pill--accent { background: var(--accent); color: var(--accent-ink); }
 .stage { position: relative; flex: 1; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
 .hint { text-align: center; color: var(--muted); font-size: 14px; padding: 6px 16px 12px; min-height: 36px; }
@@ -81,7 +81,8 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .overlay::before, .overlay::after { content: ""; flex: 1 0 0; }
 .overlay[hidden] { display: none !important; }
 /* Кнопки итога и старта всегда видны, даже если текст длиннее экрана */
-[id$="-end"].overlay .row, #r-start .btn--main#r-go { position: sticky; bottom: -12px; background: var(--bg); padding: 10px 0 2px; z-index: 2; }
+[id$="-end"].overlay .row, #u-start .row { position: sticky; bottom: -12px; background: var(--bg); padding: 10px 0 2px; z-index: 2; }
+#r-start #r-go { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 0 0 12px var(--bg); }
 [id$="-end"].overlay { background: var(--bg); justify-content: center; }
 .recap--tight div { padding: 12px 14px; }
 .howto { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 12px; counter-reset: s; }
@@ -183,6 +184,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 16px; font-size: 12px; color: var(--muted); }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
 .fort__actions { padding: 10px 16px 16px; display: flex; gap: 10px; }
+.fort .fort__actions { position: sticky; bottom: 0; background: linear-gradient(to top, var(--bg) 70%, transparent); }
 .fort__actions .btn { flex: 1; }
 .verdict { position: absolute; top: 8px; left: 16px; right: 16px; text-align: center; font-weight: 700; font-size: 17px; animation: fade .3s; }
 .verdict span { display: block; font-weight: 500; font-size: 14px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
@@ -445,7 +447,7 @@ canvas { display: block; width: 100%; height: 100%; }
       </div>
       <div class="overlay" id="n-end" hidden></div>
     </div>
-    <div class="hint">Смотри на адрес целиком: подделку выдаёт одна буква</div>
+    <div class="hint">Смотри на адрес целиком: подделку выдаёт мелочь</div>
   </section>
 
   <!-- ═════════ 5. ОКНА ═════════ -->
@@ -499,7 +501,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <div class="u-rivals" id="u-rivals"></div>
         <div class="pass" id="u-pass" role="group" aria-label="Твой пароль"></div>
         <div class="tray" id="u-tray"></div>
-        <div class="u-key" aria-hidden="true"><span><i class="t-me"></i>твои данные</span><span><i class="t-common"></i>частое</span><span><i class="t-word"></i>случайное</span></div>
+        <div class="u-key" aria-hidden="true"><span><i class="t-me"></i>твои данные</span><span><i class="t-common"></i>частое</span><span><i class="t-word"></i>случайное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span></div>
         <form class="u-own" id="u-own" autocomplete="off">
           <label class="sr-only" for="u-own-in">Своё слово до 8 символов. Не вводи настоящий пароль</label>
           <input id="u-own-in" maxlength="8" placeholder="Своё слово (не пароль)" enterkeyhint="done" autocapitalize="off" spellcheck="false">
@@ -628,6 +630,13 @@ const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) {
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const games = {};
+// Короткая видимая подсказка: ошибки действий видны не только скринридеру
+function flashMsg(parent, text) {
+  if (!parent) return;
+  parent.querySelectorAll('.toast').forEach((t) => t.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = text; parent.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
 // Внутри приложения показываем кнопку «назад», снаружи она не нужна
 if (window.parent !== window) {
   const x = document.getElementById('lab-exit');
@@ -735,7 +744,7 @@ function close() {
       buzz(12); snd.zap();
       setTimeout(() => b.el.remove(), 500);
     } else {
-      combo = 1;
+      combo = 1; score = Math.max(0, score - 5); $('#f-score').textContent = score;
       b.el.classList.remove('wobble'); void b.el.offsetWidth; b.el.classList.add('wobble');
       $('#f-hint').textContent = 'Это нормальное сообщение, его пропускай';
       buzz([20, 40, 20]); snd.bad();
@@ -894,7 +903,7 @@ function close() {
   function move(e) {
     if (!active) return;
     const r = box.getBoundingClientRect();
-    const lift = e.pointerType === 'touch' ? 76 : 0;
+    const lift = e.pointerType === 'touch' ? ((e.clientY - r.top) > r.height * 0.68 ? 44 : 76) : 0;
     const x = e.clientX - r.left, y = e.clientY - r.top - lift;
     const s = r.width / VB_W;
     dim.style.setProperty('--x', x + 'px'); dim.style.setProperty('--y', y + 'px');
@@ -977,10 +986,11 @@ function close() {
     tower.className = 'tower';
     tower.innerHTML = pass.map((b) => `<div class="brick t-${b.t}">${esc(b.v)}</div>`).join('');
     const len = pass.reduce((n, b) => n + b.v.length, 0);
-    $('#k-len').textContent = `${len} ${plural(len)}`;
+    $('#k-len').textContent = `${len} симв.`;
   }
   function add(b) {
-    if (busy || pass.length >= 7) return;
+    if (busy) return;
+    if (pass.length >= 7) { flashMsg($('#g-fort .stage'), 'Максимум 7 блоков: убери один'); return; }
     clearVerdict(); pass.push(b); buzz(6); snd.step(pass.length); render();
   }
   function clearVerdict() { scene.querySelector('.verdict')?.remove(); }
@@ -997,14 +1007,14 @@ function close() {
     if (sec < 86400) return Math.round(sec / 3600) + ' ч';
     if (sec < 86400 * 365) return Math.round(sec / 86400) + ' дн.';
     const y = sec / (86400 * 365);
-    if (y < 1000) return Math.round(y) + ' лет';
+    if (y < 1000) { const n = Math.round(y), a = n % 10, b = n % 100; return n + (a === 1 && b !== 11 ? ' год' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? ' года' : ' лет'); }
     if (y < 1e6) return Math.round(y / 1000) + ' тыс. лет';
     if (y < 1e9) return Math.round(y / 1e6) + ' млн лет';
     return 'дольше, чем светят звёзды';
   }
   function attack() {
     if (busy) return;
-    if (!pass.length) { passEl.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); return; }
+    if (!pass.length) { flashMsg($('#g-fort .stage'), 'Добавь хотя бы один блок'); passEl.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); return; }
     busy = true; clearVerdict();
     tower.className = 'tower';
     [...tower.children].forEach((el) => { el.style.transform = ''; el.classList.remove('fall'); });
@@ -1018,12 +1028,12 @@ function close() {
       tower.classList.remove('shake');
       const bricks = [...tower.children];
       let title, sub;
-      if (b < 40) {
+      if (sec < 86400) {
         bricks.forEach((el, i) => { const d = i % 2 ? 1 : -1; el.style.transform = `translate(${d * (60 + i * 15)}px, ${120 + i * 10}px) rotate(${d * 70}deg)`; el.classList.add('fall'); });
         title = `Взломан за ${human(sec)}`;
         sub = me ? 'Имя, год и кличку робот берёт прямо из твоего профиля.' : common ? 'Такие пароли робот пробует первыми.' : 'Слишком коротко. Добавь ещё слов.';
         buzz(80); snd.lose();
-      } else if (b < 56) {
+      } else if (sec < 86400 * 365) {
         bricks.slice(-2).forEach((el, i) => { el.style.transform = `translate(${70 + i * 30}px, 90px) rotate(50deg)`; el.classList.add('fall'); });
         title = `Продержался ${human(sec)}`;
         sub = 'Уже неплохо. Ещё одно случайное слово, и робот сдастся.'; snd.bad();
@@ -1046,16 +1056,16 @@ function close() {
 /* ══════════ 4. СЕТЬ ══════════ */
 (() => {
   const SITES = [
-    { b: 'ВКонтакте', real: 'vk.com', fake: ['vk-com.ru', 'vk.corn'], why: 'В vk.corn буквы «rn» прикидываются буквой «m».' },
-    { b: 'Госуслуги', real: 'gosuslugi.ru', fake: ['gosusiugi.ru', 'gosuslugi-ru.online'], why: 'В gosusiugi букву «l» заменили на «i».' },
-    { b: 'Сбер', real: 'sberbank.ru', fake: ['sber-bonus.ru', 'sberbank.ru.login.top'], why: 'Сайт — это то, что в самом конце адреса. sberbank.ru.login.top — сайт login.top.' },
-    { b: 'Telegram', real: 'telegram.org', fake: ['telegrarn.org', 'tg-premium.free'], why: 'В telegrarn снова «rn» вместо «m».' },
-    { b: 'Steam', real: 'steampowered.com', fake: ['steamcommunlty.com', 'steam-gift.ru'], why: 'В steamcommunlty «l» вместо «i», заметно только вблизи.' },
-    { b: 'Roblox', real: 'roblox.com', fake: ['rob1ox.com', 'roblox-robux.free'], why: 'В rob1ox единица вместо буквы «l».' },
-    { b: 'Ozon', real: 'ozon.ru', fake: ['0zon.ru', 'ozon-sale.shop'], why: 'В 0zon ноль вместо буквы «o».' },
-    { b: 'YouTube', real: 'youtube.com', fake: ['yuotube.com', 'youtube.com-video.ru'], why: 'В youtube.com-video.ru после «.com» адрес продолжается. Это чужой сайт.' },
-    { b: 'Wildberries', real: 'wildberries.ru', fake: ['wildberies.ru', 'wb-prize.site'], why: 'В wildberies пропала одна «r».' },
-    { b: 'Яндекс', real: 'ya.ru', fake: ['ya-ru.com', 'yandex.ru-id.net'], why: 'В ya-ru.com дефис вместо точки, и это уже другой сайт.' },
+    { b: 'ВКонтакте', real: 'vk.com', fake: ['vk-com.ru', 'vk.corn'], whys: ['После «vk» дефис и «.ru»: настоящий адрес заканчивается на vk.com.', 'В vk.corn буквы «rn» прикидываются буквой «m».'] },
+    { b: 'Госуслуги', real: 'gosuslugi.ru', fake: ['gosusiugi.ru', 'gosuslugi-ru.online'], whys: ['В gosusiugi букву «l» заменили на «i».', 'Всё после дефиса и точки уже другой сайт: gosuslugi-ru.online это online, а не ru.'] },
+    { b: 'Сбер', real: 'sberbank.ru', fake: ['sber-bonus.ru', 'sberbank.ru.login.top'], whys: ['sber-bonus.ru чужой сайт: у Сбера адрес sberbank.ru.', 'Сайт — это то, что в самом конце адреса. sberbank.ru.login.top — сайт login.top.'] },
+    { b: 'Telegram', real: 'telegram.org', fake: ['telegrarn.org', 'tg-premium.free'], whys: ['В telegrarn снова «rn» вместо «m».', 'tg-premium.free не Telegram: «премиум» заманивает на чужой сайт.'] },
+    { b: 'Steam', real: 'steampowered.com', fake: ['steamcommunlty.com', 'steam-gift.ru'], whys: ['В steamcommunlty «l» вместо «i», заметно только вблизи.', 'steam-gift.ru это «подарок» на чужом сайте, а не на Steam.'] },
+    { b: 'Roblox', real: 'roblox.com', fake: ['rob1ox.com', 'roblox-robux.free'], whys: ['В rob1ox единица вместо буквы «l».', 'roblox-robux.free: «бесплатные робуксы» на чужом сайте. Настоящий roblox.com.'] },
+    { b: 'Ozon', real: 'ozon.ru', fake: ['0zon.ru', 'ozon-sale.shop'], whys: ['В 0zon ноль вместо буквы «o».', 'ozon-sale.shop чужой сайт: у Ozon адрес ozon.ru.'] },
+    { b: 'YouTube', real: 'youtube.com', fake: ['yuotube.com', 'youtube.com-video.ru'], whys: ['В yuotube буквы «uo» поменяли местами.', 'В youtube.com-video.ru после «.com» адрес продолжается. Это чужой сайт.'] },
+    { b: 'Wildberries', real: 'wildberries.ru', fake: ['wildberies.ru', 'wb-prize.site'], whys: ['В wildberies пропала одна «r».', 'wb-prize.site «приз» на чужом сайте: у Wildberries адрес wildberries.ru.'] },
+    { b: 'Яндекс', real: 'ya.ru', fake: ['ya-ru.com', 'yandex.ru-id.net'], whys: ['В ya-ru.com дефис вместо точки, и это уже другой сайт.', 'yandex.ru-id.net это сайт id.net, «yandex.ru» тут только для вида.'] },
   ];
   const cv = $('#n-canvas'), stage = $('#n-stage');
   const ctx = cv.getContext('2d');
@@ -1146,7 +1156,7 @@ function close() {
     $('#n-best').textContent = Math.max(best, score);
     const el = $('#n-end');
     el.innerHTML = `<h2>${rec ? 'Новый рекорд!' : 'Сигнал заблудился'}</h2><div class="big">${score}</div>
-      <div class="recap recap--tight">${mistakes.slice(0, 2).map((r) => `<div><b>${esc(r.labels[r.bad])} → настоящий ${esc(r.s.real)}</b>${esc(r.s.why)}</div>`).join('')}</div>
+      <div class="recap recap--tight">${mistakes.slice(0, 2).map((r) => `<div><b>${esc(r.labels[r.bad])} → настоящий ${esc(r.s.real)}</b>${esc(r.s.whys[Math.max(0, r.s.fake.indexOf(r.labels[r.bad]))])}</div>`).join('')}</div>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="n-again">Ещё раз</button></div>`;
     el.hidden = false; $('#n-again').onclick = start; el.querySelector('[data-c]').onclick = close;
     buzz([15, 60, 15]); score > 0 ? snd.win() : snd.lose();
@@ -1214,8 +1224,8 @@ function close() {
     const elapsed = DURATION - left;
     const roll = Math.random();
     const kind = elapsed > 12 && roll < 0.26 ? 'fake' : roll < 0.62 ? 'friend' : 'stranger';
-    // друзья смотрят фото, личку и иногда геометку; чужие заглядывают куда угодно
-    const win = kind === 'friend' ? ['photo', 'photo', 'chat', 'chat', 'geo'][Math.random() * 5 | 0] : WINS[Math.random() * WINS.length | 0].id;
+    // друзья смотрят фото и личку, а где ты сейчас, им знать не нужно; чужие заглядывают куда угодно
+    const win = kind === 'friend' ? ['photo', 'photo', 'chat', 'chat'][Math.random() * 4 | 0] : WINS[Math.random() * WINS.length | 0].id;
     const name = FRIENDS[Math.random() * FRIENDS.length | 0];
     const tag = kind === 'friend' ? `${name} <i>${3 + (Math.random() * 20 | 0)} общих</i>` : kind === 'fake' ? `${name} <i>0 общих</i>` : `Не в друзьях`;
     const pt = pointOf(win), W = stage.clientWidth;
@@ -1306,6 +1316,7 @@ function close() {
     const spied = [...new Set(leaks)];
     const lines = [];
     if (spied.length) lines.push(`<div><b>Подсмотрели</b>Окна, открытые всем: ${spied.join(', ')}.</div>`);
+    if (stat.offended) lines.push(`<div><b>Ты прогнал друзей</b>Удаляй только тех, у кого «0 общих». Настоящие друзья с общими знакомыми остаются.</div>`);
     if (stat.fake) lines.push(`<div><b>«Друг» с «0 общих»</b>Заглянул ${stat.fake} раз. Таких удаляй.</div>`);
     else if (stat.shut) lines.push(`<div><b>Друзья застали закрытое окно</b>Фото и личку оставляй друзьям, а где ты сейчас — не показывай никому.</div>`);
     if (!lines.length) lines.push('<div><b>Ни одной ошибки</b>Фото и личка для друзей, а «Где я» закрыто.</div>');
@@ -1654,7 +1665,7 @@ function close() {
       ${some.map((w) => `<div><b>${esc(w.w)}</b>${esc(w.why)}</div>`).join('')}</div>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="r-again">Ещё раз</button></div>`;
     el.hidden = false; $('#r-theme').hidden = true;
-    $('#r-again').onclick = () => { $('#r-end').hidden = true; $('#r-start').hidden = false; };
+    $('#r-again').onclick = () => { $('#r-end').hidden = true; $('#r-start').hidden = false; $('#r-time').textContent = DURATION; $('#r-score').textContent = '0'; };
     el.querySelector('[data-c]').onclick = close;
     buzz([15, 60, 15]); place === 1 ? snd.win() : snd.good();
   }
@@ -1773,7 +1784,7 @@ function close() {
   function robotLine(p) {
     const mine = p.pass.find((x) => x.t === 'me'), common = p.pass.find((x) => x.t === 'common'), t = human(secOf(p)), end = human(secOf(p)).endsWith('.') ? '' : '.', when = t === 'сразу' ? 'сразу' : 'за ' + t;
     if (!p.pass.length) return 'Пароля нет, захожу сразу.';
-    if (mine) return `Пробую данные из профиля: «${mine.v}» подошло. Взлом ${when}${end}`;
+    if (mine) return level(p) === 2 ? `В пароле есть данные героя («${mine.v}»), это минус. Но слов хватает: перебор займёт ${t}${end}` : `Пробую данные из профиля: «${mine.v}» подошло. Взлом ${when}${end}`;
     if (common) return `«${common.v}» — один из самых частых паролей, его пробуют первым. Взлом ${when}${end}`;
     const lv = level(p);
     if (lv === 0) return `Пароль короткий, перебор быстрый: ${t}${end}`;
@@ -1850,7 +1861,7 @@ function close() {
   // Возвращает false, если блок не добавился (чтобы поле «своё слово» не очищалось зря)
   function add(b) {
     if (phase !== 'build' || me.pass.includes(b)) return false;
-    if (me.pass.length >= MAXB) { shake(passEl); say(`Максимум ${MAXB} блоков. Убери один, чтобы добавить новый.`); return false; }
+    if (me.pass.length >= MAXB) { shake(passEl); flashMsg($('#u-stage'), `Максимум ${MAXB} блоков: убери один`); say(`Максимум ${MAXB} блоков. Убери один, чтобы добавить новый.`); return false; }
     me.pass.push(b); buzz(6); snd.step(me.pass.length); renderPass();
     say(`Добавлено: ${b.v}. В пароле ${me.pass.length} из ${MAXB}`);
     return true;
@@ -1894,7 +1905,7 @@ function close() {
     $('#u-main').style.display = 'none'; $('#u-arena').hidden = false; timeEl.hidden = true;
     const order = [...players.filter((p) => !p.me), me];
     const ranked = players.map((p) => ({ p, b: bitsOf(p), r: Math.random() })).sort((a, b) => b.b - a.b || a.r - b.r).map((x) => x.p);
-    const place = (p) => ranked.indexOf(p) + 1;
+    const place = (p) => 1 + ranked.filter((x) => bitsOf(x) > bitsOf(p)).length;
     $('#u-cols').innerHTML = order.map((p) => `<div class="u-col" style="--c:${p.color}"><div class="u-name"><i></i>${esc(p.name)}</div>
       <div class="u-tow" data-p="${p.id}" role="list" aria-label="Пароль: ${esc(p.name)}">${p.pass.map((b) => `<div class="u-b t-${b.t}" role="listitem" aria-label="${esc(b.v)}, ${KIND[b.t]}">${esc(b.v)}</div>`).join('')}</div><div class="u-res" data-r="${p.id}"></div></div>`).join('');
     $('#u-skip').hidden = false;
@@ -1945,7 +1956,8 @@ function close() {
     if (phase === 'done' || phase === 'idle') return;
     phase = 'done'; skipFn = null;
     $('#u-arena').hidden = true;
-    const place = ranked.indexOf(me) + 1, won = place === 1;
+    const ahead = (p) => ranked.filter((x) => bitsOf(x) > bitsOf(p)).length;
+    const place = 1 + ahead(me), won = place === 1;
     let wins = store.get('duel'); if (won) { wins++; store.set('duel', wins); }
     const weakMe = me.pass.find((x) => x.t === 'me'), weakCom = me.pass.find((x) => x.t === 'common'), lv = level(me);
     let tip = !me.pass.length ? 'Без пароля робот заходит сразу.'
@@ -1953,11 +1965,11 @@ function close() {
       : weakCom ? `«${esc(weakCom.v)}» все пробуют в первую очередь.`
       : lv < 2 ? 'Добавь ещё одно случайное слово.'
       : 'Несколько случайных слов: легко помнить, трудно взломать.';
-    if (!won) tip += ' Это тренировка: попробуй ещё раз.';
+    if (!won && lv < 2) tip += ' Это тренировка: попробуй ещё раз.';
     const el = $('#u-end');
     el.innerHTML = `<h2>${won ? 'Победа!' : place + ' место'}</h2>
       <p class="u-cap">Робот взломает за:</p>
-      <div class="u-rank">${ranked.map((p, i) => `<div class="${p.me ? 'me' : ''}" style="--c:${p.color}"><span class="medal">${i + 1}</span><i></i><b>${esc(p.name)}</b><span>${esc(human(secOf(p)))}</span></div>`).join('')}</div>
+      <div class="u-rank">${ranked.map((p, i) => `<div class="${p.me ? 'me' : ''}" style="--c:${p.color}"><span class="medal">${1 + ahead(p)}</span><i></i><b>${esc(p.name)}</b><span>${esc(human(secOf(p)))}</span></div>`).join('')}</div>
       <p class="u-tip">${tip}</p>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="u-again">Ещё раз</button></div>`;
     el.hidden = false;
@@ -1981,7 +1993,7 @@ function close() {
   });
   $('#u-done').onclick = () => {
     if (phase !== 'build') return;
-    if (!me.pass.length) { shake(passEl); say('Пароль пустой. Добавь хотя бы один блок.'); return; }
+    if (!me.pass.length) { shake(passEl); flashMsg($('#u-stage'), 'Добавь хотя бы один блок'); say('Пароль пустой. Добавь хотя бы один блок.'); return; }
     finishBuild();
   };
   $('#u-skip').onclick = () => { if (skipFn) skipFn(); };
