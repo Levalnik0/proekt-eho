@@ -249,6 +249,12 @@ canvas { display: block; width: 100%; height: 100%; }
 .duel .fort__actions { position: sticky; bottom: 0; margin-top: auto; padding-top: 14px; background: linear-gradient(to top, var(--bg) 70%, transparent); }
 .u-fields { display: grid; gap: 8px; margin: 0 0 14px; }
 .u-field { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 10px; font-size: 15px; color: var(--muted); }
+.u-rules { display: grid; gap: 8px; margin: 0 0 12px; }
+.u-rule { display: grid; gap: 3px; padding: 10px 12px; border-radius: 12px; background: var(--surface); font-size: 14px; line-height: 1.3; color: var(--muted); }
+.u-rule b { font-size: 14.5px; }
+.u-rule--no b { color: var(--pink); }
+.u-rule--ok b { color: var(--good); }
+.u-rule span { padding-left: 2px; }
 .overlay .u-warn { font-size: 14px; line-height: 1.4; color: var(--ink); background: var(--surface); border-radius: 12px; padding: 10px 12px; margin: 0 0 14px; }
 .u-arena { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 4px 10px 12px; background: var(--bg); overflow-y: auto; }
 .u-arena[hidden] { display: none !important; }
@@ -515,7 +521,11 @@ canvas { display: block; width: 100%; height: 100%; }
       </div>
       <form class="overlay" id="u-start" autocomplete="off">
         <h2>Дуэль паролей</h2>
-        <p>Робот первым пробует имя, кличку и число. Собери пароль, который ему не по зубам.</p>
+        <p>Робот-взломщик знает про твоего героя всё, что видно в профиле: имя, питомца, год. Это он пробует первым. Собери пароль, который ему не по зубам.</p>
+        <div class="u-rules" aria-label="Правила пароля">
+          <div class="u-rule u-rule--no"><b>✕ Слабый пароль</b><span>имя, кличка, год или дата героя</span><span>123456, qwerty, пароль</span><span>одно короткое слово</span></div>
+          <div class="u-rule u-rule--ok"><b>✓ Крепкий пароль</b><span>3–4 случайных слова подряд</span><span>длинный: чем длиннее, тем лучше</span><span>свой для каждого сайта</span></div>
+        </div>
         <p class="u-warn" id="u-warn" role="note">Это игра: выдумай героя. Настоящие имя, год рождения и пароли не вводи.</p>
         <div class="u-fields">
           <label class="u-field">Имя героя<input id="u-name" maxlength="10" placeholder="например, Зефирка" autocomplete="off" aria-describedby="u-warn"></label>
