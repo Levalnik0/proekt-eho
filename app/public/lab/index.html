@@ -281,6 +281,25 @@ canvas { display: block; width: 100%; height: 100%; }
 .u-tip { font-size: 15px; margin: 0 0 18px; background: var(--surface); border-radius: 14px; padding: 11px 14px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 </style>
+<script>
+// Цвета берём из выбранной темы приложения (тот же адрес, общее хранилище).
+// Светлую тему не повторяем: игры нарисованы на тёмном, поэтому там остаётся «Океан».
+(() => {
+  const T = {
+    coral:  { bg: '#1c120d', s: '#2e1e17', s2: '#3b281f', ink: '#f6ebe6', muted: '#c9a99b', accent: '#ff9a70', line: 'rgba(255,190,160,.16)' },
+    pink:   { bg: '#1d0f16', s: '#35192a', s2: '#46213a', ink: '#fbe9f0', muted: '#cfa3b5', accent: '#ff8fb1', line: 'rgba(255,170,200,.16)' },
+    violet: { bg: '#130f22', s: '#241b3f', s2: '#31264f', ink: '#efeafc', muted: '#b3a8d6', accent: '#a996ff', line: 'rgba(190,170,255,.16)' },
+    neon:   { bg: '#0b0b14', s: '#171728', s2: '#222239', ink: '#eef0ff', muted: '#9fa3c7', accent: '#38e8d8', line: 'rgba(120,255,240,.14)' },
+  };
+  let name = '';
+  try { name = localStorage.getItem('echo.theme.v1') || ''; } catch (e) {}
+  const t = T[name];
+  if (!t) return;
+  const r = document.documentElement.style;
+  r.setProperty('--bg', t.bg); r.setProperty('--surface', t.s); r.setProperty('--surface-2', t.s2);
+  r.setProperty('--ink', t.ink); r.setProperty('--muted', t.muted); r.setProperty('--accent', t.accent); r.setProperty('--line', t.line);
+})();
+</script>
 
 <div class="phone" id="phone">
 
