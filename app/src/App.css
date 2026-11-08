@@ -936,7 +936,7 @@ h2[tabindex='-1']:focus {
 
 /* Закрытая медаль: едва заметное место под неё, а не яркий серый квадрат.
    Цвет берём от текста темы, поэтому в тёмных и светлых темах одинаково спокойно. */
-.medal:disabled,
+.medal.is-locked,
 .medal--secret {
   height: 96px;
   background: color-mix(in srgb, var(--ink) 4%, transparent);
@@ -975,7 +975,7 @@ h2[tabindex='-1']:focus {
   color: var(--ink);
 }
 
-.medal:disabled .medal__title,
+.medal.is-locked .medal__title,
 .medal--secret .medal__title {
   color: var(--ink-faint);
 }

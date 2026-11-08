@@ -46,10 +46,9 @@ export function ProfileScreen() {
           return (
             <li key={b.id}>
               <button
-                className={`medal${got ? ' is-got' : ''}`}
-                onClick={() => got && setOpen(b.id)}
-                disabled={!got}
-                aria-label={got ? b.title : 'Медаль ещё не открыта'}
+                className={`medal${got ? ' is-got' : ' is-locked'}`}
+                onClick={() => setOpen(b.id)}
+                aria-label={got ? b.title : `Закрытая медаль «${b.title}»: как получить`}
               >
                 <MedalIcon badgeId={b.id} size={46} locked={!got} />
                 {/* У закрытых медалей названия нет: двадцать восемь одинаковых подписей только мешали */}
@@ -70,13 +69,27 @@ export function ProfileScreen() {
         )}
       </ul>
 
-      {detail && <DetailDialog detail={detail} onClose={() => setOpen(null)} />}
+      {detail && (
+        <DetailDialog
+          detail={detail}
+          locked={!progress.badges.includes(detail.id)}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </div>
   );
 }
 
 /** Окно с описанием полученной медали; закрывается по Esc, кнопке и нажатию на фон */
-function DetailDialog({ detail, onClose }: { detail: Badge; onClose: () => void }) {
+function DetailDialog({
+  detail,
+  locked,
+  onClose,
+}: {
+  detail: Badge;
+  locked: boolean;
+  onClose: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useDialog(ref, onClose);
   return (
@@ -91,15 +104,25 @@ function DetailDialog({ detail, onClose }: { detail: Badge; onClose: () => void 
     >
       <div className="badge-pop__card" onClick={(e) => e.stopPropagation()}>
         <div className="badge-pop__stage">
-          <MedalIcon badgeId={detail.id} size={84} />
+          <MedalIcon badgeId={detail.id} size={84} locked={locked} />
         </div>
         <div className="badge-pop__title">{detail.title}</div>
-        <p className="badge-pop__reason">{detail.reason}</p>
-        <div className="badge-pop__block">
-          <b>{detail.role === 'teen' ? 'Что это про тебя' : 'Что это про вас'}</b>
-          <span>{detail.strength}</span>
-        </div>
-        {detail.growth && (
+        {locked ? (
+          // Закрытая медаль подсказывает, как её получить, а не просто «ещё нет»
+          <div className="badge-pop__block">
+            <b>Как получить</b>
+            <span>{detail.reason}</span>
+          </div>
+        ) : (
+          <p className="badge-pop__reason">{detail.reason}</p>
+        )}
+        {!locked && (
+          <div className="badge-pop__block">
+            <b>{detail.role === 'teen' ? 'Что это про тебя' : 'Что это про вас'}</b>
+            <span>{detail.strength}</span>
+          </div>
+        )}
+        {!locked && detail.growth && (
           <div className="badge-pop__block badge-pop__block--try">
             <b>Можно попробовать</b>
             <span>{detail.growth}</span>

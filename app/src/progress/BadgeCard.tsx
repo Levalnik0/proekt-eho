@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDialog } from '../components/useDialog';
 import { BADGE_BY_ID } from './badges';
 import { MedalIcon } from './MedalIcon';
@@ -8,7 +8,20 @@ import { MedalIcon } from './MedalIcon';
  * Сначала — что получилось хорошо. «Что попробовать» идёт следом
  * и только для взрослых: без похвалы такая строка читается как упрёк.
  */
-export function BadgeCard({ badgeId, onClose }: { badgeId: string; onClose: () => void }) {
+/**
+ * Окно появляется не сразу: иначе оно закрывало результат теста или
+ * проверки сообщения, и человек видел его только после «Забрать».
+ */
+export function BadgeCard(props: { badgeId: string; onClose: () => void }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setReady(true), 1200);
+    return () => window.clearTimeout(t);
+  }, []);
+  return ready ? <BadgeCardView {...props} /> : null;
+}
+
+function BadgeCardView({ badgeId, onClose }: { badgeId: string; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   useDialog(ref, onClose);
   const badge = BADGE_BY_ID[badgeId];
