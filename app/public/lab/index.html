@@ -249,6 +249,8 @@ canvas { display: block; width: 100%; height: 100%; }
 .duel .fort__actions { position: sticky; bottom: 0; margin-top: auto; padding-top: 14px; background: linear-gradient(to top, var(--bg) 70%, transparent); }
 .u-fields { display: grid; gap: 8px; margin: 0 0 14px; }
 .u-field { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 10px; font-size: 15px; color: var(--muted); }
+.overlay .u-cap2 { margin: 0 0 6px; font-size: 14px; font-weight: 700; color: var(--ink); }
+.u-say { min-height: 58px; margin: 0 2px 10px; padding: 10px 14px; border-radius: 14px; background: var(--surface); font-size: 14px; line-height: 1.35; text-align: center; color: var(--ink); }
 .u-rules { display: grid; gap: 8px; margin: 0 0 12px; }
 .u-rule { display: grid; gap: 3px; padding: 10px 12px; border-radius: 12px; background: var(--surface); font-size: 14px; line-height: 1.3; color: var(--muted); }
 .u-rule b { font-size: 14.5px; }
@@ -516,17 +518,19 @@ canvas { display: block; width: 100%; height: 100%; }
             <text x="43" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#3fd0cc" font-family="monospace">0101</text>
           </svg>
         </div>
+        <div class="u-say" id="u-say" role="status"></div>
         <div class="u-cols" id="u-cols"></div>
         <button class="btn u-skip" id="u-skip" type="button">Показать сразу</button>
       </div>
       <form class="overlay" id="u-start" autocomplete="off">
         <h2>Дуэль паролей</h2>
-        <p>Робот-взломщик знает про твоего героя всё, что видно в профиле: имя, питомца, год. Это он пробует первым. Собери пароль, который ему не по зубам.</p>
+        <p>Робот-взломщик читает профиль героя и сначала пробует то, что там нашёл. Собери пароль, который ему не по зубам.</p>
         <div class="u-rules" aria-label="Правила пароля">
           <div class="u-rule u-rule--no"><b>✕ Слабый пароль</b><span>имя, кличка, год или дата героя</span><span>123456, qwerty, пароль</span><span>одно короткое слово</span></div>
-          <div class="u-rule u-rule--ok"><b>✓ Крепкий пароль</b><span>3–4 случайных слова подряд</span><span>длинный: чем длиннее, тем лучше</span><span>свой для каждого сайта</span></div>
+          <div class="u-rule u-rule--ok"><b>✓ Крепкий пароль</b><span>4–5 случайных слов подряд, лучше с цифрой и знаком</span><span>длинный: чем длиннее, тем лучше</span><span>свой для каждого сайта</span></div>
         </div>
         <p class="u-warn" id="u-warn" role="note">Это игра: выдумай героя. Настоящие имя, год рождения и пароли не вводи.</p>
+        <p class="u-cap2">Профиль героя: это видно всем, и роботу тоже.</p>
         <div class="u-fields">
           <label class="u-field">Имя героя<input id="u-name" maxlength="10" placeholder="например, Зефирка" autocomplete="off" aria-describedby="u-warn"></label>
           <label class="u-field">Питомец героя<input id="u-pet" maxlength="10" placeholder="например, Рекс" autocomplete="off" aria-describedby="u-warn"></label>
@@ -1765,6 +1769,17 @@ function close() {
     // Бонус за разнообразие даём только за сильные виды блоков
     return total + (new Set(p.pass.map((b) => b.t).filter((t) => t !== 'me' && t !== 'common')).size >= 3 ? 3 : 0);
   }
+  // Что «думает» робот: так видно, чем пароль плох или хорош, а не только цифру
+  function robotLine(p) {
+    const mine = p.pass.find((x) => x.t === 'me'), common = p.pass.find((x) => x.t === 'common'), t = human(secOf(p)), end = human(secOf(p)).endsWith('.') ? '' : '.', when = t === 'сразу' ? 'сразу' : 'за ' + t;
+    if (!p.pass.length) return 'Пароля нет, захожу сразу.';
+    if (mine) return `Пробую данные из профиля: «${mine.v}» подошло. Взлом ${when}${end}`;
+    if (common) return `«${common.v}» — один из самых частых паролей, его пробуют первым. Взлом ${when}${end}`;
+    const lv = level(p);
+    if (lv === 0) return `Пароль короткий, перебор быстрый: ${t}${end}`;
+    if (lv === 1) return `Слов мало, подбирать долго, но можно: ${t}${end}`;
+    return `Случайные слова в случайном порядке не угадать. Перебор займёт ${t}${end}`;
+  }
   const secOf = (p) => Math.pow(2, bitsOf(p)) / 1e9;
   // 0 — взломан (меньше суток), 1 — средний (меньше года), 2 — крепкий
   const level = (p) => { const s = secOf(p); return s < DAY ? 0 : s < YEAR ? 1 : 2; };
@@ -1887,6 +1902,7 @@ function close() {
     const robot = $('#u-robot'), cols = $('#u-cols'), n = order.length, STEP = reduce.matches ? 600 : 2100;
     cols.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
     robot.classList.remove('hit'); robot.style.left = '0';
+    $('#u-say').textContent = 'Читаю профили героев и пробую самое очевидное.';
     const revealed = new Set();
     const reveal = (p, quiet) => {
       if (revealed.has(p.id)) return;
@@ -1917,7 +1933,7 @@ function close() {
       later(() => {
         const tow = $(`.u-tow[data-p="${p.id}"]`);
         robot.classList.remove('hit'); void robot.getBoundingClientRect(); if (!reduce.matches) robot.classList.add('hit');
-        tow.classList.add('shake'); buzz([20, 40, 20]); snd.robot();
+        tow.classList.add('shake'); buzz([20, 40, 20]); snd.robot(); $('#u-say').textContent = `${p.me ? 'Твой пароль' : p.name}: ${robotLine(p)}`;
       }, t + Math.round(STEP * 0.3));
       later(() => reveal(p), t + Math.round(STEP * 0.7));
     });
