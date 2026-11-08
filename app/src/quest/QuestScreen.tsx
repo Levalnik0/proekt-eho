@@ -3,6 +3,9 @@ import { IconBack, IconCardAlert } from '../components/icons';
 import { BadgeCard } from '../progress/BadgeCard';
 import { useProgress } from '../progress/useProgress';
 import { Glossed } from '../glossary/Glossed';
+import { Avatar } from './Avatar';
+import { ProfileSheet } from './ProfileSheet';
+import { PROFILES } from './profiles';
 import type { Quest, QuestChoice, QuestMessage, QuestNode } from './types';
 
 /** Пауза перед появлением сообщения — чтобы переписка шла в живом темпе.
@@ -26,6 +29,10 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
   const [queue, setQueue] = useState<QuestMessage[]>(nodeById[quest.start].messages);
   const [showDebrief, setShowDebrief] = useState(false);
   const [fresh, setFresh] = useState<string[]>([]);
+  const [profileOpen, setProfileOpen] = useState(false);
+  /** Что человек сделал в профиле: медали выдаём, когда окно закрыто, чтобы они не наложились */
+  const profileDid = useRef({ viewed: false, reported: false });
+  const profile = PROFILES[quest.id];
 
   const { award, countRun } = useProgress();
   const node = nodeById[nodeId];
@@ -78,6 +85,28 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
     [nodeById],
   );
 
+  const openProfile = useCallback(() => {
+    profileDid.current.viewed = true;
+    setProfileOpen(true);
+  }, []);
+
+  const closeProfile = useCallback(() => {
+    setProfileOpen(false);
+    const did = profileDid.current;
+    const ids = [did.viewed ? 'check-profile' : undefined, did.reported ? 'reported' : undefined].filter(
+      Boolean,
+    ) as string[];
+    profileDid.current = { viewed: false, reported: false };
+    const given = award(ids);
+    if (given.length) setFresh((prev) => [...prev, ...given]);
+  }, [award]);
+
+  // «Заблокировать» ведёт в финал, где игрок вышел из разговора
+  const blockContact = useCallback(() => {
+    closeProfile();
+    choose({ text: 'Заблокировал(а) контакт', next: 'block_end' });
+  }, [closeProfile, choose]);
+
   const restart = useCallback(() => {
     setNodeId(quest.start);
     setShown([]);
@@ -91,10 +120,27 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
         <button className="topbar__back" onClick={onExit} aria-label="Выйти из квеста">
           <IconBack size={22} />
         </button>
-        <div className="quest__contact">
-          <span className="quest__name">{quest.contact}</span>
-          <span className="quest__note">{quest.contactNote}</span>
-        </div>
+        {profile ? (
+          <button
+            className="quest__who"
+            onClick={openProfile}
+            aria-label={`Открыть профиль: ${quest.contact}`}
+          >
+            <Avatar kind={profile.avatar} size={40} />
+            <span className="quest__contact">
+              <span className="quest__name">{quest.contact}</span>
+              <span className="quest__note">{quest.contactNote}</span>
+            </span>
+            <span className="quest__more" aria-hidden="true">
+              ›
+            </span>
+          </button>
+        ) : (
+          <div className="quest__contact">
+            <span className="quest__name">{quest.contact}</span>
+            <span className="quest__note">{quest.contactNote}</span>
+          </div>
+        )}
         <button className="quest__restart" onClick={restart}>
           Заново
         </button>
@@ -155,6 +201,19 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
                 </span>
               </div>
             ))}
+            {profile && (
+              <>
+                <div className="debrief__title debrief__title--sub">Что выдавал профиль</div>
+                {profile.signs.map((f) => (
+                  <div className="debrief__item" key={f.title}>
+                    <b>{f.title}</b>
+                    <span>
+                      <Glossed text={f.text} />
+                    </span>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -190,6 +249,19 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
           </div>
         )}
       </div>
+
+      {profileOpen && profile && (
+        <ProfileSheet
+          nick={quest.contact}
+          profile={profile}
+          canBlock={!ending && Boolean(nodeById.block_end)}
+          onClose={closeProfile}
+          onReport={() => {
+            profileDid.current.reported = true;
+          }}
+          onBlock={blockContact}
+        />
+      )}
 
       {fresh.length > 0 && (
         <BadgeCard badgeId={fresh[0]} onClose={() => setFresh((prev) => prev.slice(1))} />

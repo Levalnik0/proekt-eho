@@ -1,5 +1,7 @@
 /** Какой глиф у какой медали */
 export const MEDAL_GLYPH: Record<string, string> = {
+  'check-profile': 'eye',
+  reported: 'flag',
   'calm-no': 'shield',
   'double-check': 'magnifier',
   'call-team': 'handshake',
