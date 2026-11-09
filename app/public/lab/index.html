@@ -184,6 +184,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .d-info { position: absolute; left: 14px; right: 14px; top: 10px; z-index: 6; padding: 14px; border-radius: 18px; background: #f4efe4; color: #2b2118; box-shadow: 0 14px 40px rgba(0,0,0,.5); animation: fade .2s; }
 .d-info[hidden] { display: none; }
 .d-done .d-tools, .d-done .d-actions, .d-done .d-pins { display: none; }
+.d-edit .d-lamps, .d-edit #d-count { visibility: hidden; }
 .d-info h3 { margin: 0 0 8px; font-size: 16px; }
 .d-irow { display: block; width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 6px; border-radius: 10px; background: #fff; border: 1.5px solid #e3d9c3; font-size: 14px; color: #2b2118; }
 .d-irow.done { background: #e9f6e9; border-color: #9fd3a8; }
@@ -205,6 +206,11 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .fixhit { position: absolute; width: 58px; height: 36px; margin: -18px 0 0 -29px; border-radius: 10px; border: 2px dashed rgba(255,217,138,.85); background: rgba(255,217,138,.12); }
 .fixhit.on { border: 2px solid #fff; background: repeating-linear-gradient(45deg, #f4efe4 0 6px, #e3d9c3 6px 12px); box-shadow: 0 3px 10px rgba(0,0,0,.4); }
 .fixhit.on::after { content: "закрыто"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 10px; font-weight: 800; color: #6b5a3a; }
+.d-fix .uvonly { opacity: 1; }
+.d-fix .blurry { filter: none; }
+#d-mode .w-lv { padding: 0 16px; font-size: 14px; }
+.d-stk { margin: 0 0 8px; font-size: 14px; color: var(--ink); }
+.d-stk b { color: #ffd98a; }
 .uvonly { opacity: 0; }
 .blurry { filter: blur(2px); }
 .lens[data-tool="uv"] .uvonly { opacity: 1; }
@@ -411,6 +417,18 @@ canvas { display: block; width: 100%; height: 100%; }
 })();
 </script>
 
+<script>
+// Игры открываются кодом в приложении «Эхо». Если эту страницу открыли напрямую, без кода, показываем заглушку.
+// Внутри приложения (во фрейме) проверку уже сделало само приложение.
+(function () {
+  var locked = false;
+  try { locked = window.top === window.self && localStorage.getItem('echo.lab.unlocked') !== '1'; } catch (e) { locked = false; }
+  if (locked) {
+    document.documentElement.innerHTML = '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Эхо: игры</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0c1a1d;color:#e9f5f4;font-family:-apple-system,Segoe UI,Arial,sans-serif;text-align:center;padding:24px"><div><h1 style="font-size:22px;margin:0 0 10px">Игры пока закрыты</h1><p style="margin:0;color:#9fbcbb">Они откроются позже в приложении «Эхо».</p></div></body>';
+    window.stop();
+  }
+})();
+</script>
 <div class="phone" id="phone">
 
   <!-- ═════════ МЕНЮ ═════════ -->
@@ -502,6 +520,7 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="overlay" id="d-start">
         <h2>Детектив</h2>
         <div data-how="detective"></div>
+        <div class="w-levels" id="d-mode"><button class="w-lv on" data-m="find">Детектив</button><button class="w-lv" data-m="edit">Редактор</button></div>
         <div class="w-levels" id="d-cases"></div>
         <div class="d-hero" id="d-hero"></div>
         <p class="w-lvnote" id="d-note"></p>
@@ -1214,7 +1233,7 @@ function close() {
   /* ── игра ── */
   const box = $('#d-box'), stage = $('#d-stage');
   let cs = 0, V = null, spots = [], layer = 'front', found = new Set(), safeSeen = new Set(), need = 3, tool = 'lens';
-  let stageCases = [], stageNow = 0, pending = null;
+  let stageCases = [], stageNow = 0, pending = null, mode = 'find';
   let lamps = 3, misses = 0, hints = 2, active = false, lens, dim, zoomSvg, last = { x: 180, y: 260 }, toastTimer, endT, coachT;
   const C = () => stageCases[stageNow] || CASES[cs];
   const radOf = () => C().rad || RAD;
@@ -1246,7 +1265,7 @@ function close() {
     r.style.left = q.xy[0] * k + 'px'; r.style.top = q.xy[1] * k + 'px'; box.appendChild(r);
   }
   function pickSpots(ci, st) {
-    const cfg = CFG[ci], c = CASES[ci], al = [...new Set([...TOOLS[cs], ...TOOLS[ci]])];
+    const cfg = CFG[ci], c = CASES[ci], al = mode === 'edit' ? ['uv', 'focus', 'info'] : [...new Set([...TOOLS[cs], ...TOOLS[ci]])];
     const ok = (q) => !q.tool || al.includes(q.tool);
     const real = shuffle(c.spots.filter((q) => isReal(q) && ok(q))), fake = shuffle(c.spots.filter((q) => !isReal(q) && ok(q)));
     const pr = real.slice(0, cfg.real);
@@ -1283,14 +1302,20 @@ function close() {
     const open = Math.max(1, store.get('detective_lv'));
     $('#d-cases').innerHTML = CASES.map((c, k) => { const stars = store.get('detective_s' + k); return `<button class="w-lv${k === cs ? ' on' : ''}" data-c="${k}"${k >= open ? ' disabled' : ''} aria-label="Дело ${k + 1}${k >= open ? ', пока закрыто' : stars ? ', звёзд: ' + stars : ''}">${k >= open ? '🔒' : k + 1}</button>`; }).join('');
     const done = CASES.filter((c, k) => store.get('detective_s' + k) > 0).length, total = CASES.reduce((a, c, k) => a + store.get('detective_s' + k), 0);
-    $('#d-hero').innerHTML = `<b>Сообщение от девочки</b>«${CASES[i].ask}»`;
-    $('#d-note').innerHTML = `<b>Дело ${i + 1}: ${CASES[i].title}.</b> ${CASES[i].note}${done ? ` <br>Картотека: раскрыто дел ${done}, звёзд ${total}.` : ''}`;
+    $('#d-hero').innerHTML = mode === 'edit' ? '<b>Ты и твоё фото</b>«Я хочу выложить этот снимок. Помоги закрыть лишнее так, чтобы сыщик-робот меня не нашёл.»' : `<b>Сообщение от девочки</b>«${CASES[i].ask}»`;
+    $('#d-note').innerHTML = mode === 'edit' ? `<b>Редактор, дело ${i + 1}: ${CASES[i].title}.</b> Стикеров меньше, чем улик. Закрой нужное, и сыщик-робот не найдёт тебя.${done ? ` <br>Картотека: раскрыто дел ${done}, звёзд ${total}.` : ''}` : `<b>Дело ${i + 1}: ${CASES[i].title}.</b> ${CASES[i].note}${done ? ` <br>Картотека: раскрыто дел ${done}, звёзд ${total}.` : ''}`;
+    $('#d-go').textContent = mode === 'edit' ? 'Открыть редактор' : 'Взять лупу';
   }
+  $('#d-mode').addEventListener('click', (e) => {
+    const b = e.target.closest('.w-lv'); if (!b || active) return;
+    mode = b.dataset.m; $('#d-mode').querySelectorAll('.w-lv').forEach((x) => x.classList.toggle('on', x === b)); selectCase(cs); snd.tap();
+  });
   $('#d-cases').addEventListener('click', (e) => { const b = e.target.closest('.w-lv'); if (b && !b.disabled && !active) { selectCase(+b.dataset.c); snd.tap(); } });
 
   function start() {
+    if (mode === 'edit') { startEditor(); return; }
     prepare(); active = true; clearTimeout(endT);
-    $('#g-detective').classList.remove('d-done'); $('#d-info').hidden = true;
+    $('#g-detective').classList.remove('d-done', 'd-edit'); $('#d-info').hidden = true;
     build(); $('#d-pins').innerHTML = '';
     $('#d-start').hidden = true; $('#d-end').hidden = true;
     $('#d-hint').textContent = 'Води лупой, читай надписи и нажимай «Это улика»';
@@ -1316,6 +1341,73 @@ function close() {
     zoomSvg.style.width = r.width * Z + 'px'; zoomSvg.style.height = r.height * Z + 'px';
     zoomSvg.style.transform = `translate(${64 - x * Z}px, ${64 - y * Z}px)`;
     last = { x: x / k, y: y / k };
+  }
+  /* ── режим «Редактор»: закрой лишнее стикерами, сыщик-робот ищет тебя ── */
+  function startEditor() {
+    prepare(); active = false; clearTimeout(endT);
+    $('#g-detective').classList.add('d-done', 'd-edit'); $('#d-info').hidden = true; $('#d-start').hidden = true;
+    $('#d-hint').textContent = 'Нажимай на улики на фото, чтобы закрыть их стикером';
+    editorStep(new Set(), 1);
+  }
+  function editorStep(cov, attempt) {
+    const real = spots.filter(isReal), budget = Math.max(1, real.length - 1);
+    const el = $('#d-end'); let fl = 'front';
+    const infos = spots.filter((q) => q.info);
+    el.innerHTML = `<h2>Редактор</h2><p>Ты хочешь выложить это фото. Закрой стикерами то, по чему тебя найдут. Но не трать стикеры на безобидное.</p>
+      <div class="d-stk">Стикеров осталось: <b id="d-left"></b> из ${budget}</div>
+      <div class="d-fix" id="d-fix"></div>
+      ${infos.length ? '<div id="d-ed-info"></div>' : ''}
+      <div class="row"><button class="btn" id="d-fxflip" hidden></button></div>
+      <div class="row" style="margin-top:10px"><button class="btn btn--main" id="d-post">Выложить</button></div>`;
+    el.hidden = false;
+    const left = () => budget - cov.size;
+    const draw = () => {
+      const W = Math.min(280, stage.clientWidth - 32), k = W / 360, fx = $('#d-fix');
+      fx.style.width = W + 'px'; fx.style.height = 520 * k + 'px';
+      fx.innerHTML = svgFor(fl, 0) + spots.filter((q) => q.xy && !q.info && (q.layer || 'front') === fl).map((q) => `<button class="fixhit${cov.has(q.id) ? ' on' : ''}" data-id="${q.id}" style="left:${(q.xy[0] * k).toFixed(1)}px;top:${(q.xy[1] * k).toFixed(1)}px" aria-label="Закрыть стикером: ${q.title}"></button>`).join('');
+      const c = stageCases[0], b1 = $('#d-fxflip');
+      b1.hidden = !c.layers; if (c.layers) b1.textContent = fl === 'front' ? c.flip[0] : c.flip[1];
+      $('#d-left').textContent = left();
+      const ei = $('#d-ed-info');
+      if (ei) ei.innerHTML = '<div class="d-stk">Свойства фото (нажми, чтобы стереть)</div>' + infos.map((q) => `<button class="d-irow${cov.has(q.id) ? ' done' : ''}" data-id="${q.id}">${cov.has(q.id) ? 'Стёрто: ' : ''}${q.text(V)}</button>`).join('');
+    };
+    const toggle = (id) => {
+      if (cov.has(id)) { cov.delete(id); snd.tap(); }
+      else if (left() <= 0) { toast('Стикеры закончились. Сними ненужный, чтобы закрыть другое'); snd.bad(); return; }
+      else { cov.add(id); snd.tap(); buzz(8); }
+      draw();
+    };
+    draw();
+    $('#d-fix').addEventListener('click', (e) => { const b = e.target.closest('.fixhit'); if (b) toggle(b.dataset.id); });
+    const ei = $('#d-ed-info'); if (ei) ei.addEventListener('click', (e) => { const b = e.target.closest('.d-irow'); if (b) toggle(b.dataset.id); });
+    $('#d-fxflip').onclick = () => { fl = fl === 'front' ? 'back' : 'front'; draw(); };
+    $('#d-post').onclick = () => editorVerdict(cov, attempt, budget);
+  }
+  function editorVerdict(cov, attempt, budget) {
+    const real = spots.filter(isReal), seen = real.filter((q) => !cov.has(q.id));
+    const cats = [...new Set(seen.map((q) => q.cat))], next = cs + 1 < CASES.length;
+    const wasted = [...cov].filter((id) => !real.some((q) => q.id === id)).length;
+    const el = $('#d-end');
+    if (cats.length <= 1) {
+      const stars = attempt === 1 ? 3 : attempt === 2 ? 2 : 1;
+      if (stars > store.get('detective_e' + cs)) store.set('detective_e' + cs, stars);
+      snd.win(); buzz([15, 60, 15]);
+      el.innerHTML = `<h2>Сыщик-робот не нашёл тебя</h2><div class="big" aria-label="${stars} из 3">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+        <div class="d-hero"><b>Сыщик-робот</b>«${seen.length ? 'Вижу только одну подсказку: ' + seen[0].title.toLowerCase() + '. По одной теме человека не найти.' : 'Ничего не вижу. Это фото безопасно.'}»</div>
+        <p>${wasted ? `Ты потратил стикеров на безобидное: ${wasted}. Но всё равно справился.` : 'Ни одного стикера не потрачено зря.'}</p>
+        <div class="recap recap--tight">${real.map((q) => `<div><b>${q.title}</b>${q.why} <span style="color:var(--ink)">Что сделать:</span> ${q.fix}</div>`).join('')}</div>
+        <div class="row"><button class="btn" id="d-again">Ещё раз</button>${next ? '<button class="btn btn--main" id="d-next">Дело ' + (cs + 2) + '</button>' : '<button class="btn btn--main" data-c>В меню</button>'}</div>`;
+      el.hidden = false; $('#d-again').onclick = start;
+      if (next) $('#d-next').onclick = () => { selectCase(cs + 1); start(); };
+      const mb = el.querySelector('[data-c]'); if (mb) mb.onclick = close;
+    } else {
+      snd.bad(); buzz([20, 40, 20]);
+      el.innerHTML = `<h2>Сыщик-робот напал на след</h2>
+        <div class="d-hero"><b>Сыщик-робот</b>«Я узнал: ${seen.map((q) => q.title.toLowerCase()).join(', ')}. Это уже ${cats.map((c) => CAT[c].toLowerCase()).join(' и ')}. Вместе этого хватит, чтобы тебя найти.»</div>
+        <p>Ничего страшного, это же тренировка. Закрой что-то ещё: достаточно, чтобы осталась подсказка только про одну тему.</p>
+        <div class="row"><button class="btn btn--main" id="d-retry">Исправить</button></div>`;
+      el.hidden = false; $('#d-retry').onclick = () => editorStep(cov, attempt + 1);
+    }
   }
   function lose() {
     active = false; refreshUi(); $('#g-detective').classList.add('d-done'); snd.lose(); buzz([20, 40, 20]);
@@ -1515,7 +1607,7 @@ function close() {
   $('#d-go').onclick = start;
   games.detective = {
     enter() {
-      clearTimeout(endT); active = false; $('#d-info').hidden = true; $('#g-detective').classList.remove('d-done');
+      clearTimeout(endT); active = false; $('#d-info').hidden = true; $('#g-detective').classList.remove('d-done', 'd-edit');
       selectCase(Math.max(0, Math.min(CASES.length - 1, (store.get('detective_lv') || 1) - 1)));
       prepare(); build(); $('#d-pins').innerHTML = '';
       $('#d-start').hidden = false; $('#d-end').hidden = true; $('#d-hint').textContent = 'Води лупой и читай мелочи';

@@ -1,3 +1,4 @@
+import { labUnlocked } from '../games/lab';
 import type { ReactNode } from 'react';
 import {
   IconAdultChild,
@@ -81,7 +82,7 @@ export function SectionScreen({
       </div>
 
       <ul className="tiles tiles--section stagger">
-        {section.activities.map((a, index) => {
+        {section.activities.filter((a) => !a.route.startsWith('game/lab/') || labUnlocked()).map((a, index) => {
           const Icon = ROUTE_ICON[a.route] ?? KIND_ICON[a.kind];
           return (
             <li key={a.route}>

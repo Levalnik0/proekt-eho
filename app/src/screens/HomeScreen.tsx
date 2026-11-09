@@ -11,6 +11,7 @@ import {
 } from '../components/icons';
 import { buzz, centerOf, rings } from '../fx';
 import { bestOf } from '../games/storage';
+import { labUnlocked } from '../games/lab';
 import { tileStyle } from '../routes';
 import { useProgress } from '../progress/useProgress';
 import { useTheme } from '../theme/useTheme';
@@ -43,7 +44,7 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
   const tests = TESTS.filter((id) => progress.tests[id]).length;
 
   const tiles: Tile[] = [
-    { route: 'games', label: 'Игры', sub: '9 игр на скорость', Icon: IconGamepad },
+    { route: 'games', label: 'Игры', sub: labUnlocked() ? '9 игр на скорость' : '2 игры на скорость', Icon: IconGamepad },
     {
       route: 'stories',
       label: 'Истории',

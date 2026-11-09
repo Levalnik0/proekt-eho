@@ -111,10 +111,11 @@ export default function App() {
   }, [back]);
 
   // Неизвестный адрес не должен молча показывать главную с мусором в строке
-  // Игры теперь открыты всем: маршрут game/lab/<игра> запускает нужную сразу,
-  // game/lab (меню всех игр) остаётся для тех, кто знает код в «Клубе»
+  // Игры лаборатории пока закрыты: и меню (game/lab), и каждая игра отдельно
+  // (game/lab/<игра>) открываются только после кода из «Клуба», чтобы идеи
+  // не расходились раньше времени
   const labGame = path.startsWith('game/lab/') ? path.slice('game/lab/'.length) : null;
-  const labOpen = labGame !== null || (path === 'game/lab' && labUnlocked());
+  const labOpen = (labGame !== null || path === 'game/lab') && labUnlocked();
   const known =
     isTab ||
     Boolean(section || quest || mirror || test || coop) ||
