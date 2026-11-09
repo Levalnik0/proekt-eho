@@ -187,6 +187,12 @@ export function QuestScreen({ quest, onExit }: { quest: Quest; onExit: () => voi
             <p className="ending__text">
               <Glossed text={ending.text} />
             </p>
+            {ending.tryThis && (
+              <div className="pause-card">
+                <b>Можно попробовать</b>
+                <span>{ending.tryThis}</span>
+              </div>
+            )}
           </div>
         )}
 

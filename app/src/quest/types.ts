@@ -37,6 +37,8 @@ export type QuestEnding = {
   title: string;
   /** «Твоя суперсила — …» */
   superpower: string;
+  /** Одно небольшое действие на пробу; показывается только если задано */
+  tryThis?: string;
   text: string;
   /** id медали за этот финал */
   badge?: string;
