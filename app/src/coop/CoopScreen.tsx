@@ -60,7 +60,7 @@ export function CoopScreen({ coop, onExit }: { coop: Coop; onExit: () => void })
           state: stateOf(a.teen, a.adult),
         })),
       });
-      // «Союзник» — если хоть в одном шаге пошли навстречу друг другу
+      // «Союзник» - если хоть в одном шаге пошли навстречу друг другу
       const together = all.some((a) => stateOf(a.teen, a.adult) === 'together');
       const given = award(['decision-map', together ? 'ally' : undefined]);
       if (given.length) setFresh(given);
@@ -135,7 +135,7 @@ export function CoopScreen({ coop, onExit }: { coop: Coop; onExit: () => void })
           <div className="handoff__title">Передайте телефон {WHO[phase.turn]}</div>
           <p className="handoff__text">
             {phase.turn === 'adult'
-              ? 'Выбор подростка сделан. Не подсматривайте — вы увидите его после своего хода.'
+              ? 'Выбор подростка сделан. Не подсматривайте - вы увидите его после своего хода.'
               : 'Следующий ход за подростком.'}
           </p>
           <button

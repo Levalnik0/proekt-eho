@@ -15,5 +15,5 @@ export type Profile = {
   signs: { title: string; text: string }[];
 };
 
-/** Ключ — id истории (quest.id) */
+/** Ключ - id истории (quest.id) */
 export const PROFILES = data as Record<string, Profile>;

@@ -1,8 +1,8 @@
-/** Иконки интерфейса. Все — в квадрате 24×24, без внешних библиотек. */
+/** Иконки интерфейса. Все - в квадрате 24×24, без внешних библиотек. */
 
 type IconProps = { size?: number; className?: string };
 
-/** Геймпад — режим «Я — Подросток» */
+/** Геймпад - режим «Я - Подросток» */
 export function IconGamepad({ size = 24, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -20,7 +20,7 @@ export function IconGamepad({ size = 24, className }: IconProps) {
   );
 }
 
-/** Взрослый и ребёнок — режим «Я — Взрослый» */
+/** Взрослый и ребёнок - режим «Я - Взрослый» */
 export function IconAdultChild({ size = 24, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -34,7 +34,7 @@ export function IconAdultChild({ size = 24, className }: IconProps) {
   );
 }
 
-/** Трое рядом — режим «Мы вместе» */
+/** Трое рядом - режим «Мы вместе» */
 export function IconTogether({ size = 24, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -50,7 +50,7 @@ export function IconTogether({ size = 24, className }: IconProps) {
   );
 }
 
-/** Незамкнутое кольцо-прогресс — «Квест: 48 часов» */
+/** Незамкнутое кольцо-прогресс - «Квест: 48 часов» */
 export function IconRing({ size = 24, className }: IconProps) {
   return (
     <svg
@@ -72,7 +72,7 @@ export function IconRing({ size = 24, className }: IconProps) {
   );
 }
 
-/** Компас — «Клуб навигаторов» */
+/** Компас - «Клуб навигаторов» */
 export function IconCompass({ size = 24, className }: IconProps) {
   return (
     <svg
@@ -94,7 +94,7 @@ export function IconCompass({ size = 24, className }: IconProps) {
   );
 }
 
-/** Лупа — «Проверка сообщения» */
+/** Лупа - «Проверка сообщения» */
 export function IconMagnifier({ size = 24, className }: IconProps) {
   return (
     <svg
@@ -117,7 +117,7 @@ export function IconMagnifier({ size = 24, className }: IconProps) {
   );
 }
 
-/** Медаль — вкладка с наградами */
+/** Медаль - вкладка с наградами */
 export function IconMedal({ size = 24, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -181,7 +181,7 @@ export function IconBack({ size = 24, className }: IconProps) {
   );
 }
 
-/** Карта со знаком — имитация банковского уведомления в квесте */
+/** Карта со знаком - имитация банковского уведомления в квесте */
 export function IconCardAlert({ size = 24, className }: IconProps) {
   return (
     <svg
@@ -201,7 +201,7 @@ export function IconCardAlert({ size = 24, className }: IconProps) {
   );
 }
 
-/** Шеврон «вперёд» — правый край пункта меню */
+/** Шеврон «вперёд» - правый край пункта меню */
 export function IconChevron({ size = 20, className }: IconProps) {
   return (
     <svg

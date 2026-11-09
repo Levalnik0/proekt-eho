@@ -131,7 +131,7 @@ export default function App() {
   const firstScreen = useRef(true);
   useEffect(() => {
     const heading = document.querySelector<HTMLElement>('main h1, main h2, h1');
-    document.title = heading?.textContent ? `${heading.textContent} — Эхо` : 'Проект Эхо';
+    document.title = heading?.textContent ? `${heading.textContent} - Эхо` : 'Проект Эхо';
     document.querySelector('.app__body')?.scrollTo({ top: 0 });
     if (firstScreen.current) {
       firstScreen.current = false;

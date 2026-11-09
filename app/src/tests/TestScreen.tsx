@@ -12,11 +12,11 @@ export function TestScreen({
   onExit,
 }: {
   test: PsyTest;
-  /** id всех тестов этой роли — чтобы понять, что пройдены все */
+  /** id всех тестов этой роли - чтобы понять, что пройдены все */
   allOfRole: string[];
   onExit: () => void;
 }) {
-  const [step, setStep] = useState(-1); // -1 — вступление
+  const [step, setStep] = useState(-1); // -1 - вступление
   const [keys, setKeys] = useState<string[]>([]);
   const [fresh, setFresh] = useState<string[]>([]);
   const { progress, award, saveTest } = useProgress();
@@ -26,7 +26,7 @@ export function TestScreen({
     for (const k of keys) tally.set(k, (tally.get(k) ?? 0) + 1);
     let best = test.results[0].key;
     let bestCount = -1;
-    // При равенстве побеждает тип, который встретился раньше — так результат стабилен
+    // При равенстве побеждает тип, который встретился раньше - так результат стабилен
     for (const r of test.results) {
       const c = tally.get(r.key) ?? 0;
       if (c > bestCount) {
@@ -140,7 +140,7 @@ export function TestScreen({
             )}
           </div>
 
-          <ShareButton text={`Мой результат в тесте «${test.title}» в «Эхо»: ${winner.title.split('—').pop()?.trim()}.`} />
+          <ShareButton text={`Мой результат в тесте «${test.title}» в «Эхо»: ${winner.title.split('-').pop()?.trim()}.`} />
           <button className="btn btn--primary btn--wide" onClick={onExit}>
             Готово
           </button>

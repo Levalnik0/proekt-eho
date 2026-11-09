@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import { reachFrom, rings } from '../fx';
 
 /**
- * 'day' — светлая тема, это :root, отдельного CSS-блока не требует.
+ * 'day' - светлая тема, это :root, отдельного CSS-блока не требует.
  * Остальные тёмные и окрашены в свой цвет: фон, свечение и акценты
  * в одном оттенке. Так «выбрал оранжевый, и весь экран оранжевый»
  * получается без заливки всего сплошным цветом: на нём не читается текст.
@@ -68,7 +68,7 @@ function commit(next: ThemeId) {
   try {
     localStorage.setItem(KEY, next);
   } catch {
-    // приватный режим — тема не переживёт перезапуск, не страшно
+    // приватный режим - тема не переживёт перезапуск, не страшно
   }
   markThemeChosen();
   flushSync(() => listeners.forEach((fn) => fn(next)));
@@ -206,7 +206,7 @@ function change(next: ThemeId, origin?: Origin) {
     });
 }
 
-/** Общая тема на всё приложение — как useProgress, но проще: одно значение. */
+/** Общая тема на всё приложение - как useProgress, но проще: одно значение. */
 export function useTheme() {
   const [theme, setThemeState] = useState(current);
 

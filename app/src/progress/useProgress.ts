@@ -4,7 +4,7 @@ import type { Role } from './badges';
 const KEY = 'echo.progress.v1';
 
 export type Progress = {
-  /** Кто держит телефон. null — роль ещё не выбрана */
+  /** Кто держит телефон. null - роль ещё не выбрана */
   role: Role | null;
   /** id полученных медалей в порядке получения */
   badges: string[];
@@ -17,10 +17,10 @@ export type Progress = {
 };
 
 /**
- * Результат совместного квеста — из него рисуется «Карта решений».
- * together — оба пошли навстречу, closed — оба закрылись,
- * crossed — один открылся, другой нет. Третье состояние нужно:
- * «оба промолчали» — это не то же самое, что «мы вместе».
+ * Результат совместного квеста - из него рисуется «Карта решений».
+ * together - оба пошли навстречу, closed - оба закрылись,
+ * crossed - один открылся, другой нет. Третье состояние нужно:
+ * «оба промолчали» - это не то же самое, что «мы вместе».
  */
 export type CoopState = 'together' | 'closed' | 'crossed';
 
@@ -60,7 +60,7 @@ function commit(next: Progress) {
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    // приватный режим — прогресс просто не переживёт перезапуск
+    // приватный режим - прогресс просто не переживёт перезапуск
   }
   listeners.forEach((fn) => fn(next));
 }
@@ -83,7 +83,7 @@ export function useProgress() {
     return () => void listeners.delete(setProgress);
   }, []);
 
-  /** Возвращает медали, которых ещё не было — чтобы показать их карточкой */
+  /** Возвращает медали, которых ещё не было - чтобы показать их карточкой */
   const award = useCallback((ids: (string | undefined)[]) => {
     const wanted = ids.filter(Boolean) as string[];
     const fresh = wanted.filter((id) => !current.badges.includes(id));

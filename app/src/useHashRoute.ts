@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 /**
- * Маршрут живёт в hash — тогда системная кнопка «назад» на Android
+ * Маршрут живёт в hash - тогда системная кнопка «назад» на Android
  * и жест «назад» в браузере работают сами.
  *
  * В каждой записи истории лежит номер idx: сколько переходов человек
@@ -29,7 +29,7 @@ export function useHashRoute(fallback = 'home') {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /** replace: true — для вкладок внизу, чтобы они не копили историю */
+  /** replace: true - для вкладок внизу, чтобы они не копили историю */
   const go = useCallback((next: string, opts?: { replace?: boolean }) => {
     const url = `#/${next}`;
     if (opts?.replace) window.history.replaceState({ idx: idxNow() }, '', url);

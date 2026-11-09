@@ -84,7 +84,7 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
       </header>
 
       {/* Одна строка о том, что это: без неё мама не понимала, зачем приложение */}
-      <p className="home2__lead">Как не попасться на развод в сети. Для детей 10–12 лет и родителей.</p>
+      <p className="home2__lead">Как не попасться на развод в сети. Для детей 10-12 лет и родителей.</p>
 
       <button
         className="play-hero"

@@ -110,7 +110,7 @@ export function MirrorScreen({ mirror, onExit }: { mirror: Mirror; onExit: () =>
               <div className={`reveal__verdict${picked[q.id] === q.kidAnswer ? ' is-hit' : ''}`}>
                 {picked[q.id] === q.kidAnswer
                   ? 'Совпало с частым ответом'
-                  : 'Не совпало — и это интересно'}
+                  : 'Не совпало - и это интересно'}
               </div>
               <div className="reveal__quote">
                 <Glossed text={q.kidSays} />

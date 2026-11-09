@@ -16,7 +16,7 @@ export function ProfileScreen() {
   const got = (id: string) => progress.badges.includes(id);
   const all = [...BADGES].sort((a, b) => Number(got(b.id)) - Number(got(a.id)));
   const earned = all.filter((b) => progress.badges.includes(b.id));
-  // Скрытые медали не показываем заранее — их интереснее найти
+  // Скрытые медали не показываем заранее - их интереснее найти
   const visible = all.filter((b) => !b.secret || progress.badges.includes(b.id));
   const secretsLeft = all.filter((b) => b.secret && !progress.badges.includes(b.id)).length;
 

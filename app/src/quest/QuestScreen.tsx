@@ -8,7 +8,7 @@ import { ProfileSheet } from './ProfileSheet';
 import { PROFILES } from './profiles';
 import type { Quest, QuestChoice, QuestMessage, QuestNode } from './types';
 
-/** Пауза перед появлением сообщения — чтобы переписка шла в живом темпе.
+/** Пауза перед появлением сообщения - чтобы переписка шла в живом темпе.
  * У system чуть длиннее остальных: пауза перед «приходом» уведомления
  * создаёт короткое напряжение перед плохой новостью. */
 const DELAY: Record<QuestMessage['from'], number> = {

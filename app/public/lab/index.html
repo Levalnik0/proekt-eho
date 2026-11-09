@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Эхо: игры</title>
 <style>
+@font-face{font-family:'Nunito Variable';font-style:normal;font-weight:200 1000;font-display:swap;src:url(../fonts/nunito-cyrillic-wght-normal.woff2) format('woff2-variations');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:'Nunito Variable';font-style:normal;font-weight:200 1000;font-display:swap;src:url(../fonts/nunito-latin-wght-normal.woff2) format('woff2-variations');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 /* Один экран-телефон по центру, игры открываются поверх меню.
    Единый тёмный бирюзовый вид, как тема «Океан» в приложении. */
 :root {
@@ -20,7 +23,7 @@
   --soft: #ffc27a;
   --violet: #a996ff;
   --pink: #ff8fb1;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font: 'Nunito Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   color-scheme: dark;
 }
 html, body { height: 100%; }
@@ -89,6 +92,19 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .howto li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; font-size: 16px; line-height: 1.35; color: var(--muted); counter-increment: s; }
 .howto li::before { content: counter(s); width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 800; font-size: 14px; }
 .howto b { color: var(--ink); }
+.step { display: flex; flex-direction: column; justify-content: center; min-height: 100%; gap: 18px; }
+.step__count { text-align: center; font-size: 14px; color: var(--muted); }
+.step__card { position: relative; padding: 34px 22px 30px; border-radius: 26px; background: var(--surface); border: 1px solid var(--line); text-align: center; animation: stepin .28s ease; }
+.step__card--back { animation-name: stepback; }
+.step__card p { margin: 0; font-size: 22px; line-height: 1.35; color: var(--ink); text-wrap: balance; }
+.step__card b { color: var(--accent); }
+.step__num { display: grid; place-items: center; width: 46px; height: 46px; margin: 0 auto 16px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 22px; font-weight: 800; }
+.step__dots { display: flex; justify-content: center; gap: 8px; }
+.step__dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--surface-2); }
+.step__dots i.on { width: 26px; border-radius: 5px; background: var(--accent); }
+@keyframes stepin { from { opacity: 0; transform: translateX(24px) } }
+@keyframes stepback { from { opacity: 0; transform: translateX(-24px) } }
+@media (prefers-reduced-motion: reduce) { .step__card { animation: none } }
 .snd, .help { width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-weight: 800; font-size: 17px; }
 .snd svg { display: block; }
 .snd.off { color: var(--muted); }
@@ -424,7 +440,7 @@ canvas { display: block; width: 100%; height: 100%; }
   var locked = false;
   try { locked = window.top === window.self && localStorage.getItem('echo.lab.unlocked') !== '1'; } catch (e) { locked = false; }
   if (locked) {
-    document.documentElement.innerHTML = '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Эхо: игры</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0c1a1d;color:#e9f5f4;font-family:-apple-system,Segoe UI,Arial,sans-serif;text-align:center;padding:24px"><div><h1 style="font-size:22px;margin:0 0 10px">Игры пока закрыты</h1><p style="margin:0;color:#9fbcbb">Они откроются позже в приложении «Эхо».</p></div></body>';
+    document.documentElement.innerHTML = '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Эхо: игры</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0c1a1d;color:#e9f5f4;font-family:Nunito,-apple-system,Segoe UI,Arial,sans-serif;text-align:center;padding:24px"><div><h1 style="font-size:22px;margin:0 0 10px">Игры пока закрыты</h1><p style="margin:0;color:#9fbcbb">Они откроются позже в приложении «Эхо».</p></div></body>';
     window.stop();
   }
 })();
@@ -500,7 +516,6 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="chat-line">в чат</div>
       <div class="overlay" id="f-start">
         <h2>Фильтр</h2>
-        <div data-how="filter"></div>
         <div class="chips"><span class="chip">1 мин</span><span class="chip">рекорд: <b id="f-best">0</b></span></div>
         <button class="btn btn--main btn--wide" id="f-go">Играть</button>
       </div>
@@ -519,7 +534,6 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="d-info" id="d-info" hidden></div>
       <div class="overlay" id="d-start">
         <h2>Детектив</h2>
-        <div data-how="detective"></div>
         <div class="w-levels" id="d-mode"><button class="w-lv on" data-m="find">Детектив</button><button class="w-lv" data-m="edit">Редактор</button></div>
         <div class="w-levels" id="d-cases"></div>
         <div class="d-hero" id="d-hero"></div>
@@ -573,7 +587,6 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="pads"><button aria-label="Влево" data-dir="-1"></button><button aria-label="Вправо" data-dir="1"></button></div>
       <div class="overlay" id="n-start">
         <h2>Сеть</h2>
-        <div data-how="net"></div>
         <div class="chips"><span class="chip">3 ошибки и стоп</span><span class="chip">рекорд: <b id="n-best">0</b></span></div>
         <button class="btn btn--main btn--wide" id="n-go">Поехали</button>
       </div>
@@ -595,7 +608,6 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="w-toast" id="w-toast" role="status" aria-live="polite"></div>
       <div class="overlay" id="w-start">
         <h2>Окна</h2>
-        <div data-how="windows"></div>
         <div class="w-levels" id="w-levels"></div>
         <p class="w-lvnote" id="w-lvnote"></p>
         <div class="chips"><span class="chip" id="w-dur">50 секунд</span><span class="chip">рекорд: <b id="w-best">0</b></span></div>
@@ -664,7 +676,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <p>Робот-взломщик читает профиль героя и сначала пробует то, что там нашёл. Собери пароль, который ему не по зубам.</p>
         <div class="u-rules" aria-label="Правила пароля">
           <div class="u-rule u-rule--no"><b>✕ Слабый пароль</b><span>имя, кличка, год или дата героя</span><span>123456, qwerty, пароль</span><span>одно короткое слово</span></div>
-          <div class="u-rule u-rule--ok"><b>✓ Крепкий пароль</b><span>4–5 случайных слов подряд, лучше с цифрой и знаком</span><span>длинный: чем длиннее, тем лучше</span><span>свой для каждого сайта</span></div>
+          <div class="u-rule u-rule--ok"><b>✓ Крепкий пароль</b><span>4-5 случайных слов подряд, лучше с цифрой и знаком</span><span>длинный: чем длиннее, тем лучше</span><span>свой для каждого сайта</span></div>
         </div>
         <p class="u-warn" id="u-warn" role="note">Это игра: выдумай героя. Настоящие имя, год рождения и пароли не вводи.</p>
         <p class="u-cap2">Профиль героя: это видно всем, и роботу тоже.</p>
@@ -778,16 +790,16 @@ document.addEventListener('click', (e) => { if (e.target.closest('.btn, .back, .
 
 // Правила каждой игры: три коротких шага
 const HOWTO = {
-  filter: ['Сообщения падают сверху в твой чат.', '<b>Развод</b> (просит пароль, код или деньги, торопит): нажми на него, он улетит в спам.', '<b>Нормальное</b> (от мамы, друга, школы): не трогай, пусть падает в чат.'],
-  detective: ['<b>Води пальцем</b> по столу: лупа показывает мелочи, остальное в тени. Нашёл то, по чему чужой найдёт человека? Нажми <b>«Это улика»</b>.', 'Бывают безобидные вещи: отметишь не то, и погаснет лампа. Бывают улики, которых лупой не видно: пробуй <b>фонарик, резкость и свойства фото</b>.', 'Ламп три, подсказок две: тему подскажет помощница Элина. Потом соберёшь карту сам и закроешь лишнее стикерами.'],
-  fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
-  net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b>: подделку выдаёт одна буква. Три ошибки и конец.'],
-  race: ['Веди <b>пультом</b> внизу: машинка едет по арене, куда направишь.', 'Твоя машинка цвета твоей темы. <b>Собирай слова такого же цвета.</b> Чужого цвета не трогай: затормозит.', 'Соперники <b>толкаются</b>, и тебя тоже могут сбить. Кто соберёт больше за 45 секунд, тот победил.'],
-  duel: ['Собери пароль из блоков за 45 секунд. Можно добавить своё слово.', '<b>Блоки с полосками</b> (данные героя) и <b>с пунктиром</b> (популярное) слабые: робот знает их заранее. Лучше случайные слова.', 'Робот взломает все пароли. <b>Побеждает самый крепкий.</b>'],
-  windows: ['В окнах дома горит свет, а во двор приходят гости: <b>друзья</b> с тёплым фонариком и <b>незнакомцы</b> без него.', '<b>Потяни штору</b> в сторону или нажми на окно: открыто всем, друзьям или закрыто. Друзьям нужны фото и личка, чужим не нужно ничего. Позже ветер сам приоткроет штору: успей её закрыть.', 'Гость с подписью <b>«0 общих»</b> не друг: нажми на него, и его заблокируют. Настоящих друзей не трогай. Нажми на <b>фонарь</b> во дворе: при свете видны подписи гостей, в темноте нет.'],
+  filter: ['Сообщения падают сверху. <b>Читай каждое.</b>', '<b>Развод</b> просит пароль, код или деньги и торопит. Нажми на него - он улетит в спам.', '<b>Обычное</b> (мама, друг, школа) не трогай. За ошибку теряешь очки.'],
+  detective: ['<b>Води пальцем</b> по столу. Лупа показывает мелочи, остальное в тени.', 'Нашёл то, по чему чужой найдёт человека? Нажми <b>«Это улика»</b>.', 'Есть и <b>безобидное</b>. Отметишь его, и погаснет лампа. Ламп три.', 'Не всё видно лупой. Пробуй <b>фонарик, резкость и свойства фото</b>.', 'Есть две подсказки. В конце соберёшь карту и закроешь лишнее стикерами.'],
+  fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) - слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
+  net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b> - подделку выдаёт одна буква. Три ошибки и конец.'],
+  race: ['Веди <b>пультом</b> внизу: машинка едет туда, куда направишь.', 'Собирай слова <b>своего цвета</b>. Чужого цвета не трогай - затормозишь.', 'Соперники толкаются. Кто соберёт больше за 45 секунд, тот победил.'],
+  duel: ['Собери пароль из блоков за 45 секунд. Можно добавить своё слово.', '<b>Блоки с полосками и пунктиром</b> - слабые, робот знает их заранее. Лучше случайные слова.', 'Робот взломает все пароли. <b>Побеждает самый крепкий.</b>'],
+  windows: ['Во двор приходят гости. <b>Друзья</b> с тёплым фонариком, <b>незнакомцы</b> без него.', '<b>Потяни штору</b> в сторону или нажми на окно: открыто всем, друзьям или закрыто.', 'Друзьям нужны фото и личка. Незнакомцам <b>ничего</b> не нужно. «Где я» лучше закрыть.', 'Гость с подписью <b>«0 общих»</b> не друг. Нажми на него, и его заблокируют.', 'Ветер сам приоткрывает шторы - успей закрыть. <b>Фонарь</b> показывает подписи гостей.'],
 };
-const renderHow = (id) => `<ol class="howto">${HOWTO[id].map((t) => `<li><span>${t}</span></li>`).join('')}</ol>`;
-document.querySelectorAll('[data-how]').forEach((el) => { el.outerHTML = renderHow(el.dataset.how); });
+// Правила показываются по одному шагу на карточке: «Дальше», «Дальше», «Приступить»
+const START = { filter: '#f-go', detective: '#d-go', net: '#n-go', windows: '#w-go', race: '#r-go' };
 
 const speakerSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" class="wave"/><path d="M16 9l5 6M21 9l-5 6" class="slash"/></svg>';
 function paintSound() { document.querySelectorAll('.snd').forEach((b) => { b.innerHTML = speakerSvg; b.classList.toggle('off', !snd.on); b.setAttribute('aria-pressed', String(snd.on)); }); }
@@ -798,12 +810,28 @@ document.querySelectorAll('.game .bar').forEach((bar) => {
 document.addEventListener('click', (e) => { if (e.target.closest('.snd')) { snd.set(!snd.on); paintSound(); } });
 paintSound();
 
-function showHow(id) {
-  const box = document.getElementById('howto');
-  box.innerHTML = `<h2>Как играть</h2>${renderHow(id)}<button class="btn btn--main btn--wide" id="how-ok">Понятно</button>`;
-  box.hidden = false;
+function showHow(id, auto) {
+  const steps = HOWTO[id], box = document.getElementById('howto');
+  let i = 0;
   games[id] && games[id].pause && games[id].pause();
-  document.getElementById('how-ok').onclick = () => { box.hidden = true; games[id] && games[id].resume && games[id].resume(); };
+  const finish = (go) => {
+    box.hidden = true;
+    games[id] && games[id].resume && games[id].resume();
+    const b = go && START[id] && document.querySelector(START[id]);
+    if (b && b.offsetParent !== null) b.click();
+  };
+  const paint = (dir) => {
+    const last = i === steps.length - 1, startNow = auto && START[id];
+    box.innerHTML = `<div class="step"><div class="step__count">Как играть: ${i + 1} из ${steps.length}</div>
+      <div class="step__card step__card--${dir || 'in'}" role="group" aria-label="Шаг ${i + 1}"><span class="step__num">${i + 1}</span><p>${steps[i]}</p></div>
+      <div class="step__dots" aria-hidden="true">${steps.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
+      <div class="row">${i ? '<button class="btn" id="step-back">Назад</button>' : ''}<button class="btn btn--main" id="step-next">${last ? (auto ? 'Приступить' : 'Понятно') : 'Дальше'}</button></div></div>`;
+    document.getElementById('step-next').onclick = () => { if (last) finish(startNow); else { i++; paint('in'); } };
+    const back = document.getElementById('step-back'); if (back) back.onclick = () => { i--; paint('back'); };
+    document.getElementById('step-next').focus();
+  };
+  paint();
+  box.hidden = false;
 }
 const store = {
   get(k) { try { return Number(localStorage.getItem('echo.proto.' + k)) || 0; } catch (e) { return 0; } },
@@ -834,11 +862,10 @@ function open(id) {
   current = id;
   $('#g-' + id).hidden = false;
   games[id].enter && games[id].enter();
-  if (id === 'fort') {
-    let seen = false;
-    try { seen = localStorage.getItem('echo.lab.how.fort') === '1'; localStorage.setItem('echo.lab.how.fort', '1'); } catch (e) {}
-    if (!seen) showHow('fort');
-  }
+  // Первый раз в каждой игре сразу показываем правила по шагам
+  let seen = false;
+  try { seen = localStorage.getItem('echo.lab.how.' + id) === '1'; localStorage.setItem('echo.lab.how.' + id, '1'); } catch (e) {}
+  if (!seen) showHow(id, true);
 }
 // Приложение запускает игру сразу по адресу ?game=...: тогда «назад» ведёт
 // не в меню этой страницы, а обратно в раздел «Игры»
@@ -861,19 +888,19 @@ function close() {
     { f: 'Лёша', t: 'Го в майн после уроков?', s: 0 },
     { f: 'Неизвестный', t: 'Тут твоё фото выложили, глянь: bit.ly/x7f', s: 1, why: 'Пугают, чтобы ты открыл ссылку не думая.' },
     { f: 'Классный чат', t: 'Завтра физра, не забудьте форму', s: 0 },
-    { f: 'Аня', t: 'Скинь код из смс, он мне по ошибке пришёл на твой номер', s: 1, why: 'Код из смс — ключ от аккаунта. Его не отдают никому, даже друзьям.' },
+    { f: 'Аня', t: 'Скинь код из смс, он мне по ошибке пришёл на твой номер', s: 1, why: 'Код из смс - ключ от аккаунта. Его не отдают никому, даже друзьям.' },
     { f: 'Папа', t: 'Забери брата из сада, я задерживаюсь', s: 0 },
     { f: 'Steam', t: 'Ваш аккаунт заблокируют через час. Войдите тут', s: 1, why: 'Угроза, спешка и чужая ссылка сразу.' },
     { f: 'Бабушка', t: 'Позвони, как будет время', s: 0 },
     { f: 'Незнакомка', t: 'Привет) давай дружить, только никому не говори', s: 1, why: '«Никому не говори» с первого сообщения от незнакомца.' },
     { f: 'Тренер', t: 'Тренировка переносится на 17:00', s: 0 },
     { f: 'Банк', t: 'Подтвердите карту родителей, иначе спишем 3000 ₽', s: 1, why: 'Банк не пишет детям и не угрожает списаниями.' },
-    { f: 'Элина', t: 'Смотри какой кот ахаха', s: 0 },
-    { f: 'Кристина', t: 'Ты завтра идёшь на кружок?', s: 0 },
-    { f: 'Дарина', t: 'Спасибо, что помог с задачей!', s: 0 },
+    { f: 'Лёша', t: 'Смотри какой кот ахаха', s: 0 },
+    { f: 'Дима', t: 'Ты завтра идёшь на кружок?', s: 0 },
+    { f: 'Саша', t: 'Спасибо, что помог с задачей!', s: 0 },
     { f: 'Блогер', t: 'Раздаю скины! Нужен только твой логин и пароль', s: 1, why: 'Подарок, за который надо отдать пароль, это кража.' },
     { f: 'Дима', t: 'Дз по алгебре скинешь?', s: 0 },
-    { f: 'Неизвестный', t: 'Заработок 5000 в день, нужна только карта мамы', s: 1, why: 'Лёгкие деньги и чужая карта — всегда развод.' },
+    { f: 'Неизвестный', t: 'Заработок 5000 в день, нужна только карта мамы', s: 1, why: 'Лёгкие деньги и чужая карта - всегда развод.' },
     { f: 'Школа', t: 'Родительское собрание в четверг', s: 0 },
     { f: 'Друг друга', t: 'Проголосуй за меня, войди через ВК по ссылке', s: 1, why: 'Фальшивое голосование ворует аккаунты ВК.' },
     { f: 'Сестра', t: 'Возьми мне булку по дороге', s: 0 },
@@ -1119,8 +1146,8 @@ function close() {
         draw: (v, y) => blr(bubC('r', 150, y, 176, ['мой номер:', v.phone])) },
       { id: 'nick', kind: 'real', cat: 'who', leads: 3, grp: 0, x: 119, title: 'Ник из игры', why: 'По одному нику находят все твои страницы.', fix: 'Для разных мест придумывай разные ники.',
         draw: (v, y) => bubC('l', 34, y, 170, ['в игре я под ником', v.nick]) },
-      { id: 'link', kind: 'fake', grp: 0, x: 119, title: 'Ссылка на видео', why: SAFE, draw: (v, y) => bubC('l', 34, y, 170, ['Дарина: смотри видео', 'youtu.be/xK2']) },
-      { id: 'laugh', kind: 'fake', grp: 0, x: 262, title: 'Смех', why: SAFE, draw: (v, y) => bubC('r', 204, y, 122, ['Кристина: ахахах']) },
+      { id: 'link', kind: 'fake', grp: 0, x: 119, title: 'Ссылка на видео', why: SAFE, draw: (v, y) => bubC('l', 34, y, 170, ['смотри видео', 'youtu.be/xK2']) },
+      { id: 'laugh', kind: 'fake', grp: 0, x: 262, title: 'Смех', why: SAFE, draw: (v, y) => bubC('r', 204, y, 122, ['ахахах']) },
       { id: 'geo', kind: 'real', cat: 'where', grp: 0, x: 109, title: 'Геометка в чате', why: 'Показывает, где человек сейчас.', fix: 'Не отправляй своё местоположение в чат.',
         draw: (v, y) => `${rc(34, y - 13, 150, 26, '#fff', 13, 'stroke="#dfe5ea"')}${tx(46, y + 4, '📍 ТЦ ' + v.mall, { s: 10, a: 'start', c: '#232a32' })}` },
     ],
@@ -1481,7 +1508,7 @@ function close() {
     const m = spots.filter((q) => isReal(q) && !found.has(q.id));
     if (!m.length) return;
     const q = pick(m); hints--; refreshUi(); snd.tap();
-    toast(`Элина подсказывает: ещё есть что-то про «${CAT[q.cat].toLowerCase()}»${q.tool === 'info' ? '. Посмотри свойства фото' : q.tool === 'uv' ? '. Попробуй фонарик' : q.tool === 'focus' ? '. Попробуй резкость' : ''}${q.stage !== stageNow ? '. Это на другой странице' : (q.layer || 'front') !== layer ? '. Это на другой стороне' : ''}`);
+    toast(`Подсказка: ещё есть что-то про «${CAT[q.cat].toLowerCase()}»${q.tool === 'info' ? '. Посмотри свойства фото' : q.tool === 'uv' ? '. Попробуй фонарик' : q.tool === 'focus' ? '. Попробуй резкость' : ''}${q.stage !== stageNow ? '. Это на другой странице' : (q.layer || 'front') !== layer ? '. Это на другой стороне' : ''}`);
   }
   function flip() {
     if (!active || !C().layers) return;
@@ -1581,7 +1608,7 @@ function close() {
     const stars = Math.max(1, lamps), next = cs + 1 < CASES.length, real = spots.filter(isReal);
     const el = $('#d-end');
     el.innerHTML = `<h2>Дело раскрыто</h2><div class="big" aria-label="${stars} из 3">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
-      <div class="d-hero"><b>${V.name}</b>«Спасибо! Я закрыла всё лишнее. Элина сказала, что ты отлично справился.»</div>
+      <div class="d-hero"><b>${V.name}</b>«Спасибо! Я закрыла всё лишнее. Ты отлично справился.»</div>
       <div class="d-board">${boardSvg()}</div>
       <p>Каждая мелочь по отдельности безобидна. Вместе они складываются в карту, по которой чужой человек найдёт, где ты живёшь, учишься и бываешь.${cov ? ` Ты закрыл стикерами: ${cov}.` : ''}</p>
       <div class="recap recap--tight">${real.map((q) => `<div><b>${q.title}</b>${q.why} <span style="color:var(--ink)">Что сделать:</span> ${q.fix}</div>`).join('')}</div>
@@ -1711,7 +1738,7 @@ function close() {
       } else {
         tower.classList.add('hold');
         title = `Роботу нужно ${human(sec)}`;
-        sub = me || common ? 'Крепость стоит, но блоки «про тебя» лучше убрать.' : 'Несколько случайных слов — сильный пароль, и его легко запомнить.';
+        sub = me || common ? 'Крепость стоит, но блоки «про тебя» лучше убрать.' : 'Несколько случайных слов - сильный пароль, и его легко запомнить.';
         buzz([15, 50, 15]); snd.win();
       }
       const v = document.createElement('div'); v.className = 'verdict'; v.innerHTML = `${esc(title)}<span>${esc(sub)}</span>`;
@@ -1729,7 +1756,7 @@ function close() {
   const SITES = [
     { b: 'ВКонтакте', real: 'vk.com', fake: ['vk-com.ru', 'vk.corn'], whys: ['После «vk» дефис и «.ru»: настоящий адрес заканчивается на vk.com.', 'В vk.corn буквы «rn» прикидываются буквой «m».'] },
     { b: 'Госуслуги', real: 'gosuslugi.ru', fake: ['gosusiugi.ru', 'gosuslugi-ru.online'], whys: ['В gosusiugi букву «l» заменили на «i».', 'Всё после дефиса и точки уже другой сайт: gosuslugi-ru.online это online, а не ru.'] },
-    { b: 'Сбер', real: 'sberbank.ru', fake: ['sber-bonus.ru', 'sberbank.ru.login.top'], whys: ['sber-bonus.ru чужой сайт: у Сбера адрес sberbank.ru.', 'Сайт — это то, что в самом конце адреса. sberbank.ru.login.top — сайт login.top.'] },
+    { b: 'Сбер', real: 'sberbank.ru', fake: ['sber-bonus.ru', 'sberbank.ru.login.top'], whys: ['sber-bonus.ru чужой сайт: у Сбера адрес sberbank.ru.', 'Сайт - это то, что в самом конце адреса. sberbank.ru.login.top - сайт login.top.'] },
     { b: 'Telegram', real: 'telegram.org', fake: ['telegrarn.org', 'tg-premium.free'], whys: ['В telegrarn снова «rn» вместо «m».', 'tg-premium.free не Telegram: «премиум» заманивает на чужой сайт.'] },
     { b: 'Steam', real: 'steampowered.com', fake: ['steamcommunlty.com', 'steam-gift.ru'], whys: ['В steamcommunlty «l» вместо «i», заметно только вблизи.', 'steam-gift.ru это «подарок» на чужом сайте, а не на Steam.'] },
     { b: 'Roblox', real: 'roblox.com', fake: ['rob1ox.com', 'roblox-robux.free'], whys: ['В rob1ox единица вместо буквы «l».', 'roblox-robux.free: «бесплатные робуксы» на чужом сайте. Настоящий roblox.com.'] },
@@ -1850,7 +1877,7 @@ function close() {
 
 /* ══════════ 5. ОКНА: ВЕЧЕРНИЙ ДВОР ══════════ */
 (() => {
-  // 0 — всем, 1 — друзьям, 2 — никому
+  // 0 - всем, 1 - друзьям, 2 - никому
   const NAMES = ['видно всем', 'видно друзьям', 'закрыто'];
   const SHORT = ['всем', 'друзьям', 'никому'];
   const PILL = ['#ffc46b', '#9fd3d6', '#b9a2ff'];
@@ -1861,7 +1888,7 @@ function close() {
     { id: 'geo', label: 'Где я', x: 256, what: 'где ты сейчас' },
   ];
   const WY = 194, WW = 86, WH = 104;
-  // Вечера усложняются: больше гостей, дождь, ветер сам приоткрывает шторы. m — множитель потерь
+  // Вечера усложняются: больше гостей, дождь, ветер сам приоткрывает шторы. m - множитель потерь
   const NOISE = { clear: null, rain: [1400, 0.05], fog: [500, 0.02], snow: [700, 0.015] };
   const LEVELS = [
     { name: 'Тихий вечер', note: 'Ясное небо, гостей мало, всё в твоих руках. Привыкай к шторам.', dur: 40, maxG: 2, sMax: 2.7, sMin: 2.1, chat: 10, geo: null, fake: null, wind: null, w: 'clear', m: 0.7 },
@@ -1870,7 +1897,7 @@ function close() {
     { name: 'Туманный вечер', note: 'Над двором туман, гостей много, ветер дует чаще.', dur: 55, maxG: 4, sMax: 1.6, sMin: 1.0, chat: 0, geo: 0, fake: 8, wind: 10, w: 'fog', m: 1 },
     { name: 'Снежный вечер', note: 'Падает снег. Всё сразу: гости, ветер, фонарь. Ты справишься.', dur: 60, maxG: 4, sMax: 1.3, sMin: 0.9, chat: 0, geo: 0, fake: 5, wind: 7, w: 'snow', m: 1 },
   ];
-  const FRIENDS = ['Элина', 'Кристина', 'Дарина', 'Лёша', 'Дима', 'Саша'];
+  const FRIENDS = ['Лёша', 'Дима', 'Саша', 'Миша', 'Женя', 'Паша'];
   // у «друга» с нулём общих имена другие: хорошие имена в плохой роли не показываем
   const FAKES = ['Тимур', 'Артём', 'Никита', 'Глеб'];
   const LOOKS = {
@@ -2481,9 +2508,9 @@ function close() {
     { id: 'manip', name: 'Манипуляции', words: [
       ['давление', 'Тебя торопят и не дают подумать.'],
       ['«срочно!»', 'Спешка нужна, чтобы ты не успел проверить.'],
-      ['лесть', 'Слишком много комплиментов от незнакомца — повод насторожиться.'],
+      ['лесть', 'Слишком много комплиментов от незнакомца - повод насторожиться.'],
       ['«только тебе»', 'Тебя делают «особенным», чтобы вызвать доверие.'],
-      ['«никому не говори»', 'Секрет от взрослых — главный признак опасности.'],
+      ['«никому не говори»', 'Секрет от взрослых - главный признак опасности.'],
       ['чувство вины', '«Если не сделаешь, ты плохой друг».'],
       ['запугивание', 'Пугают, чтобы ты не мог думать спокойно.'],
       ['шантаж', 'Угроза рассказать или выложить, если не выполнишь.'],
@@ -2509,7 +2536,7 @@ function close() {
     { id: 'scam', name: 'Мошенничество', words: [
       ['фишинг', 'Поддельный сайт крадёт пароль и данные.'],
       ['«скинь код из смс»', 'Код нельзя называть никому, даже «банку».'],
-      ['фальшивый приз', 'Выигрыш в том, во что ты не играл — развод.'],
+      ['фальшивый приз', 'Выигрыш в том, во что ты не играл - развод.'],
       ['«служба безопасности»', 'Настоящий банк не просит такого по звонку.'],
       ['дешёвые скины', 'Слишком дешёвые скины часто краденые или фальшивые.'],
       ['лёгкий заработок', '«Тысяча в день» бывает только в обмане.'],
@@ -2546,7 +2573,7 @@ function close() {
       ['личное фото', 'Сначала подумай: оно может остаться навсегда.'],
       ['скриншот', 'Любой может сохранить то, что ты отправил.'],
       ['цифровой след', 'Всё, что ты выложил, остаётся в сети.'],
-      ['расписание', '«Каждый день в 7:40 тут» — подсказка, когда тебя найти.'],
+      ['расписание', '«Каждый день в 7:40 тут» - подсказка, когда тебя найти.'],
       ['имя и фамилия', 'Целиком их незнакомцам знать не нужно.'],
       ['вид из окна', 'На фото может быть видно район и дом.'],
       ['посылка с адресом', 'Не снимай с наклейки фамилию и адрес.'],
@@ -2558,7 +2585,7 @@ function close() {
       ['подписчики', 'Те, кто видят твои посты. Знаешь ли ты их всех?'],
       ['публичный пост', 'Увидит любой, даже без аккаунта.'],
       ['видимость профиля', 'Всем, друзьям или никому: выбирай сам.'],
-      ['данные родителей', 'Работа, адрес и деньги семьи — не для чужих.'],
+      ['данные родителей', 'Работа, адрес и деньги семьи - не для чужих.'],
       ['кто пишет первым', 'Реши, кому разрешено писать тебе в личку.'],
       ['фото паспорта', 'Паспорт и карту не отправляют в переписке.'],
     ] },
@@ -2812,7 +2839,7 @@ function close() {
 
 /* ══════════ 7. ДУЭЛЬ ПАРОЛЕЙ ══════════ */
 (() => {
-  // Игрок в дуэли — это запись { id, name, color, me, profile, blocks, pass, bot }.
+  // Игрок в дуэли - это запись { id, name, color, me, profile, blocks, pass, bot }.
   // Сейчас соперники-боты (bot != null) сами добавляют блоки по таймеру.
   // Когда появится онлайн, у живых игроков bot будет null, а pass станет
   // обновляться сообщениями с сервера. Подсчёт, взлом и итоги работают
@@ -2893,14 +2920,14 @@ function close() {
     const mine = p.pass.find((x) => x.t === 'me'), common = p.pass.find((x) => x.t === 'common'), t = human(secOf(p)), end = human(secOf(p)).endsWith('.') ? '' : '.', when = t === 'сразу' ? 'сразу' : 'за ' + t;
     if (!p.pass.length) return 'Пароля нет, захожу сразу.';
     if (mine) return level(p) === 2 ? `В пароле есть данные героя («${mine.v}»), это минус. Но слов хватает: перебор займёт ${t}${end}` : `Пробую данные из профиля: «${mine.v}» подошло. Взлом ${when}${end}`;
-    if (common) return `«${common.v}» — один из самых частых паролей, его пробуют первым. Взлом ${when}${end}`;
+    if (common) return `«${common.v}» - один из самых частых паролей, его пробуют первым. Взлом ${when}${end}`;
     const lv = level(p);
     if (lv === 0) return `Пароль короткий, перебор быстрый: ${t}${end}`;
     if (lv === 1) return `Слов мало, подбирать долго, но можно: ${t}${end}`;
     return `Случайные слова в случайном порядке не угадать. Перебор займёт ${t}${end}`;
   }
   const secOf = (p) => Math.pow(2, bitsOf(p)) / 1e9;
-  // 0 — взломан (меньше суток), 1 — средний (меньше года), 2 — крепкий
+  // 0 - взломан (меньше суток), 1 - средний (меньше года), 2 - крепкий
   const level = (p) => { const s = secOf(p); return s < DAY ? 0 : s < YEAR ? 1 : 2; };
   const yearWord = (n) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? 'год' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? 'года' : 'лет'; };
   function human(sec) {
@@ -2916,7 +2943,7 @@ function close() {
     return 'вечность';
   }
 
-  // Бот заранее решает, что соберёт: умелый берёт случайные слова, неумелый — данные героя и популярное
+  // Бот заранее решает, что соберёт: умелый берёт случайные слова, неумелый - данные героя и популярное
   function planFor(p, skill) {
     const n = 4 + (Math.random() * (MAXB - 3) | 0), used = new Set(), out = [];
     const strong = ['word', 'word', 'word', 'num', 'sym'], weak = ['me', 'common', 'me', 'num'];
