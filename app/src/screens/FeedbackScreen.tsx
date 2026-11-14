@@ -1,16 +1,34 @@
+import { useEffect, useState } from 'react';
 import { IconBack } from '../components/icons';
 import { goal } from '../analytics';
 import { FEEDBACK_URL } from '../config';
 
 /**
- * «Отзывы»: короткое приглашение и кнопка, которая открывает форму.
- * Сам текст отзыва в приложении не вводится и никуда из него не уходит:
- * ответы попадают прямо в форму авторов проекта.
+ * «Отзывы»: форма встроена прямо в экран, поэтому оставить отзыв можно, не
+ * выходя из приложения. Отзыв никуда не ведёт, кроме формы авторов проекта,
+ * и приходит анонимно: ни имени, ни почты форма не просит.
  */
 export function FeedbackScreen({ onBack }: { onBack: () => void }) {
   const ready = Boolean(FEEDBACK_URL);
+  const [online, setOnline] = useState(() => navigator.onLine);
+
+  useEffect(() => {
+    const up = () => setOnline(true);
+    const down = () => setOnline(false);
+    window.addEventListener('online', up);
+    window.addEventListener('offline', down);
+    return () => {
+      window.removeEventListener('online', up);
+      window.removeEventListener('offline', down);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (ready) goal('feedback_open');
+  }, [ready]);
+
   return (
-    <div className="screen">
+    <div className="screen feedback">
       <div className="topbar">
         <button className="topbar__back" onClick={onBack} aria-label="Назад">
           <IconBack size={22} />
@@ -19,35 +37,30 @@ export function FeedbackScreen({ onBack }: { onBack: () => void }) {
         <span className="topbar__spacer" />
       </div>
 
-      <div className="panel">
-        <div className="panel__row">
-          <span>
-            <b>Расскажи, как тебе «Эхо».</b> Что понравилось, где было непонятно, какую игру ты бы
-            добавил. Ответ займёт две минуты.
-          </span>
+      {!ready && <p className="home2__trust">Форма откроется совсем скоро</p>}
+      {ready && !online && (
+        <div className="panel">
+          <div className="panel__row">
+            <span>Чтобы оставить отзыв, нужен интернет. Загляни сюда, когда он появится.</span>
+          </div>
         </div>
-        <div className="panel__row">
-          <span>Не пиши в отзыве свою фамилию, телефон и адрес. Имя можно не указывать вовсе.</span>
-        </div>
-      </div>
-
-      {ready ? (
-        <a
-          className="btn btn--primary btn--wide"
-          href={FEEDBACK_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => goal('feedback_open')}
-          style={{ textAlign: 'center', textDecoration: 'none' }}
-        >
-          Оставить отзыв
-        </a>
-      ) : (
-        <button className="btn btn--wide" disabled>
-          Форма откроется совсем скоро
-        </button>
       )}
-      <p className="home2__trust">Отзывы читают только авторы проекта</p>
+      {ready && online && (
+        <>
+          <iframe
+            className="feedback__frame"
+            title="Форма отзыва"
+            src={`${FEEDBACK_URL}?embedded=true`}
+            loading="lazy"
+          />
+          <p className="home2__trust">
+            Отзыв анонимный: имя и почту указывать не нужно.{' '}
+            <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">
+              Если форма не открылась, нажми сюда
+            </a>
+          </p>
+        </>
+      )}
     </div>
   );
 }

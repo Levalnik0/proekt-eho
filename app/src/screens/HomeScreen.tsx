@@ -130,7 +130,7 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
       <button className="btn btn--wide" onClick={() => { buzz('tap'); onOpen('feedback'); }}>
         Оставить отзыв
       </button>
-      <p className="home2__trust">Ответы остаются в этом телефоне</p>
+      <p className="home2__trust">Ответы тестов хранятся только в этом телефоне. Мы лишь считаем анонимную статистику посещений.</p>
     </div>
   );
 }
