@@ -127,6 +127,9 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
         ))}
       </ul>
 
+      <button className="btn btn--wide" onClick={() => { buzz('tap'); onOpen('feedback'); }}>
+        Оставить отзыв
+      </button>
       <p className="home2__trust">Ответы остаются в этом телефоне</p>
     </div>
   );

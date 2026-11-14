@@ -34,6 +34,7 @@ import { useProgress } from './progress/useProgress';
 import { SECTION_BY_ID, TABS, type Section, type Tab } from './routes';
 import { themeChosen } from './theme/useTheme';
 import { useHashRoute } from './useHashRoute';
+import { FeedbackScreen } from './screens/FeedbackScreen';
 
 /** Библиотеки сценариев: чтобы добавить историю, достаточно положить JSON и вписать сюда */
 const QUESTS: Record<string, Quest> = {
@@ -62,7 +63,7 @@ const ADULT_ROUTES = [
 const TEEN_ROUTES = ['games', 'stories', 'tests'];
 
 /** Экраны с таб-баром, которые не разделы и не вкладки из списка TABS */
-const OTHER = ['profile', 'settings', 'club', 'check-message', 'crisis-protocol'];
+const OTHER = ['profile', 'settings', 'club', 'check-message', 'crisis-protocol', 'feedback'];
 
 export default function App() {
   const { route, go, back } = useHashRoute();
@@ -237,6 +238,7 @@ export default function App() {
         {path === 'club' && <ClubScreen onBack={back} onOpenLab={() => go('game/lab')} />}
         {path === 'check-message' && <CheckerScreen onExit={back} />}
         {path === 'crisis-protocol' && <CrisisScreen onBack={back} />}
+        {path === 'feedback' && <FeedbackScreen onBack={back} />}
         {section && <SectionScreen section={section} onBack={back} onOpen={go} />}
         {!section && !OTHER.includes(path) && <HomeScreen onOpen={go} />}
       </main>
