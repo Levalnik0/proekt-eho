@@ -8,17 +8,30 @@ import { reachFrom, rings } from '../fx';
  * в одном оттенке. Так «выбрал оранжевый, и весь экран оранжевый»
  * получается без заливки всего сплошным цветом: на нём не читается текст.
  */
-export type ThemeId = 'day' | 'ocean' | 'coral' | 'pink' | 'violet' | 'neon';
+export type ThemeId = 'day' | 'ocean' | 'coral' | 'pink' | 'violet' | 'neon' | 'night';
 
 /** Порядок важен: так цвета идут на первом экране и по кнопке-палитре */
-export const THEMES: { id: ThemeId; label: string; swatch: string }[] = [
+export const THEMES: { id: ThemeId; label: string; swatch: string; secret?: boolean }[] = [
   { id: 'coral', label: 'Коралл', swatch: '#ff7a45' },
   { id: 'pink', label: 'Розовый', swatch: '#ff5d8f' },
   { id: 'violet', label: 'Сирень', swatch: '#9b7cff' },
   { id: 'ocean', label: 'Океан', swatch: '#3fd0cc' },
   { id: 'neon', label: 'Неон', swatch: 'linear-gradient(135deg, #38e8d8, #ff57c7)' },
   { id: 'day', label: 'Светлая', swatch: '#ffffff' },
+  { id: 'night', label: 'Ночная почта', swatch: 'linear-gradient(135deg, #2a2346 0%, #ffb35c 100%)', secret: true },
 ];
+
+/** Секретная тема открывается пасхалкой в игре «Ночная почта»: часы на 11:12 */
+export function nightUnlocked() {
+  try {
+    return localStorage.getItem('echo.egg.night') === '1';
+  } catch {
+    return false;
+  }
+}
+
+/** Темы, которые видно в выборе цвета: секретная появляется только после пасхалки */
+export const visibleThemes = () => THEMES.filter((t) => !t.secret || nightUnlocked());
 
 const KEY = 'echo.theme.v1';
 const CHOSEN_KEY = 'echo.theme.chosen.v1';
@@ -219,8 +232,9 @@ export function useTheme() {
 
   /** Следующий цвет по кругу: для кнопки-палитры на главной */
   const cycle = useCallback((origin?: Origin) => {
-    const i = THEMES.findIndex((t) => t.id === current);
-    change(THEMES[(i + 1) % THEMES.length].id, origin);
+    const list = visibleThemes();
+    const i = list.findIndex((t) => t.id === current);
+    change(list[(i + 1) % list.length].id, origin);
   }, []);
 
   return { theme, setTheme, cycle };

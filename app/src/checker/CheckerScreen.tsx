@@ -60,7 +60,7 @@ export function CheckerScreen({ onExit }: { onExit: () => void }) {
       {!checked && (
         <>
           <textarea
-            className="checker__input"
+            className="checker__input ym-hide-content ym-disable-keys"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Вставь сюда сообщение, которое насторожило"

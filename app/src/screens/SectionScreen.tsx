@@ -1,19 +1,20 @@
 import { labUnlocked } from '../games/lab';
+import { labGameOfDay, labRank } from '../games/labRank';
 import type { ReactNode } from 'react';
 import {
   IconAdultChild,
   IconBack,
   IconBubble,
   IconCompass,
-  IconDuel,
   IconFilter,
-  IconFort,
   IconGamepad,
   IconMagnifier,
   IconMirror,
   IconNet,
   IconPerson,
+  IconImpostor,
   IconRace,
+  IconSafe,
   IconSwipe,
   IconTogether,
   IconWindows,
@@ -37,10 +38,10 @@ const KIND_ICON: Record<Activity['kind'], (props: { size?: number }) => ReactNod
 const ROUTE_ICON: Record<string, (props: { size?: number }) => ReactNode> = {
   'game/swipe': IconSwipe,
   'game/slang': IconBubble,
-  'game/lab/duel': IconDuel,
+  'game/lab/imp': IconImpostor,
+  'game/lab/safe': IconSafe,
   'game/lab/race': IconRace,
   'game/lab/filter': IconFilter,
-  'game/lab/fort': IconFort,
   'game/lab/detective': IconMagnifier,
   'game/lab/net': IconNet,
   'game/lab/windows': IconWindows,
@@ -62,6 +63,9 @@ export function SectionScreen({
   onOpen: (route: string) => void;
 }) {
   const { progress } = useProgress();
+  // Звание и игра дня есть только у раздела «Игры», и только когда игры открыты
+  const rank = section.id === 'games' && labUnlocked() ? labRank() : null;
+  const today = rank ? labGameOfDay() : null;
 
   /** Пройденное помечаем галочкой: видно, что осталось */
   const isDone = (route: string) => {
@@ -81,6 +85,19 @@ export function SectionScreen({
         <span className="topbar__spacer" />
       </div>
 
+      {rank && (
+        <div className="rank-card">
+          <div className="rank-card__row">
+            <b>{rank.name}</b>
+            <span>{rank.next ? `до звания «${rank.next}» ещё ${rank.left}` : 'высшее звание'}</span>
+          </div>
+          <div className="rank-card__bar" role="img" aria-label={`Опыт: ${rank.xp}`}>
+            <i style={{ width: `${rank.percent}%` }} />
+          </div>
+          <p>Опыт дают за каждую партию, даже неудачную. За игру дня дают вдвое больше.</p>
+        </div>
+      )}
+
       <ul className="tiles tiles--section stagger">
         {section.activities.filter((a) => !a.route.startsWith('game/lab/') || labUnlocked()).map((a, index) => {
           const Icon = ROUTE_ICON[a.route] ?? KIND_ICON[a.kind];
@@ -98,6 +115,7 @@ export function SectionScreen({
                   <Icon size={26} />
                 </span>
                 <span className="tile__label">{a.label}</span>
+                {a.route === today && <span className="tile__x2">×2 сегодня</span>}
                 {isDone(a.route) && (
                   <span className="tile__done" role="img" aria-label="пройдено">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">

@@ -136,7 +136,8 @@ button {
 [data-theme='ocean'],
 [data-theme='coral'],
 [data-theme='pink'],
-[data-theme='violet'] {
+[data-theme='violet'],
+[data-theme='night'] {
   --bg: hsl(var(--h) 42% 9%);
   --bg-soft: hsl(var(--h) 38% 12%);
   --surface: hsl(var(--h) 32% 16%);
@@ -259,6 +260,18 @@ button {
 
 /* Единственная тёмная тема: закрывает сразу и «чёрный», и «неоновый»
    запрос - тёмные поверхности плюс яркий циан-маджента акцент. */
+/* Секретная тема из пасхалки «Ночной почты»: ночная комната и тёплая лампа */
+[data-theme='night'] {
+  --h: 252;
+  --echo-teal: #ffb35c;
+  --echo-teal-light: #ffd59a;
+  --echo-navy: #ffd2a1;
+  --echo-navy-deep: #ffbf75;
+  --echo-teal-text: #ffc27a;
+  --grad-icon: linear-gradient(145deg, #a8734c 0%, #6b4630 100%);
+  --icon-glyph-dark: #6b4630;
+}
+
 [data-theme='neon'] {
   --bg: #121018;
   --bg-soft: #181521;

@@ -1,6 +1,6 @@
 import { EchoAppIcon } from '../components/EchoLogo';
 import { buzz, centerOf } from '../fx';
-import { markThemeChosen, THEMES, useTheme, type ThemeId } from '../theme/useTheme';
+import { markThemeChosen, useTheme, visibleThemes, type ThemeId } from '../theme/useTheme';
 
 /**
  * Первый экран при запуске. Раньше здесь был выбор «подросток или взрослый»,
@@ -25,7 +25,7 @@ export function ColorScreen({ onDone }: { onDone: () => void }) {
       <h1 className="color-screen__title">Твой цвет?</h1>
 
       <div className="color-grid" role="radiogroup" aria-label="Цвет приложения">
-        {THEMES.map((t) => (
+        {visibleThemes().map((t) => (
           <button
             key={t.id}
             role="radio"

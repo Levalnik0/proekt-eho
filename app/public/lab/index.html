@@ -412,6 +412,286 @@ canvas { display: block; width: 100%; height: 100%; }
 .u-rank div:first-child .medal { background: var(--accent); color: var(--accent-ink); }
 .u-tip { font-size: 15px; margin: 0 0 18px; background: var(--surface); border-radius: 14px; padding: 11px 14px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+/* ── 8. Сейф на двоих ── */
+.sf { background: radial-gradient(90% 60% at 50% 0%, #26343a 0%, #10171a 55%, #080b0c 100%); touch-action: manipulation; }
+.sf-room { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 10px 14px 12px; gap: 10px; overflow-y: auto; touch-action: pan-y; }
+.sf-glow { position: absolute; inset: 0; pointer-events: none; z-index: 3; box-shadow: inset 0 0 90px 30px rgba(0,0,0,.6); }
+.sf.hot .sf-glow { animation: sfhot 1s ease-in-out infinite; }
+.sf.strike .sf-glow { animation: sfstrike .6s ease-out; }
+@keyframes sfhot { 50% { box-shadow: inset 0 0 90px 30px rgba(255,40,40,.32); } }
+@keyframes sfstrike { 0%, 40% { box-shadow: inset 0 0 120px 60px rgba(255,30,30,.6); } }
+@keyframes sfin { from { opacity: 0; transform: translateY(8px); } }
+@keyframes sfshake { 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+.sf.strike .sf-panel { animation: sfshake .4s; }
+.sf-hud { display: flex; align-items: center; gap: 10px; flex: none; }
+.sf-led { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 32px; letter-spacing: .06em; color: #ff5a4d; text-shadow: 0 0 12px rgba(255,70,50,.8); background: #160808; border: 2px solid #3a1512; border-radius: 12px; padding: 0 12px; line-height: 1.3; }
+.sf-serial { font-size: 11.5px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; line-height: 1.3; }
+.sf-serial b { display: block; font-size: 15px; color: var(--ink); letter-spacing: .12em; }
+.sf-lamps { display: flex; gap: 6px; margin-left: auto; }
+.sf-lamps i { width: 16px; height: 16px; border-radius: 50%; background: #2a3336; border: 2px solid #47575c; }
+.sf-lamps i.on { background: #ff4a3d; box-shadow: 0 0 12px #ff4a3d; border-color: #ff9a8f; }
+.sf-locks { display: flex; gap: 8px; flex: none; }
+.sf-lock { flex: 1; min-height: 46px; border-radius: 14px; background: linear-gradient(#2b3a40, #1b262a); border: 1.5px solid #3d4f55; font-size: 12.5px; font-weight: 700; color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.sf-lock i { width: 10px; height: 10px; border-radius: 50%; background: #ffb14a; box-shadow: 0 0 8px #ffb14a; }
+.sf-lock.on { border-color: var(--accent); color: var(--ink); }
+.sf-lock.ok { color: var(--good); }
+.sf-lock.ok i { background: var(--good); box-shadow: 0 0 10px var(--good); }
+.sf-panel { flex: 1 0 auto; border-radius: 20px; background: linear-gradient(160deg, #2a373c, #182125); border: 1.5px solid #3c4d53; padding: 14px; display: flex; flex-direction: column; gap: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 10px 30px rgba(0,0,0,.4); position: relative; animation: sfin .3s ease; }
+.sf-panel h3 { margin: 0; font-size: 12.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.sf-panel.done::after { content: "ОТКРЫТ"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 34px; font-weight: 800; letter-spacing: .14em; color: var(--good); background: rgba(10,18,20,.72); border-radius: 18px; text-shadow: 0 0 18px rgba(127,224,166,.7); }
+.sf-msg { background: #0f1719; border-radius: 14px; padding: 12px; border: 1px solid #2f3e43; }
+.sf-msg b { display: block; font-size: 13px; color: var(--accent); margin-bottom: 4px; }
+.sf-msg p { margin: 0; font-size: 16px; line-height: 1.35; color: var(--ink); }
+.sf-wires { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }
+.sf-wire { position: relative; min-height: 40px; border-radius: 10px; background: #0f1719; border: 1px solid #2f3e43; display: flex; align-items: center; padding: 0 12px; font-size: 13.5px; font-weight: 700; color: var(--ink); overflow: hidden; text-align: left; }
+.sf-wire::before { content: ""; position: absolute; left: 100px; right: 14px; top: 50%; height: 8px; margin-top: -4px; border-radius: 4px; background: var(--w); box-shadow: 0 0 10px var(--w); }
+.sf-wire.cut::before { background: linear-gradient(90deg, var(--w) 0 42%, transparent 42% 58%, var(--w) 58%); box-shadow: none; opacity: .5; }
+.sf-wire:disabled { opacity: .65; }
+.sf-site { font-size: 14px; color: var(--muted); margin: 0; }
+.sf-site b { color: var(--ink); }
+.sf-url { background: #f3f5f6; color: #16202a; border-radius: 16px; padding: 10px 14px; font-size: 18px; font-weight: 800; word-break: break-all; letter-spacing: .02em; }
+.sf-url small { display: block; font-size: 11px; font-weight: 700; color: #6c7a86; letter-spacing: .08em; text-transform: uppercase; }
+.sf-dial { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: auto; }
+.sf-knob { width: 124px; height: 124px; border-radius: 50%; position: relative; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #5a6b71, #232e32 70%); border: 4px solid #11181a; box-shadow: 0 0 0 3px #46575d, 0 10px 24px rgba(0,0,0,.5); }
+.sf-knob i { position: absolute; inset: 0; border-radius: 50%; transition: transform .18s ease; }
+.sf-knob i::before { content: ""; position: absolute; top: 6px; left: 50%; width: 6px; height: 20px; margin-left: -3px; border-radius: 3px; background: var(--soft); box-shadow: 0 0 8px var(--soft); }
+.sf-knob span { position: relative; font-size: 44px; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+.sf-step { width: 56px; height: 56px; border-radius: 50%; background: var(--surface-2); font-size: 28px; font-weight: 800; border: 1.5px solid #3c4d53; }
+.sf-prof { background: #0f1719; border-radius: 14px; border: 1px solid #2f3e43; padding: 10px 12px; display: grid; gap: 6px; font-size: 14.5px; }
+.sf-prof div { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); }
+.sf-prof div b { color: var(--ink); text-align: right; }
+.sf-prof p { margin: 4px 0 0; padding: 8px 10px; border-radius: 12px 12px 12px 4px; background: var(--surface-2); color: var(--ink); font-size: 15px; line-height: 1.35; }
+.sf-syms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: auto; }
+.sf-sym { aspect-ratio: 1; border-radius: 16px; background: #0f1719; border: 1.5px solid #3c4d53; display: grid; place-items: center; }
+.sf-sym svg, .sf-shape svg { width: 38px; height: 38px; fill: var(--soft); }
+.sf-peek { flex: none; min-height: 44px; border-radius: 14px; background: #e9dcc0; color: #33271a; font-weight: 800; font-size: 14.5px; }
+/* Справочник: бумажная папка */
+.sf-book { position: absolute; inset: 0; z-index: 8; overflow-y: auto; touch-action: pan-y; padding: 14px 16px 20px; color: #33271a; background: #e9dcc0 repeating-linear-gradient(0deg, transparent 0 27px, rgba(120,90,50,.1) 27px 28px); user-select: text; -webkit-user-select: text; }
+.sf-book[hidden] { display: none; }
+.sf-book.sheet { top: 9%; border-radius: 20px 20px 0 0; box-shadow: 0 -12px 40px rgba(0,0,0,.6); animation: sfin .25s ease; }
+.sf-book__top { display: flex; align-items: center; gap: 10px; }
+.sf-book h3 { margin: 0; font-size: 19px; flex: 1; line-height: 1.2; }
+.sf-book h3 small { display: block; font-size: 12px; font-weight: 700; color: #7a6243; letter-spacing: .08em; text-transform: uppercase; }
+.sf-stamp { border: 2px solid #b3402e; color: #b3402e; transform: rotate(-7deg); padding: 1px 8px; font-weight: 800; font-size: 11.5px; letter-spacing: .12em; border-radius: 4px; }
+.sf-booktime { font-weight: 800; font-size: 20px; font-variant-numeric: tabular-nums; color: #b3402e; }
+.sf-x { width: 40px; height: 40px; border-radius: 50%; background: #33271a; color: #f3e8cf; font-size: 20px; font-weight: 800; }
+.sf-tabs { display: flex; gap: 6px; margin: 12px 0 0; }
+.sf-tab { flex: 1; min-height: 44px; border-radius: 12px 12px 0 0; background: #d6c6a4; color: #5a4630; font-weight: 800; font-size: 14px; }
+.sf-tab.on { background: #33271a; color: #f3e8cf; }
+.sf-page { border-top: 3px solid #33271a; padding-top: 12px; }
+.sf-page p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.4; color: #5a4630; }
+.sf-page ol, .sf-page ul { margin: 0 0 12px; padding-left: 22px; }
+.sf-page li { margin-bottom: 8px; font-size: 15.5px; line-height: 1.35; }
+.sf-page h4 { margin: 4px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: #7a6243; }
+.sf-w { display: inline-block; padding: 0 8px; border-radius: 6px; font-weight: 800; background: var(--w); color: #10171a; border: 1.5px solid rgba(51,39,26,.45); }
+.sf-num { display: inline-grid; place-items: center; min-width: 28px; height: 28px; border-radius: 8px; background: #33271a; color: #f3e8cf; font-weight: 800; }
+.sf-shape { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; }
+.sf-shape svg { width: 22px; height: 22px; fill: #33271a; }
+.sf-bookend { display: flex; gap: 8px; margin-top: 16px; }
+.sf-bookend button { flex: 1; min-height: 48px; border-radius: 14px; font-weight: 800; background: #33271a; color: #f3e8cf; }
+.sf-bookend button + button { background: #d6c6a4; color: #5a4630; }
+/* Старт */
+.sf-lv { display: flex; gap: 6px; margin-bottom: 12px; }
+.sf-lv button { flex: 1; min-height: 44px; border-radius: 12px; background: var(--surface); font-weight: 800; border: 1.5px solid transparent; }
+.sf-lv button.on { border-color: var(--accent); color: var(--accent); }
+.sf-lv button:disabled { opacity: .4; }
+.sf-code { display: flex; gap: 8px; align-items: stretch; margin-bottom: 6px; }
+.sf-code input { flex: 1; min-width: 0; height: 56px; border-radius: 14px; border: 1.5px solid #5f8a8c; background: var(--surface); color: var(--ink); font: inherit; font-size: 28px; font-weight: 800; letter-spacing: .3em; text-align: center; user-select: text; -webkit-user-select: text; }
+.sf-code input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.overlay .sf-tip { font-size: 13.5px; margin: 0 0 12px; }
+.sf-roles { display: flex; gap: 8px; margin-bottom: 8px; }
+.sf-roles .btn { flex: 1; padding: 0 10px; }
+.sf-gems { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0 0; align-items: center; font-size: 13px; color: var(--muted); }
+.sf-gems i { width: 14px; height: 14px; transform: rotate(45deg); border-radius: 3px; background: #26353a; }
+.sf-gems i.on { background: var(--g); box-shadow: 0 0 8px var(--g); }
+.sf-count { font-size: 96px; font-weight: 800; color: var(--accent); text-align: center; line-height: 1; margin: 10px 0 20px; animation: sfpop .9s ease both; }
+@keyframes sfpop { from { transform: scale(1.6); opacity: 0; } 30% { opacity: 1; } to { transform: scale(1); } }
+/* Финал: дверь сейфа */
+.sf-door { position: relative; width: 190px; height: 190px; margin: 0 auto 12px; }
+.sf-door__in { position: absolute; inset: 14px; border-radius: 50%; background: radial-gradient(circle, #fff3c4 0%, #ffcf5a 35%, #7a4b12 80%); display: grid; place-items: center; box-shadow: 0 0 40px rgba(255,200,80,.55); }
+.sf-door__gem { width: 54px; height: 54px; transform: rotate(45deg) scale(0); border-radius: 10px; background: var(--g); box-shadow: 0 0 24px var(--g), inset 6px 6px 0 rgba(255,255,255,.35); animation: sfgem .6s 2s cubic-bezier(.2,1.6,.4,1) forwards; }
+@keyframes sfgem { to { transform: rotate(45deg) scale(1); } }
+.sf-door svg { position: absolute; inset: 0; transform-origin: 4% 50%; animation: sfopen 1s 1.2s cubic-bezier(.6,0,.3,1) forwards; }
+.sf-door svg g { transform-origin: 100px 100px; animation: sfspin 1.2s cubic-bezier(.5,0,.2,1) forwards; }
+@keyframes sfspin { to { transform: rotate(300deg); } }
+@keyframes sfopen { to { transform: perspective(600px) rotateY(-82deg); opacity: .25; } }
+.sf-door.shut svg, .sf-door.shut svg g { animation: none; }
+.sf-door.shut .sf-door__in { display: none; }
+@media (prefers-reduced-motion: reduce) { .sf.hot .sf-glow, .sf-count { animation: none; } }
+/* ── 9. Самозванец ── */
+.im { display: flex; flex-direction: column; background: radial-gradient(100% 50% at 50% 0%, #2a2150 0%, #15112a 60%, #0d0a1c 100%); touch-action: manipulation; }
+.im-top { flex: none; padding: 8px 12px 10px; border-bottom: 1px solid rgba(180,160,255,.14); background: rgba(13,10,28,.55); }
+.im-people { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.im-p { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px 5px; border-radius: 14px; border: 1.5px solid transparent; font-size: 12.5px; font-weight: 700; color: var(--ink); min-height: 74px; }
+.im-p.sel { border-color: #ffd24a; background: rgba(255,210,74,.1); }
+.im-p:disabled { opacity: .45; }
+.im-ava { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 17px; color: #15112a; background: var(--c); flex: none; }
+.im-p small { font-size: 10.5px; font-weight: 700; line-height: 1.1; min-height: 12px; color: var(--good); }
+.im-p small.bad { color: #ff8f8f; }
+.im-threat { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.im-threat div { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.im-threat b { color: #ff8fb1; font-size: 15px; letter-spacing: .1em; }
+.im-threat i { height: 7px; border-radius: 4px; background: #2c2550; transition: background .4s, box-shadow .4s; }
+.im-threat i.on { background: #ff5a6e; box-shadow: 0 0 10px #ff5a6e; }
+.im-chat { flex: 1; overflow-y: auto; touch-action: pan-y; padding: 12px 12px 6px; display: flex; flex-direction: column; gap: 8px; }
+.im-msg { max-width: 84%; align-self: flex-start; display: flex; gap: 8px; align-items: flex-end; animation: impop .28s cubic-bezier(.2,1.3,.4,1) both; }
+.im-msg .im-ava { width: 30px; height: 30px; font-size: 13px; }
+.im-msg div { background: #2a2350; border-radius: 16px 16px 16px 5px; padding: 8px 12px; font-size: 15.5px; line-height: 1.35; color: var(--ink); }
+.im-msg b { display: block; font-size: 12.5px; color: var(--c); margin-bottom: 1px; }
+.im-msg.me { align-self: flex-end; }
+.im-msg.me div { background: #6b5bd6; border-radius: 16px 16px 5px 16px; color: #fff; }
+.im-sys { align-self: center; font-size: 12px; color: var(--muted); background: rgba(255,255,255,.06); padding: 4px 12px; border-radius: 999px; text-align: center; animation: impop .28s both; }
+.im-sys.hot { color: #ffb0b8; background: rgba(255,90,110,.14); }
+.im-typing { align-self: flex-start; font-size: 13px; color: var(--muted); padding-left: 38px; min-height: 18px; }
+.im-typing span { display: inline-block; animation: imdots 1s steps(4) infinite; overflow: hidden; vertical-align: bottom; width: 0; }
+@keyframes imdots { to { width: 1.1em; } }
+@keyframes impop { from { opacity: 0; transform: translateY(10px) scale(.96); } }
+.im-bar { flex: none; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; background: rgba(13,10,28,.75); border-top: 1px solid rgba(180,160,255,.14); min-height: 78px; justify-content: center; }
+.im-bar p { margin: 0; text-align: center; color: var(--muted); font-size: 14px; }
+.im-bar .row .btn { padding: 0 10px; font-size: 15px; }
+.im-acc { background: #ff5a6e; color: #25060c; }
+.im-big { width: 96px; height: 96px; border-radius: 50%; margin: 0 auto 12px; display: grid; place-items: center; font-size: 42px; font-weight: 800; color: #15112a; background: var(--c); position: relative; }
+.im-big.glitch { animation: imglitch 1.4s steps(2) 2; box-shadow: 0 0 0 4px #ff5a6e, 0 0 30px rgba(255,90,110,.6); }
+.im-big.glitch::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; border-radius: 50%; background: #1a1430; color: #ff5a6e; animation: immask 2.8s forwards; }
+@keyframes imglitch { 0% { transform: translate(0); filter: none; } 25% { transform: translate(-4px, 2px); filter: hue-rotate(90deg); } 50% { transform: translate(4px, -2px); filter: invert(1); } 75% { transform: translate(-2px, -3px); filter: hue-rotate(200deg); } }
+@keyframes immask { 0%, 55% { opacity: 0; } 100% { opacity: 1; } }
+.im-why { margin: 0 0 14px; padding-left: 20px; color: var(--ink); font-size: 15px; line-height: 1.5; }
+.overlay .im-tip { background: var(--surface); border-radius: 12px; padding: 10px 12px; color: var(--ink); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .im-big.glitch { animation: none; } }
+/* ── Общий опыт и звания ── */
+.xp { position: absolute; top: 60px; left: 12px; right: 12px; z-index: 60; padding: 10px 14px 12px; border-radius: 16px; background: #10262b; border: 1.5px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,.5); display: grid; gap: 3px; animation: xpin .35s cubic-bezier(.2,1.3,.4,1) both; pointer-events: none; }
+.xp[hidden] { display: none; }
+.xp b { font-size: 16px; color: var(--accent); }
+.xp span { font-size: 13px; color: var(--muted); }
+.xp.up { border-color: var(--soft); }
+.xp.up b, .xp.up span { color: var(--soft); }
+.xp__bar { height: 7px; border-radius: 4px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: 4px; }
+.xp__bar i { display: block; height: 100%; border-radius: 4px; background: var(--accent); transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.xp.up .xp__bar i { background: var(--soft); }
+@keyframes xpin { from { opacity: 0; transform: translateY(-14px); } }
+.confetti { position: absolute; inset: 0; z-index: 59; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: cfall 1.7s ease-in forwards; }
+@keyframes cfall { to { transform: translate(var(--dx), 105vh) rotate(var(--r)); opacity: .9; } }
+.overlay p.near { color: var(--soft); font-weight: 700; margin: -2px 0 12px; }
+@media (prefers-reduced-motion: reduce) { .confetti { display: none; } }
+/* ── 1. Ночная почта ── */
+.np { background: linear-gradient(#2a2346 0 50%, #54341f 50%); touch-action: none; }
+.np-box { position: absolute; left: 50%; top: 50%; width: 360px; height: 600px; transform-origin: center; transform: translate(-50%, -50%); }
+.np-scene, .np-scene svg { position: absolute; inset: 0; width: 360px; height: 600px; display: block; }
+.np-scene text { font-family: var(--font); }
+.np-mb, .np-ret { position: absolute; border-radius: 10px; z-index: 2; }
+.np-mb { top: 226px; width: 104px; height: 100px; }
+.np-ret { left: 250px; top: 432px; width: 104px; height: 122px; }
+.np-mb.over, .np-ret.over { outline: 3px solid #ffd98a; outline-offset: -3px; background: rgba(255,217,138,.12); }
+.np-letter { position: absolute; left: 26px; bottom: 26px; width: 214px; touch-action: none; cursor: grab; transform-origin: 50% 50%; z-index: 4; filter: drop-shadow(0 8px 10px rgba(0,0,0,.38)); transition: transform .2s ease; }
+.np-letter[hidden] { display: none; }
+.np-letter.drag { cursor: grabbing; transition: none; }
+.np-sheet { position: relative; margin: 0 9px -8px; padding: 10px 12px 17px; border-radius: 6px 6px 0 0; background: #fffaf0 repeating-linear-gradient(transparent 0 19px, rgba(120,140,190,.2) 19px 20px); }
+.np-sheet p { margin: 0; font-size: 13.5px; line-height: 20px; font-weight: 600; color: #2c2440; }
+.np-env { position: relative; min-height: 76px; padding: 10px 12px; border-radius: 6px; background: #f1dfbd; border: 1px solid #d6bf95; overflow: hidden; }
+.np-env::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom right, transparent 49.5%, rgba(150,120,70,.22) 50%, transparent 50.5%), linear-gradient(to bottom left, transparent 49.5%, rgba(150,120,70,.22) 50%, transparent 50.5%); }
+.np-addr { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1px 8px; align-items: baseline; font-size: 11px; color: #8a6f48; }
+.np-addr b { font-size: 16px; color: #3a2518; }
+.np-addr em { font-style: normal; font-size: 13px; font-weight: 700; color: #3a2518; padding-right: 30px; }
+.np-seal { position: absolute; right: 11px; bottom: 8px; width: 26px; height: 26px; border-radius: 50%; background: var(--c); box-shadow: inset -3px -3px 0 rgba(0,0,0,.18), inset 3px 3px 0 rgba(255,255,255,.28); }
+.np-post { position: absolute; right: 9px; top: 7px; width: 20px; height: 24px; border-radius: 2px; background: #fffaf0; outline: 1.5px dashed rgba(90,70,40,.45); outline-offset: -1px; }
+.np-post::after { content: ""; position: absolute; inset: 4px; border-radius: 1px; background: var(--c); opacity: .75; }
+.np-urg { position: absolute; right: 36px; top: 9px; transform: rotate(7deg); border: 2px solid #c9304a; color: #c9304a; font-weight: 800; font-size: 10px; letter-spacing: .1em; padding: 0 6px; border-radius: 4px; text-transform: uppercase; background: rgba(255,245,240,.5); }
+.np-mark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-12deg) scale(2.2); opacity: 0; border: 3px solid #c9304a; color: #c9304a; font-weight: 800; font-size: 19px; letter-spacing: .12em; padding: 1px 10px; border-radius: 6px; text-transform: uppercase; background: rgba(255,240,240,.7); }
+.np-letter.stamped .np-mark { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg) scale(1); transition: transform .16s cubic-bezier(.3,1.7,.5,1), opacity .08s; }
+.np-note { position: absolute; left: 14px; right: 14px; top: 8px; z-index: 6; padding: 9px 12px; border-radius: 14px; background: #fff7e8; color: #3a2518; font-size: 13.5px; line-height: 1.35; font-weight: 600; box-shadow: 0 8px 20px rgba(0,0,0,.4); opacity: 0; transform: translateY(-8px); transition: opacity .25s, transform .25s; pointer-events: none; }
+.np-note.on { opacity: 1; transform: none; }
+.np-note b { color: #b3402e; }
+.np-note.good b { color: #2f7d55; }
+/* живые мелочи сцены */
+.np-rain line { animation: nprain .7s linear infinite; }
+.np-snow circle { animation: npsnow 6s linear infinite; }
+.np-cloud { animation: npcloud 22s linear infinite; }
+.np-leaf { animation: npleaf 3.4s linear infinite; }
+.np-fog { animation: npfog 9s ease-in-out infinite alternate; }
+.np-steam path { animation: npsteam 2.6s ease-in-out infinite; }
+.np-flick { animation: npflick 5s ease-in-out infinite; }
+.np-breath { transform-box: fill-box; transform-origin: 50% 100%; animation: npbreath 3.4s ease-in-out infinite; }
+.np-tail { transform-box: fill-box; transform-origin: 0% 100%; }
+.np-cat.twitch .np-tail { animation: nptail .5s ease-in-out infinite; }
+.np-cat .np-open { opacity: 0; } .np-cat.awake .np-open { opacity: 1; } .np-cat.awake .np-shut { opacity: 0; }
+.np-star { animation: nptw 3s ease-in-out infinite; }
+@keyframes nprain { to { transform: translate(-6px, 30px); } }
+@keyframes npsnow { to { transform: translate(8px, 170px); } }
+@keyframes npcloud { from { transform: translateX(-70px); } to { transform: translateX(170px); } }
+@keyframes npleaf { from { transform: translate(-20px, 0) rotate(0); } to { transform: translate(170px, 50px) rotate(540deg); } }
+@keyframes npfog { to { transform: translateX(18px); } }
+@keyframes npsteam { 0% { opacity: 0; transform: translateY(4px); } 40% { opacity: .55; } 100% { opacity: 0; transform: translateY(-9px); } }
+@keyframes npflick { 0%, 100% { opacity: 1; } 47% { opacity: 1; } 50% { opacity: .82; } 53% { opacity: 1; } }
+@keyframes npbreath { 50% { transform: scaleY(1.05); } }
+@keyframes nptail { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-22deg); } }
+@keyframes nptw { 50% { opacity: .25; } }
+/* старт, альбом, открытка */
+.np-evs { display: flex; gap: 6px; margin-bottom: 10px; }
+.np-evs button { flex: 1; min-height: 46px; border-radius: 12px; background: var(--surface); font-weight: 800; border: 1.5px solid transparent; }
+.np-evs button.on { border-color: var(--soft); color: var(--soft); }
+.np-evs button:disabled { opacity: .4; }
+.np-album { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin: 0 0 14px; }
+.np-st { aspect-ratio: 4/5; border-radius: 4px; background: #f3e7cf; display: grid; place-items: center; outline: 1.5px dashed rgba(60,40,20,.35); outline-offset: -3px; }
+.np-st svg { width: 62%; }
+.np-st.off { background: rgba(255,255,255,.07); outline-color: rgba(255,255,255,.15); }
+.np-st.off svg { opacity: 0; }
+.np-st.new { animation: xpin .5s cubic-bezier(.2,1.5,.4,1) both; box-shadow: 0 0 0 2px var(--soft); }
+.overlay .np-cap { font-size: 12.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 6px; }
+.np-card { background: #fff7e8; color: #3a2518; border-radius: 16px; padding: 16px; margin-bottom: 14px; transform: rotate(-1.2deg); box-shadow: 0 14px 30px rgba(0,0,0,.45); }
+.np-card h3 { margin: 0 0 2px; font-size: 20px; }
+.np-card small { display: block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #8a6f48; }
+.np-card .np-stars { font-size: 30px; letter-spacing: .08em; color: #e0a22a; margin: 4px 0; }
+.np-card .np-stars i { font-style: normal; color: #d9c9a8; }
+.np-card p { margin: 0; color: #5a4630 !important; font-size: 14.5px; line-height: 1.45; }
+.np-new { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.np-new .np-st { width: 34px; }
+@media (prefers-reduced-motion: reduce) { .np-rain line, .np-snow circle, .np-cloud, .np-leaf, .np-fog, .np-steam path, .np-flick, .np-breath, .np-star { animation: none; } }
+/* Живая комната: предметы отзываются на касание */
+.np-scene [data-act] { cursor: pointer; }
+.np-scene [data-act="cat"] { cursor: grab; }
+.np-scene [data-act="clock"] { cursor: ew-resize; }
+.np-panl, .np-panr { transition: transform .85s cubic-bezier(.45,.05,.25,1); }
+.np-panl { transform: translateX(-76px); } .np-panr { transform: translateX(76px); }
+#p-win.closed .np-panl, #p-win.closed .np-panr { transform: none; }
+#p-lampdark { transition: opacity .5s ease; }
+.np.lampoff { background: linear-gradient(#1d1732 0 50%, #35211b 50%); }
+.np-flick.off { animation: none; opacity: 0; }
+.np-cat .np-happy { opacity: 0; }
+.np-cat.pet .np-open, .np-cat.pet .np-shut { opacity: 0; } .np-cat.pet .np-happy { opacity: 1; }
+.np-cat.pet .np-breath { animation-duration: 1.1s; }
+.np-cat.pet .np-tail { animation: nptail .9s ease-in-out infinite; }
+.np-head { transform-box: fill-box; }
+.np-cat.pet .np-head { animation: nppurr .09s linear infinite; }
+.np-ear2 { transform-box: fill-box; transform-origin: 50% 100%; animation: npear 8s ease-in-out infinite; }
+.np-blink { transform-box: fill-box; transform-origin: 50% 50%; animation: npblink 6s ease-in-out infinite; }
+.np-bell.ring { animation: npbell .9s ease-out; transform-origin: 258px 352px; }
+.np-plant.sway { animation: npplant .9s ease-out; transform-origin: 145px 200px; }
+.np-cup.sip { animation: npsip 1s ease-in-out; transform-origin: 312px 366px; }
+.np-parcel.thump { animation: npthump .3s ease-out; }
+@keyframes nppurr { 50% { transform: translateY(.5px); } }
+@keyframes npear { 0%, 90%, 100% { transform: rotate(0); } 93% { transform: rotate(-16deg); } 96% { transform: rotate(7deg); } }
+@keyframes npblink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@keyframes npbell { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-11deg); } 50% { transform: rotate(8deg); } 75% { transform: rotate(-3deg); } }
+@keyframes npplant { 20% { transform: rotate(-7deg); } 50% { transform: rotate(5deg); } 80% { transform: rotate(-2deg); } }
+@keyframes npsip { 35%, 65% { transform: rotate(-17deg) translateY(-3px); } }
+@keyframes npthump { 40% { transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .np-ear2, .np-blink, .np-cat.pet .np-head, .np-cat.pet .np-breath { animation: none; } .np-panl, .np-panr { transition: none; } }
+/* Пасхалка: часы на 11:12 */
+.np-q { display: grid; place-items: center; font-weight: 800; font-size: 14px; color: var(--muted); }
+.np-gold { background: linear-gradient(#ffe7a3, #e0a22a); outline-color: rgba(138,90,26,.6); box-shadow: 0 0 10px rgba(255,200,90,.6); }
+.np-egg { position: absolute; inset: 0; z-index: 25; display: grid; place-items: center; padding: 18px; background: rgba(10,7,22,.6); animation: npfade .4s ease both; }
+.np-egg__card { position: relative; width: min(320px, 100%); background: #fff7e8; color: #3a2518; border-radius: 18px; padding: 18px 18px 16px; box-shadow: 0 18px 40px rgba(0,0,0,.5); transform: rotate(-1deg); animation: npeggin .7s cubic-bezier(.2,1.3,.4,1) both; }
+.np-egg__card small { display: block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #b07a2a; font-weight: 800; padding-right: 56px; }
+.np-egg__card h3 { margin: 2px 0 10px; font-size: 21px; line-height: 1.2; padding-right: 56px; }
+.np-egg__card p { margin: 0 0 10px; font-size: 15px; line-height: 1.45; color: #5a4630; }
+.np-egg__stamp { position: absolute; right: 16px; top: 14px; width: 46px; height: 54px; border-radius: 4px; background: linear-gradient(#ffe7a3, #e0a22a); outline: 2px dashed rgba(138,90,26,.6); outline-offset: -4px; display: grid; place-items: center; transform: rotate(8deg); animation: npgold 2s ease-in-out infinite; }
+.np-egg__stamp b { font-size: 22px; color: #8a5a1a; }
+.np-egg__new { background: #2a2346; color: #ffd59a; border-radius: 12px; padding: 9px 12px; font-size: 13.5px; font-weight: 700; line-height: 1.4; margin: 4px 0 12px; }
+.np-egg .btn { width: 100%; }
+@keyframes npfade { from { opacity: 0; } }
+@keyframes npeggin { from { opacity: 0; transform: translateY(30px) rotate(6deg) scale(.8); } }
+@keyframes npgold { 0%, 100% { box-shadow: 0 0 14px rgba(255,200,90,.6); } 50% { box-shadow: 0 0 28px rgba(255,210,110,.95); } }
 </style>
 <script>
 // Цвета берём из выбранной темы приложения (тот же адрес, общее хранилище).
@@ -454,10 +734,10 @@ canvas { display: block; width: 100%; height: 100%; }
     <p class="sub">Все игры в одном месте. Рекорды остаются в этом телефоне.</p>
     <div class="cards">
       <button class="card" data-open="filter">
-        <span class="card__art" style="background:linear-gradient(145deg,#2a8f8c,#18515a)">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="6" width="22" height="12" rx="6" fill="#e9f5f4"/><rect x="14" y="22" width="22" height="12" rx="6" fill="#ffc27a"/><path d="M6 37h28" stroke="#3fd0cc" stroke-width="3" stroke-linecap="round"/></svg>
+        <span class="card__art" style="background:linear-gradient(145deg,#6e5aa8,#2a2346)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="6" y="12" width="28" height="19" rx="3" fill="#f1dfbd"/><path d="M6 14l14 10 14-10" stroke="#b89a6a" stroke-width="2"/><circle cx="20" cy="25" r="4" fill="#c9304a"/><circle cx="31" cy="9" r="3" fill="#ffd98a"/></svg>
         </span>
-        <span><div class="card__name">Фильтр</div><div class="card__how">Сбивай разводы, пока они не упали в чат</div></span>
+        <span><div class="card__name">Ночная почта</div><div class="card__how">Разбирай письма: настоящие в ящики друзей, развод на возврат</div></span>
         <span class="card__go">›</span>
       </button>
       <button class="card" data-open="detective">
@@ -465,13 +745,6 @@ canvas { display: block; width: 100%; height: 100%; }
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="17" cy="17" r="10" stroke="#e9f5f4" stroke-width="3.5"/><path d="M25 25l9 9" stroke="#e9f5f4" stroke-width="4" stroke-linecap="round"/><circle cx="17" cy="17" r="4" fill="#a996ff"/></svg>
         </span>
         <span><div class="card__name">Детектив</div><div class="card__how">Найди лупой, что выдаёт человека в сторис</div></span>
-        <span class="card__go">›</span>
-      </button>
-      <button class="card" data-open="fort">
-        <span class="card__art" style="background:linear-gradient(145deg,#c9824a,#5e3a1f)">
-          <svg width="40" height="40" viewBox="0 0 40 40"><rect x="10" y="28" width="20" height="7" rx="2" fill="#3fd0cc"/><rect x="10" y="19" width="20" height="7" rx="2" fill="#a996ff"/><rect x="10" y="10" width="20" height="7" rx="2" fill="#ffc27a"/><rect x="10" y="4" width="4" height="5" fill="#e9f5f4"/><rect x="18" y="4" width="4" height="5" fill="#e9f5f4"/><rect x="26" y="4" width="4" height="5" fill="#e9f5f4"/></svg>
-        </span>
-        <span><div class="card__name">Крепость</div><div class="card__how">Построй пароль, который робот не сломает</div></span>
         <span class="card__go">›</span>
       </button>
       <button class="card" data-open="net">
@@ -495,33 +768,42 @@ canvas { display: block; width: 100%; height: 100%; }
         <span><div class="card__name">Автодром слов</div><div class="card__how">Ездишь по арене и собираешь слова своей темы</div></span>
         <span class="card__go">›</span>
       </button>
-      <button class="card" data-open="duel">
-        <span class="card__art" style="background:linear-gradient(145deg,#7b6bd8,#2f2a66)">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="16" width="12" height="18" rx="3" fill="#e9f5f4"/><rect x="5" y="9" width="12" height="5" rx="2" fill="#ffc27a"/><rect x="23" y="12" width="12" height="22" rx="3" fill="#3fd0cc"/><rect x="23" y="5" width="12" height="5" rx="2" fill="#a996ff"/></svg>
+      <button class="card" data-open="safe">
+        <span class="card__art" style="background:linear-gradient(145deg,#56707a,#1a2428)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="5" y="6" width="30" height="28" rx="5" fill="#2b383d" stroke="#fff" stroke-width="2"/><circle cx="20" cy="20" r="7" stroke="#ffc27a" stroke-width="2.4"/><path d="M20 13v14M13 20h14" stroke="#ffc27a" stroke-width="2.4" stroke-linecap="round"/><circle cx="30" cy="12" r="1.8" fill="#ff5a4d"/></svg>
         </span>
-        <span><div class="card__name">Дуэль паролей</div><div class="card__how">У каждого свои данные. Чей пароль крепче?</div></span>
+        <span><div class="card__name">Сейф на двоих</div><div class="card__how">Один видит замки, у другого шпаргалка. Откройте вместе</div></span>
+        <span class="card__go">›</span>
+      </button>
+      <button class="card" data-open="imp">
+        <span class="card__art" style="background:linear-gradient(145deg,#6b5bd6,#1b1438)">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="13" cy="15" r="6" fill="#fff" opacity=".85"/><circle cx="27" cy="15" r="6" fill="#ff5a6e"/><path d="M4 33c1-7 5-10 9-10s8 3 9 10z" fill="#fff" opacity=".85"/><path d="M18 33c1-7 5-10 9-10s8 3 9 10z" fill="#ff5a6e"/><text x="27" y="19" font-size="10" font-weight="800" fill="#1b1438" text-anchor="middle">?</text></svg>
+        </span>
+        <span><div class="card__name">Самозванец</div><div class="card__how">В чате класса кто-то пишет с чужого аккаунта. Вычисли его</div></span>
         <span class="card__go">›</span>
       </button>
     </div>
     <p class="note">Рекорды остаются в этом телефоне</p>
   </div>
   <div class="overlay" id="howto" hidden></div>
+  <div class="xp" id="xp" hidden role="status" aria-live="polite"></div>
 
-  <!-- ═════════ 1. ФИЛЬТР ═════════ -->
+  <!-- ═════════ 1. НОЧНАЯ ПОЧТА ═════════ -->
   <section class="game" id="g-filter" hidden>
-    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Фильтр</span>
-      <span class="pill" id="f-time">60</span><span class="pill pill--accent" id="f-score">0</span></div>
-    <div class="stage" id="f-stage">
-      <div class="spam-bin">↖ в спам</div>
-      <div class="chat-line">в чат</div>
-      <div class="overlay" id="f-start">
-        <h2>Фильтр</h2>
-        <div class="chips"><span class="chip">1 мин</span><span class="chip">рекорд: <b id="f-best">0</b></span></div>
-        <button class="btn btn--main btn--wide" id="f-go">Играть</button>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Ночная почта</span>
+      <span class="pill" id="p-left" aria-label="Осталось писем" hidden>✉ 6</span><span class="pill pill--accent" id="p-score">0</span></div>
+    <div class="stage np" id="p-stage">
+      <div class="np-box" id="p-box">
+        <div class="np-scene" id="p-scene"></div>
+        <button class="np-mb" data-mb="0" style="left:22px"></button><button class="np-mb" data-mb="1" style="left:128px"></button><button class="np-mb" data-mb="2" style="left:234px"></button>
+        <button class="np-ret" id="p-ret" aria-label="Штамп «Возврат»: вернуть подозрительное письмо"></button>
+        <div class="np-letter" id="p-letter" hidden></div>
+        <div class="np-note" id="p-note" role="status" aria-live="polite"></div>
       </div>
+      <div class="overlay" id="f-start"></div>
       <div class="overlay" id="f-end" hidden></div>
     </div>
-    <div class="hint" id="f-hint">Комбо растёт, если не ошибаешься</div>
+    <div class="hint" id="p-hint">Перетащи письмо в ящик друга или на штамп «Возврат»</div>
   </section>
 
   <!-- ═════════ 2. ДЕТЕКТИВ ═════════ -->
@@ -553,30 +835,6 @@ canvas { display: block; width: 100%; height: 100%; }
     <div class="hint" id="d-hint">Води лупой и читай мелочи</div>
   </section>
 
-  <!-- ═════════ 3. КРЕПОСТЬ ═════════ -->
-  <section class="game" id="g-fort" hidden>
-    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Крепость</span>
-      <span class="pill" id="k-len">0 символов</span></div>
-    <div class="stage" style="touch-action:auto">
-      <div class="fort">
-        <div class="fort__scene" id="k-scene">
-          <div class="tower" id="k-tower"></div>
-          <svg class="robot" id="k-robot" viewBox="0 0 86 100" role="img" aria-label="Робот-подборщик">
-            <line x1="43" y1="6" x2="43" y2="18" stroke="#9fbcbb" stroke-width="3"/><circle cx="43" cy="6" r="5" fill="#ffc27a"/>
-            <rect x="16" y="18" width="54" height="40" rx="14" fill="#2b5662"/>
-            <circle cx="33" cy="38" r="7" fill="#e9f5f4"/><circle cx="53" cy="38" r="7" fill="#e9f5f4"/>
-            <circle cx="34" cy="39" r="3" fill="#0c1a1d"/><circle cx="54" cy="39" r="3" fill="#0c1a1d"/>
-            <rect x="22" y="62" width="42" height="30" rx="10" fill="#1f4049"/>
-            <text x="43" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#3fd0cc" font-family="monospace">0101</text>
-          </svg>
-        </div>
-        <div class="pass" id="k-pass"></div>
-        <div class="tray" id="k-tray"></div>
-        <div class="legend"><span><i class="t-word"></i>слово</span><span><i class="t-me"></i>про тебя</span><span><i class="t-common"></i>популярное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span></div>
-        <div class="fort__actions"><button class="btn" id="k-clear">Другие блоки</button><button class="btn btn--main" id="k-attack">Запустить робота</button></div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═════════ 4. СЕТЬ ═════════ -->
   <section class="game" id="g-net" hidden>
@@ -638,58 +896,39 @@ canvas { display: block; width: 100%; height: 100%; }
     <div class="r-pad" id="r-pad" aria-label="Пульт: веди круг в нужную сторону"><div class="r-base"><div class="r-knob" id="r-knob"></div></div></div>
   </section>
 
-  <!-- ═════════ 7. ДУЭЛЬ ПАРОЛЕЙ ═════════ -->
-  <section class="game" id="g-duel" hidden>
-    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Дуэль паролей</span>
-      <span class="pill pill--accent" id="u-time" role="timer" aria-live="off" aria-label="Осталось секунд" hidden>45</span></div>
-    <div class="stage" id="u-stage" style="touch-action:auto">
-      <div id="u-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
-      <div class="duel" id="u-main">
-        <div class="u-rivals" id="u-rivals"></div>
-        <div class="pass" id="u-pass" role="group" aria-label="Твой пароль"></div>
-        <div class="tray" id="u-tray"></div>
-        <div class="u-key" aria-hidden="true"><span><i class="t-me"></i>твои данные</span><span><i class="t-common"></i>частое</span><span><i class="t-word"></i>случайное</span><span><i class="t-num"></i>цифры</span><span><i class="t-sym"></i>знак</span></div>
-        <form class="u-own" id="u-own" autocomplete="off">
-          <label class="sr-only" for="u-own-in">Своё слово до 8 символов. Не вводи настоящий пароль</label>
-          <input id="u-own-in" maxlength="8" placeholder="Своё слово (не пароль)" enterkeyhint="done" autocapitalize="off" spellcheck="false">
-          <button class="btn" type="submit" aria-label="Добавить своё слово">+</button>
-        </form>
-        <div class="fort__actions"><button class="btn btn--main btn--wide" id="u-done">Готово</button></div>
+  <!-- ═════════ 8. СЕЙФ НА ДВОИХ ═════════ -->
+  <section class="game" id="g-safe" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Сейф на двоих</span>
+      <span class="pill pill--accent" id="s-time">3:00</span></div>
+    <div class="stage sf" id="s-stage">
+      <div class="sf-room" id="s-room" hidden></div>
+      <div class="sf-glow"></div>
+      <div class="sf-book" id="s-book" hidden></div>
+      <div class="overlay" id="s-start"></div>
+      <div class="overlay" id="s-end" hidden></div>
+    </div>
+    <div class="hint" id="s-hint">Нужны два телефона и один код</div>
+  </section>
+
+  <!-- ═════════ 9. САМОЗВАНЕЦ ═════════ -->
+  <section class="game" id="g-imp" hidden>
+    <div class="bar"><button class="back" data-close aria-label="Назад">‹</button><span class="bar__title">Самозванец</span>
+      <span class="pill pill--accent" id="i-round">1/3</span></div>
+    <div class="stage im" id="i-stage">
+      <div class="im-top"><div class="im-people" id="i-people"></div>
+        <div class="im-threat"><span>Самозванец у цели</span><div id="i-threat"><i></i><i></i><i></i></div><b id="i-lives" aria-label="Попытки">♥♥</b></div></div>
+      <div class="im-chat" id="i-chat" aria-live="polite"></div>
+      <div class="im-bar" id="i-bar"></div>
+      <div class="overlay" id="i-start">
+        <h2>Самозванец</h2>
+        <p>В чате класса один аккаунт взломали. Кто-то пишет от имени друга. Вычисли его, пока он не добился своего.</p>
+        <div class="chips"><span class="chip">рекорд: <b id="i-best">0</b></span><span class="chip">серия побед: <b id="i-streak">0</b></span><span class="chip" id="i-rank">Новичок</span></div>
+        <button class="btn btn--main btn--wide" id="i-go">Войти в чат</button>
       </div>
-      <div class="u-arena" id="u-arena" hidden role="region" aria-label="Взлом паролей">
-        <div class="u-robotrow">
-          <svg id="u-robot" viewBox="0 0 86 100" role="img" aria-label="Робот-взломщик">
-            <line x1="43" y1="6" x2="43" y2="18" stroke="#9fbcbb" stroke-width="3"/><circle cx="43" cy="6" r="5" fill="#ffc27a"/>
-            <rect x="16" y="18" width="54" height="40" rx="14" fill="#2b5662"/>
-            <circle cx="33" cy="38" r="7" fill="#e9f5f4"/><circle cx="53" cy="38" r="7" fill="#e9f5f4"/>
-            <circle cx="34" cy="39" r="3" fill="#0c1a1d"/><circle cx="54" cy="39" r="3" fill="#0c1a1d"/>
-            <rect x="22" y="62" width="42" height="30" rx="10" fill="#1f4049"/>
-            <text x="43" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#3fd0cc" font-family="monospace">0101</text>
-          </svg>
-        </div>
-        <div class="u-say" id="u-say" role="status"></div>
-        <div class="u-cols" id="u-cols"></div>
-        <button class="btn u-skip" id="u-skip" type="button">Показать сразу</button>
-      </div>
-      <form class="overlay" id="u-start" autocomplete="off">
-        <h2>Дуэль паролей</h2>
-        <p>Робот-взломщик читает профиль героя и сначала пробует то, что там нашёл. Собери пароль, который ему не по зубам.</p>
-        <div class="u-rules" aria-label="Правила пароля">
-          <div class="u-rule u-rule--no"><b>✕ Слабый пароль</b><span>имя, кличка, год или дата героя</span><span>123456, qwerty, пароль</span><span>одно короткое слово</span></div>
-          <div class="u-rule u-rule--ok"><b>✓ Крепкий пароль</b><span>4-5 случайных слов подряд, лучше с цифрой и знаком</span><span>длинный: чем длиннее, тем лучше</span><span>свой для каждого сайта</span></div>
-        </div>
-        <p class="u-warn" id="u-warn" role="note">Это игра: выдумай героя. Настоящие имя, год рождения и пароли не вводи.</p>
-        <p class="u-cap2">Профиль героя: это видно всем, и роботу тоже.</p>
-        <div class="u-fields">
-          <label class="u-field">Имя героя<input id="u-name" maxlength="10" placeholder="например, Зефирка" autocomplete="off" aria-describedby="u-warn"></label>
-          <label class="u-field">Питомец героя<input id="u-pet" maxlength="10" placeholder="например, Рекс" autocomplete="off" aria-describedby="u-warn"></label>
-          <label class="u-field">Число героя<input id="u-num" maxlength="4" inputmode="numeric" placeholder="любые цифры" autocomplete="off" aria-describedby="u-warn"></label>
-        </div>
-        <div class="row"><button type="button" class="btn" id="u-rand">Другой герой</button><button type="submit" class="btn btn--main" id="u-go">В дуэль</button></div>
-      </form>
-      <div class="overlay" id="u-end" hidden></div>
+      <div class="overlay" id="i-end" hidden></div>
     </div>
   </section>
+
 </div>
 
 <script>
@@ -765,6 +1004,13 @@ const snd = (() => {
     g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.09, t + 0.35); g.gain.linearRampToValueAtTime(0.0001, t + 1.1);
     n.connect(f); f.connect(g); g.connect(c.destination); n.start(t); n.stop(t + 1.2);
   }
+  function burst(d, f0, f1, q, v, at) {
+    if (!on) return; const c = ensure(); if (!c) return;
+    const t = c.currentTime + (at || 0), n = noiseSrc(c), f = c.createBiquadFilter(), g = c.createGain();
+    f.type = 'bandpass'; f.Q.value = q || 1; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + d);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v || 0.05, t + Math.min(0.03, d / 3)); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    n.connect(f); f.connect(g); g.connect(c.destination); n.start(t); n.stop(t + d + 0.05);
+  }
   return {
     get on() { return on; },
     set(v) { on = v; try { localStorage.setItem('echo.lab.sound', v ? '1' : '0'); } catch (e) {} if (!v) ambientStop(); else if (ambWant) ambientStart(ambWant); if (v) this.tap(); },
@@ -774,6 +1020,9 @@ const snd = (() => {
     wind: windGust,
     foot() { tone(110, 0.06, 'triangle', 0.025, 0, 70); },
     unlock() { ensure(); },
+    tone,
+    burst,
+    ctx() { return on ? ensure() : null; },
     tap() { tone(520, 0.05, 'sine', 0.07); },
     good() { tone(660, 0.09, 'sine', 0.1); tone(990, 0.14, 'sine', 0.1, 0.08); },
     bump() { tone(150, 0.09, 'square', 0.05, 0, 90); },
@@ -790,16 +1039,16 @@ document.addEventListener('click', (e) => { if (e.target.closest('.btn, .back, .
 
 // Правила каждой игры: три коротких шага
 const HOWTO = {
-  filter: ['Сообщения падают сверху. <b>Читай каждое.</b>', '<b>Развод</b> просит пароль, код или деньги и торопит. Нажми на него - он улетит в спам.', '<b>Обычное</b> (мама, друг, школа) не трогай. За ошибку теряешь очки.'],
+  filter: ['Ты смотритель ночной почты. В окно прилетают <b>письма</b> для твоих друзей.', '<b>Настоящее письмо</b> перетащи в ящик того, кому оно написано. Имя есть на конверте.', '<b>Развод</b> просит пароль, код или деньги, зовёт по ссылке, просит молчать. Его тащи на штамп <b>«Возврат»</b>.', 'Таймера нет, не спеши. За каждое верное письмо получаешь <b>марку</b> в альбом.'],
   detective: ['<b>Води пальцем</b> по столу. Лупа показывает мелочи, остальное в тени.', 'Нашёл то, по чему чужой найдёт человека? Нажми <b>«Это улика»</b>.', 'Есть и <b>безобидное</b>. Отметишь его, и погаснет лампа. Ламп три.', 'Не всё видно лупой. Пробуй <b>фонарик, резкость и свойства фото</b>.', 'Есть две подсказки. В конце соберёшь карту и закроешь лишнее стикерами.'],
-  fort: ['<b>Нажимай на блоки</b> внизу: из них строится пароль и растёт башня.', '<b>Розовые</b> (имя, год) и <b>серые</b> (qwerty) - слабые. Лучше всего несколько случайных слов.', 'Нажми <b>«Запустить робота»</b> и узнаешь, за сколько он взломает пароль.'],
   net: ['Сигнал летит вниз по трём дорожкам.', '<b>Нажми слева или справа</b> от него, чтобы перейти на соседнюю дорожку.', 'Выбирай ворота с <b>настоящим адресом</b> - подделку выдаёт одна буква. Три ошибки и конец.'],
   race: ['Веди <b>пультом</b> внизу: машинка едет туда, куда направишь.', 'Собирай слова <b>своего цвета</b>. Чужого цвета не трогай - затормозишь.', 'Соперники толкаются. Кто соберёт больше за 45 секунд, тот победил.'],
-  duel: ['Собери пароль из блоков за 45 секунд. Можно добавить своё слово.', '<b>Блоки с полосками и пунктиром</b> - слабые, робот знает их заранее. Лучше случайные слова.', 'Робот взломает все пароли. <b>Побеждает самый крепкий.</b>'],
+  safe: ['<b>Вас двое</b>, у каждого свой телефон. Экран друга подсматривать нельзя.', 'Один видит <b>замки</b>, но не знает, как их открыть. У второго <b>шпаргалка</b> с ответами, но сейф он не видит.', '<b>Говорите вслух:</b> один рассказывает, что видит, второй подсказывает, что нажать.', 'Нет напарника? Нажми <b>«Попробовать одному»</b>: и сейф, и шпаргалка будут у тебя.'],
+  imp: ['В чате класса четыре друга. Один аккаунт <b>взломали</b>: от имени друга пишет чужой.', 'Читай сообщения. Самозванец <b>торопит, просит код или деньги, зовёт по ссылке</b>.', 'Сомневаешься? Нажми на человека и <b>задай проверочный вопрос</b>. Уверен? Жми «Это самозванец».'],
   windows: ['Во двор приходят гости. <b>Друзья</b> с тёплым фонариком, <b>незнакомцы</b> без него.', '<b>Потяни штору</b> в сторону или нажми на окно: открыто всем, друзьям или закрыто.', 'Друзьям нужны фото и личка. Незнакомцам <b>ничего</b> не нужно. «Где я» лучше закрыть.', 'Гость с подписью <b>«0 общих»</b> не друг. Нажми на него, и его заблокируют.', 'Ветер сам приоткрывает шторы - успей закрыть. <b>Фонарь</b> показывает подписи гостей.'],
 };
 // Правила показываются по одному шагу на карточке: «Дальше», «Дальше», «Приступить»
-const START = { filter: '#f-go', detective: '#d-go', net: '#n-go', windows: '#w-go', race: '#r-go' };
+const START = { imp: '#i-go', filter: '#f-go', detective: '#d-go', net: '#n-go', windows: '#w-go', race: '#r-go' };
 
 const speakerSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" class="wave"/><path d="M16 9l5 6M21 9l-5 6" class="slash"/></svg>';
 function paintSound() { document.querySelectorAll('.snd').forEach((b) => { b.innerHTML = speakerSvg; b.classList.toggle('off', !snd.on); b.setAttribute('aria-pressed', String(snd.on)); }); }
@@ -841,6 +1090,37 @@ const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) {
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const games = {};
+// Общий опыт: каждая партия в любой игре двигает одно звание. Опыт дают и за
+// старание (доиграл до конца), и за результат, чтобы проигрыш не обнулял усилие.
+const RANKS = [[0, 'Новичок'], [60, 'Наблюдатель'], [150, 'Следопыт'], [280, 'Сыщик'], [450, 'Защитник'], [680, 'Страж сети'], [1000, 'Мастер Эха'], [1400, 'Легенда Эха']];
+const DAY_GAMES = ['imp', 'safe', 'race', 'filter', 'detective', 'net', 'windows'];
+const gameOfDay = () => DAY_GAMES[Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5) % DAY_GAMES.length];
+function rankInfo(xp) { let i = 0; while (i + 1 < RANKS.length && xp >= RANKS[i + 1][0]) i++; const n = RANKS[i + 1]; return { i, name: RANKS[i][1], from: RANKS[i][0], to: n ? n[0] : null, next: n ? n[1] : null }; }
+function confetti() {
+  const box = document.createElement('div'); box.className = 'confetti';
+  const cols = ['#3fd0cc', '#ffc27a', '#ff8fb1', '#a996ff', '#7fe0a6', '#fff'];
+  for (let k = 0; k < 28; k++) { const c = document.createElement('i'); c.style.cssText = `left:${Math.random() * 100}%;background:${cols[k % cols.length]};--dx:${(Math.random() * 120 - 60) | 0}px;--r:${(Math.random() * 900 - 450) | 0}deg;animation-delay:${Math.random() * 0.35}s`; box.appendChild(c); }
+  document.getElementById('phone').appendChild(box); setTimeout(() => box.remove(), 2300);
+}
+const nearLine = (score, best, rec) => rec ? (best > 0 ? `Прошлый рекорд был ${best}. Ты его побил!` : 'Первый результат записан. Попробуй побить его!') : best - score <= Math.max(10, best * 0.2) ? `До рекорда не хватило всего ${best - score + 1}!` : `Твой рекорд: ${best}. Каждая попытка приближает к нему`;
+let awarding = false, xpTimer = 0;
+function award(id, o) {
+  o = o || {};
+  const dbl = gameOfDay() === id, gain = (10 + (o.won ? 15 : 0) + (o.rec ? 10 : 0)) * (dbl ? 2 : 1);
+  const before = store.get('xp'), xp = before + gain; store.set('xp', xp);
+  const r = rankInfo(xp), up = r.i > rankInfo(before).i, el = document.getElementById('xp');
+  const pct = r.to ? Math.round((xp - r.from) / (r.to - r.from) * 100) : 100;
+  el.innerHTML = `<b>+${gain} опыта${dbl ? ' · игра дня ×2' : ''}</b><span>${up ? `Новое звание: ${r.name}!` : r.to ? `${r.name} · до звания «${r.next}» ещё ${r.to - xp}` : `${r.name} · высшее звание`}</span><div class="xp__bar"><i style="width:${up ? 0 : Math.max(0, pct - 12)}%"></i></div>`;
+  el.hidden = true; void el.offsetWidth; el.classList.toggle('up', up); el.hidden = false;
+  setTimeout(() => { const b = el.querySelector('i'); if (b) b.style.width = pct + '%'; }, 60);
+  clearTimeout(xpTimer); xpTimer = setTimeout(() => { el.hidden = true; }, up ? 5200 : 3800);
+  if (up || o.rec) confetti();
+  if (up) { awarding = true; setTimeout(() => { snd.win(); awarding = false; }, 500); }
+}
+// «Окна» не правим: опыт за них начисляется по их же звуку финала
+{ const w = snd.win, l = snd.lose;
+  snd.win = function () { w.call(snd); if (!awarding && current === 'windows') award('windows', { won: true }); };
+  snd.lose = function () { l.call(snd); if (current === 'windows') award('windows', { won: false }); }; }
 // Короткая видимая подсказка: ошибки действий видны не только скринридеру
 function flashMsg(parent, text) {
   if (!parent) return;
@@ -872,150 +1152,470 @@ function open(id) {
 const direct = new URLSearchParams(location.search).get('game');
 function close() {
   if (!current) return;
-  document.getElementById('howto').hidden = true;
+  document.getElementById('howto').hidden = true; document.getElementById('xp').hidden = true;
   games[current].leave && games[current].leave();
   $('#g-' + current).hidden = true;
   current = null;
   if (direct && window.parent !== window) window.parent.postMessage({ echoLab: 'exit' }, location.origin);
 }
 
-/* ══════════ 1. ФИЛЬТР ══════════ */
+/* ══════════ 1. НОЧНАЯ ПОЧТА ══════════ */
 (() => {
-  const MSG = [
-    { f: 'Неизвестный', t: 'Ты выиграл iPhone 16! Забери по ссылке за 10 минут', s: 1, why: 'Ты ничего не разыгрывал, а таймер торопит.' },
-    { f: 'Мама', t: 'Буду в 7, суп в холодильнике', s: 0 },
-    { f: 'Поддержка Roblox', t: 'Пришли пароль, начислим 5000 робуксов', s: 1, why: 'Настоящая поддержка никогда не просит пароль.' },
-    { f: 'Лёша', t: 'Го в майн после уроков?', s: 0 },
-    { f: 'Неизвестный', t: 'Тут твоё фото выложили, глянь: bit.ly/x7f', s: 1, why: 'Пугают, чтобы ты открыл ссылку не думая.' },
-    { f: 'Классный чат', t: 'Завтра физра, не забудьте форму', s: 0 },
-    { f: 'Аня', t: 'Скинь код из смс, он мне по ошибке пришёл на твой номер', s: 1, why: 'Код из смс - ключ от аккаунта. Его не отдают никому, даже друзьям.' },
-    { f: 'Папа', t: 'Забери брата из сада, я задерживаюсь', s: 0 },
-    { f: 'Steam', t: 'Ваш аккаунт заблокируют через час. Войдите тут', s: 1, why: 'Угроза, спешка и чужая ссылка сразу.' },
-    { f: 'Бабушка', t: 'Позвони, как будет время', s: 0 },
-    { f: 'Незнакомка', t: 'Привет) давай дружить, только никому не говори', s: 1, why: '«Никому не говори» с первого сообщения от незнакомца.' },
-    { f: 'Тренер', t: 'Тренировка переносится на 17:00', s: 0 },
-    { f: 'Банк', t: 'Подтвердите карту родителей, иначе спишем 3000 ₽', s: 1, why: 'Банк не пишет детям и не угрожает списаниями.' },
-    { f: 'Лёша', t: 'Смотри какой кот ахаха', s: 0 },
-    { f: 'Дима', t: 'Ты завтра идёшь на кружок?', s: 0 },
-    { f: 'Саша', t: 'Спасибо, что помог с задачей!', s: 0 },
-    { f: 'Блогер', t: 'Раздаю скины! Нужен только твой логин и пароль', s: 1, why: 'Подарок, за который надо отдать пароль, это кража.' },
-    { f: 'Дима', t: 'Дз по алгебре скинешь?', s: 0 },
-    { f: 'Неизвестный', t: 'Заработок 5000 в день, нужна только карта мамы', s: 1, why: 'Лёгкие деньги и чужая карта - всегда развод.' },
-    { f: 'Школа', t: 'Родительское собрание в четверг', s: 0 },
-    { f: 'Друг друга', t: 'Проголосуй за меня, войди через ВК по ссылке', s: 1, why: 'Фальшивое голосование ворует аккаунты ВК.' },
-    { f: 'Сестра', t: 'Возьми мне булку по дороге', s: 0 },
-    { f: 'Telegram', t: 'Premium в подарок! Активируй по номеру телефона', s: 1, why: 'Подарок от «Telegram» в личке почти всегда фейк.' },
-    { f: 'Саша', t: 'Ты на концерт идёшь в субботу?', s: 0 },
-    { f: 'Неизвестный', t: 'Для приза нужно фото паспорта родителей, пришли сюда', s: 1, why: 'Документы родителей не отправляют никому и никуда.' },
-    { f: 'Мама', t: 'Ты где? Позвони', s: 0 },
+  // Смотритель почты разбирает письма: настоящие кладёт в ящик адресата,
+  // развод отбивает штампом «Возврат». Таймера нет: если не успеваешь,
+  // письма просто копятся в стопке.
+  const FRIENDS = ['Лёша', 'Дима', 'Саша', 'Миша', 'Женя', 'Паша', 'Катя', 'Аня', 'Соня', 'Вика'];
+  const REAL = [
+    ['Бабушка', 'Приезжай в субботу, испеку твой любимый пирог с яблоками.'],
+    ['Мама', 'Суп в холодильнике, разогрей. Буду дома к семи.'],
+    ['Тренер', 'Тренировка завтра в 16:00. Не забудь форму и воду.'],
+    ['Классная', 'В пятницу экскурсия в музей. Сбор у школы в 9:00.'],
+    ['Библиотека', 'Книга, которую ты ждёшь, пришла. Можно забрать до пятницы.'],
+    ['Кружок рисования', 'Занятие переносится на четверг. Краски дадим на месте.'],
+    ['Друг со двора', 'Выходи гулять после уроков, мы будем на площадке.'],
+    ['Папа', 'Заберу тебя из школы в три. Жди у главного входа.'],
+    ['Дедушка', 'Велосипед починен. Приходи, покатаемся в выходные.'],
+    ['Сосед по парте', 'Принеси завтра тетрадь по матеше, сверим ответы.'],
+    ['Музыкальная школа', 'Концерт в воскресенье в 12:00. Приходи с родителями.'],
+    ['Тётя', 'Передай маме привет. Жду вас в гости на каникулах.'],
   ];
-  const stage = $('#f-stage');
-  let bubs = [], raf = 0, last = 0, t0 = 0, spawnAt = 0, score = 0, combo = 1, running = false, missed = [], deck = [], paused = false, pausedAt = 0;
-  const DURATION = 60000;
-  $('#f-best').textContent = store.get('filter');
+  const REAL_URG = [
+    ['Мама', 'Срочно позвони мне, когда выйдешь из школы. Жду.'],
+    ['Классная', 'Срочно: завтра первым уроком контрольная. Повторите дроби.'],
+    ['Тренер', 'Срочно! Игра перенесена на сегодня, сбор в 17:00 в зале.'],
+    ['Папа', 'Срочно возьми зонт, вечером обещают ливень.'],
+  ];
+  const SCAM = [
+    ['Служба поддержки игры', 'Ваш аккаунт заблокируют. Назовите пароль, и мы всё исправим.', 'Настоящая поддержка никогда не просит пароль.', 0],
+    ['Розыгрыш призов', 'Вы выиграли телефон! Оплатите доставку 200 рублей по ссылке.', 'Ты ни в чём не участвовал, а за «приз» просят деньги.', 0],
+    ['Неизвестный номер', 'Привет, это я с нового номера. Срочно переведи 500 рублей, потом объясню.', 'Чужой номер, спешка и сразу просьба о деньгах.', 1],
+    ['Банк', 'Ваша карта заблокирована. Сообщите код из СМС для разблокировки.', 'Банк никогда не спрашивает коды из СМС.', 1],
+    ['Курьерская служба', 'Посылка ждёт. Перейдите на posilka-top.ru и введите данные карты.', 'Незнакомая ссылка и просьба ввести данные карты.', 0],
+    ['Админ сервера', 'Дарим 1000 монет! Введи логин и пароль на free-coins.top.', 'Подарки за пароль не раздают. И сайт незнакомый.', 0],
+    ['Новый знакомый', 'Давай дружить. Только никому не говори, что мы переписываемся.', 'Просьба хранить секрет от взрослых - тревожный знак.', 0],
+    ['Школьный опрос', 'Пройди опрос и получи пятёрки. Нужны логин и пароль от дневника.', 'Оценки за опросы не ставят. Им нужен твой пароль.', 0],
+    ['Магазин скинов', 'Только сегодня! Скидка сгорит через 10 минут. Переведи 150 рублей.', 'Таймер торопит, чтобы ты не успел подумать.', 1],
+    ['Техподдержка', 'Мы заметили вход с другого устройства. Продиктуйте код подтверждения.', 'Код подтверждения нельзя говорить никому.', 0],
+  ];
+  // Развод, который притворяется знакомым: появляется с третьего вечера
+  const SCAM_LOOK = [
+    ['Мама (новый номер)', 'Это мама, я потеряла телефон. Скинь код, который сейчас придёт.', 'Мама не станет просить код. Перезвони ей на старый номер.', 0],
+    ['Друг со двора', 'Проголосуй за меня: vote-top.ru. Вход через твой аккаунт.', 'Аккаунт друга могли взломать. Ссылка просит твой вход.', 0],
+    ['Классная', 'Срочно сдаём по 300 рублей на подарок. Переведи мне на карту сегодня.', 'Учитель не собирает деньги у детей в переписке. Спроси у родителей.', 1],
+    ['Бабушка', 'Внучек, мне нужна помощь. Купи подарочную карту и пришли её код.', 'Просьба купить карту и прислать код - частая уловка. Позвони бабушке.', 0],
+  ];
+  const LV = [
+    { name: 'Тихий вечер', note: 'Писем мало. Кот подскажет: он дёргает хвостом, если письмо подозрительное.', n: 6, scam: 2, pace: 9000, w: 'clear', urg: 0, look: 0, cat: true },
+    { name: 'Дождь', note: 'Писем больше. Осторожно: «срочно» бывает и на настоящих письмах.', n: 8, scam: 3, pace: 7000, w: 'rain', urg: 2, look: 0 },
+    { name: 'Ветер', note: 'Письма летят чаще и копятся в стопке. Появился развод «от знакомых».', n: 10, scam: 4, pace: 5200, w: 'wind', urg: 2, look: 1 },
+    { name: 'Туман', note: 'Развод маскируется лучше. Читай каждое письмо до конца.', n: 11, scam: 5, pace: 4600, w: 'fog', urg: 2, look: 2 },
+    { name: 'Первый снег', note: 'Самый длинный вечер. Все уловки сразу.', n: 13, scam: 6, pace: 4000, w: 'snow', urg: 3, look: 3 },
+  ];
+  const SKY = { clear: ['#5b4a9a', '#c9739a', '#f4a57a'], rain: ['#343a56', '#4f5676', '#747b98'], wind: ['#2e2a5a', '#6a4a8a', '#c97a8a'], fog: ['#4a5068', '#78809a', '#a7adba'], snow: ['#141838', '#272d5e', '#4f5590'] };
+  const STAMPS = [
+    ['Звезда', '#e0a22a', '<path d="M10 2l2.4 5 5.6.6-4.2 3.8 1.2 5.6L10 14.2 5 17l1.2-5.6L2 7.6l5.6-.6z"/>'],
+    ['Сердце', '#e0567f', '<path d="M10 17S3 12.5 3 7.8A3.8 3.8 0 0 1 10 6a3.8 3.8 0 0 1 7 1.8C17 12.5 10 17 10 17z"/>'],
+    ['Луна', '#7f6ad6', '<path d="M14 3a7.5 7.5 0 1 0 3 12A6.5 6.5 0 0 1 14 3z"/>'],
+    ['Солнце', '#f08a2a', '<circle cx="10" cy="10" r="5"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'],
+    ['Домик', '#3f8fd0', '<path d="M3 10l7-6 7 6v7H3z"/>'],
+    ['Ёлка', '#2f9a5f', '<path d="M10 2l5 6h-3l4 5h-4.5v4h-3v-4H4l4-5H5z"/>'],
+    ['Рыбка', '#2aa6b8', '<path d="M2 10c3-5 9-5 12 0-3 5-9 5-12 0z"/><path d="M14 10l4-3.5v7z"/>'],
+    ['Кораблик', '#3a6fd8', '<path d="M3 13h14l-2.5 4h-9z"/><path d="M10 3v9H5z"/>'],
+    ['Цветок', '#d95a96', '<circle cx="10" cy="6" r="3"/><circle cx="6" cy="10" r="3"/><circle cx="14" cy="10" r="3"/><circle cx="10" cy="14" r="3"/>'],
+    ['Облако', '#6f9ac8', '<path d="M6 15a4 4 0 0 1 .5-8 5 5 0 0 1 9.3 1.5A3.3 3.3 0 0 1 15 15z"/>'],
+    ['Ключ', '#c98a2a', '<circle cx="6.5" cy="10" r="3.5"/><path d="M10 9h8v2h-2v2h-2v-2h-4z"/>'],
+    ['Чашка', '#a56ac0', '<path d="M4 6h10v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M14 8h1.5a2 2 0 0 1 0 4H14" fill="none" stroke="currentColor" stroke-width="1.6"/>'],
+    ['Воздушный змей', '#d8484f', '<path d="M10 2l6 6-6 9-6-9z"/>'],
+    ['Колокольчик', '#c9962a', '<path d="M10 2a5 5 0 0 1 5 5v5l2 3H3l2-3V7a5 5 0 0 1 5-5z"/><circle cx="10" cy="17" r="1.6"/>'],
+    ['Лист', '#5aa83f', '<path d="M4 16C4 8 9 3 17 3c0 8-5 13-13 13z"/>'],
+    ['Кот', '#d08a4a', '<path d="M4 4l3 3h6l3-3v8a6 6 0 0 1-12 0z"/>'],
+  ];
+  const GOLD = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#fff3c4" stroke="#8a5a1a" stroke-width="1.2"/><text x="10" y="14" font-size="11" font-weight="800" fill="#8a5a1a" text-anchor="middle">Э</text></svg>';
+  const stampSvg = (i) => `<svg viewBox="0 0 20 20" style="color:${STAMPS[i][1]};fill:${STAMPS[i][1]}" aria-hidden="true">${STAMPS[i][2]}</svg>`;
+  const SEALS = ['#c9304a', '#3a6fd8', '#2f9a5f', '#a56ac0', '#c98a2a'];
+  const MB = [0, 1, 2].map((i) => ({ x: 22 + i * 106, y: 226, w: 104, h: 100 })), RET = { x: 250, y: 432, w: 104, h: 122 }, WIN = { x: 92, y: 112 };
 
-  function start() {
-    $('#f-start').hidden = true; $('#f-end').hidden = true;
-    bubs.forEach((b) => b.el.remove()); bubs = [];
-    score = 0; combo = 1; missed = []; deck = shuffle(MSG); running = true; paused = false;
-    $('#f-score').textContent = '0';
-    $('#f-hint').textContent = 'Комбо растёт, если не ошибаешься';
-    t0 = last = performance.now(); spawnAt = t0 + 300;
-    raf = requestAnimationFrame(tick);
+  const stage = $('#p-stage'), box = $('#p-box'), sceneEl = $('#p-scene'), letter = $('#p-letter'), noteEl = $('#p-note'), startEl = $('#f-start'), endEl = $('#f-end');
+  let lv = 0, L = LV[0], names = [], deck = [], cur = null, pile = [], total = 0, done = 0, score = 0, mistakes = 0, okReal = 0, okScam = 0, totReal = 0, totScam = 0, stacks = [0, 0, 0];
+  let busy = false, running = false, paused = false, k = 1, nextAt = 0, loop = 0, newStamps = [], noteT = 0, drag = null, clkOff = 0, calDay = 1, lampOn = true, curClosed = false;
+  const maxLv = () => Math.min(LV.length, Math.max(1, store.get('post_lv')));
+  const T = (...a) => snd.tone && snd.tone(...a);
+  const sfx = {
+    arrive() { [0, 0.07, 0.14].forEach((d, i) => T(900 - i * 120, 0.05, 'triangle', 0.03, d, 500)); T(1320, 0.3, 'sine', 0.05, 0.3); T(1980, 0.35, 'sine', 0.03, 0.32); },
+    drop() { T(190, 0.09, 'sine', 0.15, 0, 110); T(120, 0.13, 'sine', 0.1, 0.06, 80); T(880, 0.18, 'sine', 0.05, 0.14); },
+    thud() { T(90, 0.17, 'sine', 0.24, 0, 48); T(1500, 0.02, 'square', 0.03); },
+    fly() { T(480, 0.3, 'triangle', 0.045, 0, 1150); },
+    purr() { for (let i = 0; i < 7; i++) T(46, 0.09, 'sawtooth', 0.028, i * 0.11); },
+    soft() { T(300, 0.26, 'triangle', 0.07, 0, 210); },
+    stamp() { T(1047, 0.16, 'sine', 0.06); T(1568, 0.25, 'sine', 0.05, 0.1); },
+    done() { [523, 659, 784, 1047].forEach((f, i) => T(f, 0.5, 'sine', 0.07, i * 0.16)); },
+    tick() { T(2000, 0.012, 'square', 0.018); },
+    chime() { T(659, 1.4, 'sine', 0.06); T(1318, 1, 'sine', 0.03); T(1976, 0.6, 'sine', 0.015); T(523, 1.6, 'sine', 0.05, 0.45); T(1046, 1.1, 'sine', 0.025, 0.45); },
+    paper() { snd.burst(0.2, 2200, 6000, 0.9, 0.06); snd.burst(0.12, 3500, 7000, 1.2, 0.04, 0.16); T(240, 0.08, 'triangle', 0.025, 0.02, 150); },
+    curtain(close) { snd.burst(0.6, close ? 500 : 1500, close ? 1500 : 500, 0.7, 0.05); for (let i = 0; i < 3; i++) T(3000 + i * 500, 0.05, 'sine', 0.015, 0.1 + i * 0.07); },
+    lamp(on) { T(on ? 1400 : 1000, 0.025, 'square', 0.05); T(on ? 800 : 600, 0.05, 'square', 0.035, 0.035); if (on) T(110, 0.6, 'sine', 0.012, 0.1); },
+    bell() { T(1760, 1.2, 'sine', 0.055); T(2637, 0.9, 'sine', 0.025); T(3520, 0.5, 'sine', 0.012); },
+    sip() { T(240, 0.2, 'sine', 0.05, 0.05, 140); T(170, 0.12, 'sine', 0.05, 0.28, 110); T(2300, 0.04, 'sine', 0.025); },
+    rustle() { snd.burst(0.35, 3200, 1500, 0.6, 0.035); },
+    thump() { T(120, 0.14, 'sine', 0.2, 0, 60); snd.burst(0.1, 900, 300, 0.8, 0.04); },
+  };
+
+  /* Сцена */
+  function weatherSvg(w) {
+    const out = [];
+    if (w === 'clear') { for (let i = 0; i < 9; i++) out.push(`<circle class="np-star" style="animation-delay:${i * 0.37}s" cx="${32 + (i * 53) % 122}" cy="${46 + (i * 29) % 44}" r="${i % 3 ? 1 : 1.5}" fill="#fff7e8"/>`); out.push('<circle cx="126" cy="150" r="17" fill="#ffe0a3"/><circle cx="126" cy="150" r="26" fill="#ffe0a3" opacity=".25"/>'); }
+    if (w === 'rain') { out.push('<g class="np-cloud"><ellipse cx="60" cy="62" rx="34" ry="12" fill="#8a90ac" opacity=".6"/></g><g class="np-rain" stroke="#c9d4ee" stroke-width="1.4" stroke-linecap="round" opacity=".7">'); for (let i = 0; i < 16; i++) out.push(`<line style="animation-delay:${-(i * 0.09).toFixed(2)}s" x1="${30 + (i * 37) % 128}" y1="${34 + (i * 23) % 120}" x2="${27 + (i * 37) % 128}" y2="${46 + (i * 23) % 120}"/>`); out.push('</g>'); }
+    if (w === 'wind') { out.push('<circle cx="124" cy="74" r="13" fill="#fff3d6"/><g class="np-cloud"><ellipse cx="40" cy="70" rx="30" ry="9" fill="#c9a6c9" opacity=".7"/></g><g class="np-cloud" style="animation-duration:14s;animation-delay:-6s"><ellipse cx="30" cy="104" rx="24" ry="7" fill="#e0b6c9" opacity=".6"/></g>'); for (let i = 0; i < 3; i++) out.push(`<path class="np-leaf" style="animation-delay:${-i * 1.1}s" d="M26 ${70 + i * 30}q5-6 10 0q-5 6-10 0z" fill="#e8a05a"/>`); }
+    if (w === 'fog') { out.push('<circle cx="120" cy="76" r="15" fill="#f3f0e0" opacity=".7"/><g class="np-fog"><ellipse cx="70" cy="120" rx="80" ry="16" fill="#fff" opacity=".28"/><ellipse cx="110" cy="158" rx="80" ry="18" fill="#fff" opacity=".32"/></g>'); }
+    if (w === 'snow') { out.push('<path d="M128 60a15 15 0 1 0 6 23a12 12 0 0 1-6-23z" fill="#fff3d6"/>'); for (let i = 0; i < 7; i++) out.push(`<circle class="np-star" style="animation-delay:${i * 0.4}s" cx="${32 + (i * 47) % 120}" cy="${44 + (i * 31) % 40}" r="1" fill="#fff"/>`); out.push('<g class="np-snow" fill="#fff">'); for (let i = 0; i < 16; i++) out.push(`<circle style="animation-delay:${-(i * 0.39).toFixed(2)}s" cx="${28 + (i * 41) % 130}" cy="${20 + (i * 17) % 30}" r="${i % 3 ? 1.6 : 2.3}" opacity=".9"/>`); out.push('</g>'); }
+    return out.join('');
   }
-  function spawn() {
-    if (!deck.length) deck = shuffle(MSG);
-    const m = deck.pop();
-    const el = document.createElement('div');
-    el.className = 'bub';
-    el.innerHTML = `<small>${esc(m.f)}</small>${esc(m.t)}`;
-    stage.appendChild(el);
-    const W = stage.clientWidth, bw = el.offsetWidth;
-    const x = 10 + Math.random() * Math.max(0, W - bw - 20);
-    const b = { el, m, x, y: -el.offsetHeight - 10, h: el.offsetHeight, done: false };
-    el.style.transform = `translate(${x}px, ${b.y}px)`;
-    el.addEventListener('pointerdown', (e) => { e.preventDefault(); hit(b); });
-    bubs.push(b);
+  function sceneSvg() {
+    calDay = lv + 1; clkOff = 0; lampOn = true; curClosed = false; stage.classList.remove('lampoff');
+    const s = SKY[L.w], town = L.w === 'snow' ? '#20264e' : L.w === 'fog' ? '#6a7086' : '#352a55';
+    const boxes = [0, 1, 2].map((i) => { const x = 24 + i * 106; return `<rect x="${x}" y="232" width="100" height="90" rx="7" fill="#2e1d15"/><rect x="${x}" y="232" width="100" height="10" rx="5" fill="#1d120c" opacity=".7"/>
+      <circle id="p-glow${i}" cx="${x + 50}" cy="249" r="15" fill="#ffd98a" opacity="0"/><circle id="p-lamp${i}" cx="${x + 50}" cy="249" r="6" fill="#5a4a3a" stroke="#3a2518" stroke-width="1.5"/>
+      <rect x="${x + 10}" y="262" width="80" height="22" rx="4" fill="#d9b36a" stroke="#8a6a2a" stroke-width="1"/><circle cx="${x + 15}" cy="273" r="1.6" fill="#8a6a2a"/><circle cx="${x + 85}" cy="273" r="1.6" fill="#8a6a2a"/>
+      <text x="${x + 50}" y="277.500" font-size="12.500" font-weight="800" fill="#3a2518" text-anchor="middle">${names[i]}</text><g id="p-stack${i}"></g>`; }).join('');
+    return `<svg viewBox="0 0 360 600" aria-hidden="true">
+      <defs><linearGradient id="npSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s[0]}"/><stop offset=".6" stop-color="${s[1]}"/><stop offset="1" stop-color="${s[2]}"/></linearGradient>
+      <linearGradient id="npWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2346"/><stop offset="1" stop-color="#3a2f5c"/></linearGradient>
+      <linearGradient id="npWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f5e3d"/><stop offset="1" stop-color="#54341f"/></linearGradient>
+      <radialGradient id="npCone" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#ffd98a" stop-opacity=".34"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+      <clipPath id="npGlass"><rect x="26" y="38" width="134" height="156" rx="4"/></clipPath></defs>
+      <rect width="360" height="372" fill="url(#npWall)"/>
+      <g stroke="#fff" stroke-opacity=".035" stroke-width="10">${[30, 78, 126, 174, 222, 270, 318].map((x) => `<line x1="${x}" y1="0" x2="${x}" y2="372"/>`).join('')}</g>
+      <rect x="0" y="210" width="360" height="5" fill="#1e1836" opacity=".6"/>
+      <!-- окно -->
+      <rect x="18" y="30" width="150" height="172" rx="10" fill="#17122a"/>
+      <g clip-path="url(#npGlass)"><rect x="26" y="38" width="134" height="156" fill="url(#npSky)"/>${weatherSvg(L.w)}
+        <path d="M26 194V166l18-12 14 9 20-18 22 20 16-10 22 14 22-9v34z" fill="${town}"/>
+        ${[[40, 170], [62, 176], [84, 160], [106, 174], [124, 168], [146, 178]].map((p, i) => `<rect x="${p[0]}" y="${p[1]}" width="5" height="6" fill="#ffd98a" opacity="${i % 2 ? 0.9 : 0.6}"/>`).join('')}
+        ${L.w === 'snow' ? '<path d="M26 194v-6q30-6 67 0t67-2v8z" fill="#e9eefc"/>' : ''}</g>
+      <rect x="91" y="38" width="4" height="156" fill="#17122a"/><rect x="26" y="112" width="134" height="4" fill="#17122a"/>
+      <g clip-path="url(#npGlass)"><g id="p-win"><g class="np-panl"><rect x="26" y="38" width="71" height="156" fill="#b5587a"/>${[0, 1, 2, 3, 4].map((i) => `<rect x="${26 + 8 + i * 14}" y="38" width="7" height="156" fill="#fff" opacity=".08"/><path d="M${26 + 4 + i * 14} 38V194" stroke="#7a3550" stroke-width="2" opacity=".5"/>`).join('')}<rect x="26" y="38" width="71" height="10" fill="#8a3f58" opacity=".5"/></g><g class="np-panr"><rect x="90" y="38" width="70" height="156" fill="#a84f6e"/>${[0, 1, 2, 3, 4].map((i) => `<rect x="${90 + 8 + i * 14}" y="38" width="7" height="156" fill="#fff" opacity=".08"/><path d="M${90 + 4 + i * 14} 38V194" stroke="#7a3550" stroke-width="2" opacity=".5"/>`).join('')}<rect x="90" y="38" width="70" height="10" fill="#8a3f58" opacity=".5"/></g></g></g>
+      <path d="M16 24q20 90-6 184h26q16-92 6-184z" fill="#a84f6e"/><path d="M26 30q10 80-6 170" stroke="#8a3f58" stroke-width="2" fill="none"/>
+      <path d="M170 24q-20 90 6 184h-26q-16-92-6-184z" fill="#a84f6e"/><path d="M160 30q-10 80 6 170" stroke="#8a3f58" stroke-width="2" fill="none"/>
+      <rect x="8" y="20" width="170" height="8" rx="4" fill="#8a5a3c"/><circle cx="10" cy="24" r="6" fill="#c9962a"/><circle cx="176" cy="24" r="6" fill="#c9962a"/>
+      <rect x="10" y="200" width="166" height="11" rx="3" fill="#9a6a48"/><rect x="10" y="209" width="166" height="3" fill="#5e3b27"/>
+      <rect data-act="cur" x="8" y="18" width="172" height="190" fill="transparent"/>
+      <g class="np-plant" data-act="plant"><path d="M134 200v-12h22v12z" fill="#c9734a"/><path d="M145 188c-8-10-14-10-16-20 8 2 13 6 16 14 0-10 4-16 12-20 1 10-3 18-10 26z" fill="#5aa85f"/><path d="M145 188c2-8 0-14-4-18" stroke="#3f8a4a" stroke-width="1.500" fill="none"/><rect x="126" y="160" width="36" height="42" fill="transparent"/></g>
+      <!-- лампа, часы, календарь, карта -->
+      <g data-act="lamp"><rect x="263" y="0" width="2" height="30" fill="#17122a"/><path d="M240 54q24-34 48 0z" fill="#c98a2a"/><path d="M240 54h48v4h-48z" fill="#8a5a1a"/><rect x="234" y="12" width="60" height="56" fill="transparent"/></g>
+      <g class="np-flick" id="p-cone" pointer-events="none"><ellipse cx="264" cy="60" rx="9" ry="6" fill="#fff3c4"/><path d="M240 58L150 372h228L288 58z" fill="url(#npCone)"/></g>
+<g data-act="clock">      <circle cx="212" cy="104" r="23" fill="#f3e7cf" stroke="#8a5a3c" stroke-width="4"/>${[0, 90, 180, 270].map((a) => `<rect x="211" y="85" width="2" height="5" fill="#8a5a3c" transform="rotate(${a} 212 104)"/>`).join('')}
+      <rect id="p-hh" x="210.500" y="92" width="3" height="13" rx="1.500" fill="#3a2518"/><rect id="p-mh" x="211.200" y="87" width="1.600" height="18" rx=".8" fill="#b3402e"/><circle cx="212" cy="104" r="2.400" fill="#3a2518"/><circle cx="212" cy="104" r="28" fill="transparent"/></g>
+      <g data-act="cal"><g id="p-calpage"><rect x="296" y="84" width="48" height="56" rx="4" fill="#fff7e8"/><rect x="296" y="84" width="48" height="15" rx="4" fill="#c9304a"/><rect x="296" y="94" width="48" height="5" fill="#c9304a"/>
+      <text x="320" y="95.500" font-size="8.500" font-weight="800" fill="#fff" text-anchor="middle">ВЕЧЕР</text><text id="p-calnum" x="320" y="130" font-size="27" font-weight="800" fill="#3a2518" text-anchor="middle">${calDay}</text></g><rect x="296" y="84" width="48" height="56" fill="transparent"/></g>
+      <rect x="192" y="146" width="92" height="52" rx="3" fill="#8a5a3c"/><rect x="196" y="150" width="84" height="44" fill="#e9dcc0"/><path d="M204 184q14-22 28-10t24-14 16 6" fill="none" stroke="#b3402e" stroke-width="1.600" stroke-dasharray="3 3"/><circle cx="204" cy="184" r="3" fill="#3a6fd8"/><path d="M272 160c-4 0-6 3-6 6 0 4 6 9 6 9s6-5 6-9c0-3-2-6-6-6z" fill="#c9304a"/>
+      <g class="np-parcel" data-act="parcel"><rect x="298" y="176" width="20" height="22" rx="2" fill="#c99a68"/><path d="M298 187h20M308 176v22" stroke="#8a6a48" stroke-width="1.500"/><rect x="322" y="166" width="24" height="32" rx="2" fill="#b0855a"/><path d="M322 182h24M334 166v32" stroke="#7a5a3a" stroke-width="1.500"/><rect x="296" y="164" width="52" height="36" fill="transparent"/></g><rect x="292" y="198" width="60" height="5" rx="2" fill="#8a5a3c"/>
+      <!-- ящики друзей -->
+      <rect x="14" y="222" width="332" height="108" rx="10" fill="#6b4630"/><rect x="14" y="222" width="332" height="6" rx="3" fill="#8f6444"/>${boxes}
+      <!-- стойка -->
+      <rect x="0" y="372" width="360" height="228" fill="url(#npWood)"/><rect x="0" y="364" width="360" height="12" rx="3" fill="#a8734c"/><rect x="0" y="374" width="360" height="4" fill="#3a2518" opacity=".35"/>
+      <g stroke="#3a2518" stroke-opacity=".14" stroke-width="2" fill="none"><path d="M0 420q90-10 180 0t180-4"/><path d="M0 500q120 10 200 0t160 6"/><path d="M0 570q80-8 170 0t190-6"/></g>
+      <!-- кот -->
+      <g class="np-cat" id="p-cat">
+        <ellipse cx="86" cy="373" rx="72" ry="5" fill="#000" opacity=".22"/>
+        <g class="np-tail"><path d="M126 368C150 373 163 357 157 342C154 335 147 337 149 345" fill="none" stroke="#e8a15f" stroke-width="9" stroke-linecap="round"/><path d="M137 370l1-8M146 365l5-6M154 356l7-2" stroke="#b86f34" stroke-width="2.400" stroke-linecap="round" fill="none" opacity=".8"/><circle cx="149" cy="345" r="4.600" fill="#7a4a24"/></g>
+        <g class="np-breath">
+          <path d="M44 368C38 350 56 335 82 334C108 333 130 342 132 360C133 368 130 372 124 372L52 372C47 372 45 370 44 368Z" fill="#efae72"/>
+          <path d="M60 338q4 9 2 19M76 335q5 10 3 21M94 335q6 9 4 20M110 339q5 8 3 16" stroke="#d98f4a" stroke-width="3.200" stroke-linecap="round" fill="none"/>
+          <ellipse cx="111" cy="358" rx="20" ry="14.500" fill="#f3b87a" stroke="#d98f4a" stroke-width="1.200"/>
+          <path d="M101 350q6 8 4 16M113 349q6 8 5 15" stroke="#d98f4a" stroke-width="2.200" fill="none" stroke-linecap="round" opacity=".7"/>
+          <ellipse cx="123" cy="370" rx="10" ry="4.400" fill="#fadcae" stroke="#d98f4a" stroke-width="1"/><path d="M119 368.500v3.500M123 368v4M127 368.500v3.500" stroke="#d98f4a" stroke-width=".9"/>
+        </g>
+        <path d="M24 356L44 356L47 371L20 371C16 371 17 364 24 356Z" fill="#f3b87a"/>
+        <ellipse cx="31" cy="370" rx="12" ry="5" fill="#fadcae" stroke="#d98f4a" stroke-width="1.100"/><ellipse cx="50" cy="371.500" rx="11" ry="4.600" fill="#f6cf9c" stroke="#d98f4a" stroke-width="1.100"/>
+        <path d="M25 367.500v4.500M30 367v5M35 367.500v4.500M44 369v4M49 368.500v5M54 369v4" stroke="#d98f4a" stroke-width=".9" opacity=".8" stroke-linecap="round"/>
+        <g class="np-head">
+          <path class="np-ear2" d="M40 337L52 323L54 345Z" fill="#f3b87a"/><path d="M44 337L51 329L51.500 341Z" fill="#f7c9d1"/>
+          <path d="M23 344L24 323L36 336Z" fill="#f3b87a"/><path d="M26 340L26.500 328L33 336Z" fill="#f7c9d1"/>
+          <path d="M23 350L17 354L24 357Z M53 350L59 354L52 357Z" fill="#f3b87a"/>
+          <ellipse cx="38" cy="350" rx="16" ry="14" fill="#f3b87a"/>
+          <path d="M33 338l1 5M38 337v6M43 338l-1 5" stroke="#d98f4a" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="38" cy="357" rx="8" ry="5.500" fill="#fff3e2"/>
+          <g class="np-shut" stroke="#5a3518" stroke-width="1.800" fill="none" stroke-linecap="round"><path d="M27 349q4 3 8 0M41 349q4 3 8 0"/></g>
+          <g class="np-happy" stroke="#5a3518" stroke-width="1.800" fill="none" stroke-linecap="round"><path d="M27 350q4-4.500 8 0M41 350q4-4.500 8 0"/></g>
+          <g class="np-open"><g class="np-blink"><ellipse cx="31" cy="348" rx="4.200" ry="4.800" fill="#e5b93f"/><ellipse cx="31" cy="348" rx="1.400" ry="4" fill="#1a1208"/><circle cx="32.300" cy="346.300" r="1" fill="#fff"/><ellipse cx="45" cy="348" rx="4.200" ry="4.800" fill="#e5b93f"/><ellipse cx="45" cy="348" rx="1.400" ry="4" fill="#1a1208"/><circle cx="46.300" cy="346.300" r="1" fill="#fff"/></g><path d="M26.500 346q4.500-4 9 0M40.500 346q4.500-4 9 0" stroke="#5a3518" stroke-width="1.300" fill="none"/></g>
+          <path d="M36 353.500h4l-2 2.600z" fill="#e07a8a"/><path d="M38 356v1.500M38 357.500q-3 2.500-5.500.5M38 357.500q3 2.500 5.500.5" stroke="#8a4a3a" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <path d="M31 357L15 354M31 359L15 362M45 357L61 354M45 359L61 362" stroke="#fff7e8" stroke-width=".9" opacity=".75" stroke-linecap="round"/>
+        </g>
+        <rect data-act="cat" x="12" y="327" width="152" height="49" rx="22" fill="transparent"/>
+      </g>
+      <g id="p-pile"></g>
+      <!-- колокольчик и чашка -->
+      <g class="np-bell" data-act="bell"><path d="M246 364a12 12 0 0 1 24 0z" fill="#d9b36a"/><rect x="242" y="363" width="32" height="4" rx="2" fill="#8a6a2a"/><circle cx="258" cy="350" r="3" fill="#8a6a2a"/><rect x="238" y="344" width="40" height="26" fill="transparent"/></g>
+      <g class="np-cup" data-act="cup"><path d="M298 344h28v12a10 10 0 0 1-10 10h-8a10 10 0 0 1-10-10z" fill="#f3e7cf"/><path d="M326 348h4a5 5 0 0 1 0 10h-4" fill="none" stroke="#f3e7cf" stroke-width="3"/><ellipse cx="312" cy="345" rx="13" ry="3" fill="#7a4a2a"/><rect x="294" y="322" width="44" height="48" fill="transparent"/></g>
+      <g class="np-steam" stroke="#fff7e8" stroke-width="2" fill="none" stroke-linecap="round" pointer-events="none"><path d="M306 338q-4-6 0-12"/><path style="animation-delay:-1.300s" d="M316 338q4-6 0-12"/></g>
+      <!-- штамп «Возврат» -->
+      <rect x="258" y="486" width="88" height="60" rx="9" fill="#4a2230"/><rect x="264" y="492" width="76" height="48" rx="6" fill="#8a3f52"/>
+      <text x="302" y="520.500" font-size="11.500" font-weight="800" fill="#ffd9df" text-anchor="middle" letter-spacing="1.200">ВОЗВРАТ</text>
+      <g id="p-stamp"><rect x="284" y="462" width="36" height="20" rx="4" fill="#3a1a22"/><rect x="294" y="440" width="16" height="26" rx="5" fill="#8a3f52"/><circle cx="302" cy="436" r="11" fill="#b65a78"/><circle cx="298" cy="432" r="3" fill="#d98aa3"/></g>
+      <!-- альбом -->
+      <rect x="262" y="558" width="80" height="30" rx="5" fill="#2f5d5a"/><rect x="262" y="558" width="8" height="30" rx="3" fill="#1f423f"/><text id="p-alb" x="306" y="577.500" font-size="11" font-weight="800" fill="#e9f5f4" text-anchor="middle">марки 0/16</text>
+      <g id="p-fx" pointer-events="none"></g>
+      <rect id="p-lampdark" width="360" height="600" fill="#0a0716" opacity="0" pointer-events="none"/>
+      <rect id="p-dim" width="360" height="600" fill="#0a0716" opacity="0" pointer-events="none"/>
+    </svg>`;
   }
-  function popText(x, y, txt, color) {
-    const p = document.createElement('div');
-    p.className = 'pop'; p.textContent = txt; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.color = color;
-    stage.appendChild(p); setTimeout(() => p.remove(), 700);
+  const stackSvg = (i, n) => { const x = 24 + i * 106; return Array.from({ length: Math.min(n, 4) }, (_, j) => `<rect x="${x + 16 + (j % 2) * 5}" y="${305 - j * 7}" width="64" height="12" rx="2" fill="${j % 2 ? '#fff7e8' : '#f1dfbd'}" stroke="#c9b08a" stroke-width=".8" transform="rotate(${j % 2 ? 3 : -2} ${x + 50} ${311 - j * 7})"/>`).join(''); };
+  function paintPile() { $('#p-pile').innerHTML = pile.map((_, j) => `<g transform="translate(${172 + j * 7} ${346 - j * 7}) rotate(${j % 2 ? 6 : -5})"><rect width="50" height="22" rx="2" fill="${j % 2 ? '#fff7e8' : '#f1dfbd'}" stroke="#c9b08a"/><path d="M0 0l25 12 25-12" fill="none" stroke="#c9b08a"/></g>`).join(''); }
+  function paintHud() {
+    $('#p-left').textContent = `✉ ${deck.length + pile.length + (cur ? 1 : 0)}`; $('#p-score').textContent = score;
+    paintClock();
+    $('#p-dim').setAttribute('opacity', Math.min(0.3, mistakes * 0.07));
+    const have = store.get('post_stamps'); $('#p-alb').textContent = `марки ${STAMPS.filter((_, i) => have >> i & 1).length}/${STAMPS.length}`;
+    [0, 1, 2].forEach((i) => { $('#p-stack' + i).innerHTML = stackSvg(i, stacks[i]); $('#p-lamp' + i).setAttribute('fill', stacks[i] ? '#ffd98a' : '#5a4a3a'); $('#p-glow' + i).setAttribute('opacity', Math.min(0.5, stacks[i] * 0.16)); });
   }
-  function hit(b) {
-    if (b.done || !running) return;
-    if (b.m.s) {
-      b.done = true;
-      const pts = 10 * combo;
-      score += pts; combo = Math.min(combo + 1, 5);
-      b.el.classList.add('zap');
-      b.el.style.transform = `translate(${-b.el.offsetWidth - 40}px, ${b.y - 80}px) rotate(-18deg) scale(.6)`;
-      popText(b.x + 40, Math.max(10, b.y), '+' + pts, 'var(--accent)');
-      $('#f-hint').textContent = combo > 1 ? `Комбо ×${combo}` : 'Отлично';
-      $('#f-score').textContent = score;
-      buzz(12); snd.zap();
-      setTimeout(() => b.el.remove(), 500);
-    } else {
-      combo = 1; score = Math.max(0, score - 5); $('#f-score').textContent = score;
-      b.el.classList.remove('wobble'); void b.el.offsetWidth; b.el.classList.add('wobble');
-      $('#f-hint').textContent = 'Это нормальное сообщение, его пропускай';
-      buzz([20, 40, 20]); snd.bad();
+  function say(html, good) { noteEl.innerHTML = html; noteEl.classList.toggle('good', !!good); noteEl.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(() => noteEl.classList.remove('on'), good ? 1700 : 4200); }
+  function fit() { k = Math.min(stage.clientWidth / 360, stage.clientHeight / 600) || 1; box.style.transform = `translate(-50%, -50%) scale(${k})`; }
+
+  /* Живая комната: всё, что в ней стоит, можно потрогать */
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const sc = (e) => { const r = box.getBoundingClientRect(); return { x: (e.clientX - r.left) / k, y: (e.clientY - r.top) / k }; };
+  const angAt = (e) => { const p = sc(e); return Math.atan2(p.x - 212, 104 - p.y) * 180 / Math.PI; };
+  const clockAngle = () => (total ? done / total : 0) * 360 + clkOff;
+  function paintClock() { const mh = $('#p-mh'), hh = $('#p-hh'); if (!mh || !hh) return; const a = clockAngle(); mh.setAttribute('transform', `rotate(${a} 212 104)`); hh.setAttribute('transform', `rotate(${180 + a / 12} 212 104)`); }
+  const wiggle = (sel, cls, ms) => { const el = sceneEl.querySelector(sel); if (!el) return; el.classList.remove(cls); void el.getBoundingClientRect(); el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms); };
+  const catWake = (ms) => { const cat = $('#p-cat'); if (!cat) return; cat.classList.add('awake'); setTimeout(() => { if (!cur) cat.classList.remove('awake'); }, ms || 1500); };
+  let purr = null;
+  function purrStart() {
+    if (purr) return; const c = snd.ctx(); if (!c) return;
+    const buf = c.createBuffer(1, c.sampleRate, c.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const n = c.createBufferSource(); n.buffer = buf; n.loop = true;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 240;
+    const g = c.createGain(); g.gain.value = 0;
+    const lfo = c.createOscillator(); lfo.frequency.value = 24; const lg = c.createGain(); lg.gain.value = 0; lfo.connect(lg); lg.connect(g.gain);
+    n.connect(f); f.connect(g); g.connect(c.destination); n.start(); lfo.start();
+    g.gain.setTargetAtTime(0.06, c.currentTime, 0.18); lg.gain.setTargetAtTime(0.05, c.currentTime, 0.18);
+    purr = { c, g, lg, n, lfo };
+  }
+  function purrStop() {
+    if (!purr) return; const p = purr; purr = null;
+    try { p.g.gain.setTargetAtTime(0, p.c.currentTime, 0.12); p.lg.gain.setTargetAtTime(0, p.c.currentTime, 0.12); setTimeout(() => { try { p.n.stop(); p.lfo.stop(); p.g.disconnect(); } catch (e) {} }, 700); } catch (e) {}
+  }
+  function meow() {
+    const c = snd.ctx(); if (!c) return;
+    const t = c.currentTime, o = c.createOscillator(), f = c.createBiquadFilter(), g = c.createGain();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(420, t); o.frequency.linearRampToValueAtTime(700, t + 0.14); o.frequency.linearRampToValueAtTime(380, t + 0.55);
+    f.type = 'bandpass'; f.Q.value = 3.5; f.frequency.setValueAtTime(900, t); f.frequency.linearRampToValueAtTime(1700, t + 0.15); f.frequency.linearRampToValueAtTime(800, t + 0.55);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.12, t + 0.06); g.gain.linearRampToValueAtTime(0.09, t + 0.3); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+    o.connect(f); f.connect(g); g.connect(c.destination); o.start(t); o.stop(t + 0.65);
+  }
+  function heart(x, y) {
+    const fx = $('#p-fx'); if (!fx) return;
+    const h = document.createElementNS(svgNS, 'path'); h.setAttribute('d', 'M0 4C-8 -2 -4 -9 0 -5C4 -9 8 -2 0 4Z'); h.setAttribute('fill', ['#ff8fb1', '#ff6f9c', '#ffb3c8'][Math.random() * 3 | 0]); fx.appendChild(h);
+    const dx = Math.random() * 26 - 13, s = 0.8 + Math.random() * 0.7;
+    const a = h.animate([{ transform: `translate(${x}px, ${y}px) scale(${s * 0.4})`, opacity: 0 }, { transform: `translate(${x + dx * 0.4}px, ${y - 14}px) scale(${s})`, opacity: 1, offset: 0.25 }, { transform: `translate(${x + dx}px, ${y - 46}px) scale(${s})`, opacity: 0 }], { duration: 1100 + Math.random() * 400, easing: 'ease-out' });
+    a.onfinish = () => h.remove();
+  }
+  function tearCal() {
+    const pg = $('#p-calpage'); if (!pg) return;
+    const ghost = pg.cloneNode(true); ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach((x) => x.removeAttribute('id'));
+    ghost.style.transformOrigin = '320px 84px'; pg.after(ghost);
+    const a = ghost.animate([{ transform: 'translate(0px, 0px) rotate(0deg)', opacity: 1 }, { transform: 'translate(-4px, 4px) rotate(-8deg)', opacity: 1, offset: 0.2 }, { transform: 'translate(30px, 170px) rotate(28deg)', opacity: 0 }], { duration: 800, easing: 'ease-in' });
+    a.onfinish = () => ghost.remove();
+    calDay = calDay % 31 + 1; $('#p-calnum').textContent = calDay; sfx.paper();
+  }
+  function touch(a) {
+    if (a === 'bell') { wiggle('.np-bell', 'ring', 900); sfx.bell(); catWake(1200); }
+    else if (a === 'cup') { wiggle('.np-cup', 'sip', 1000); sfx.sip(); }
+    else if (a === 'plant') { wiggle('.np-plant', 'sway', 900); sfx.rustle(); }
+    else if (a === 'parcel') { wiggle('.np-parcel', 'thump', 300); sfx.thump(); }
+    else if (a === 'cal') tearCal();
+    else if (a === 'lamp') { lampOn = !lampOn; $('#p-cone').classList.toggle('off', !lampOn); $('#p-lampdark').setAttribute('opacity', lampOn ? 0 : 0.42); stage.classList.toggle('lampoff', !lampOn); sfx.lamp(lampOn); }
+    else if (a === 'cur') { curClosed = !curClosed; $('#p-win').classList.toggle('closed', curClosed); sfx.curtain(curClosed); }
+  }
+  let catDrag = null, clkDrag = null;
+  // Пасхалка: стрелки на 11:12 (112, номер помощи). Часы стартуют с 6:00,
+  // значит минутная стрелка должна пройти 5 оборотов и ещё 72 градуса
+  const EGG = 5 * 360 + 72;
+  let eggOpen = false;
+  function eggCheck() { const a = ((clockAngle() % 4320) + 4320) % 4320; if (Math.abs(a - EGG) <= 18) secretLetter(); }
+  function secretLetter() {
+    if (eggOpen) return; eggOpen = true; paused = true;
+    const first = !store.get('post_egg'); store.set('post_egg', 1);
+    try { localStorage.setItem('echo.egg.night', '1'); } catch (e) {}
+    [784, 988, 1175, 1568, 1319, 1175, 988, 1175, 1568].forEach((f, i) => T(f, 0.55, 'sine', 0.06, 0.25 + i * 0.17));
+    if (!lampOn) touch('lamp');
+    catWake(5000); meow(); for (let i = 0; i < 7; i++) setTimeout(() => heart(24 + Math.random() * 44, 330), i * 150);
+    setTimeout(() => {
+      if (!eggOpen) return;
+      const el = document.createElement('div'); el.className = 'np-egg'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Тайное письмо');
+      el.innerHTML = `<div class="np-egg__card"><div class="np-egg__stamp" aria-hidden="true"><b>Э</b></div><small>тайное письмо · 11:12</small><h3>Время помощи найдено</h3>
+        <p>Это письмо получают только те, кто замечает мелочи. В сети это умение очень пригодится.</p>
+        <p>Если что-то пугает или кажется странным, ты не один. Расскажи взрослому, которому доверяешь. А если нужна срочная помощь, звони <b>112</b>.</p>
+        ${first ? '<div class="np-egg__new">Золотая марка «Эхо» теперь в альбоме. А в Настройках открылась новая тема «Ночная почта».</div>' : ''}
+        <button class="btn btn--main">Спрятать письмо</button></div>`;
+      stage.appendChild(el); buzz([20, 40, 20, 40, 60]);
+      el.querySelector('button').onclick = closeEgg; el.querySelector('button').focus();
+    }, 1500);
+  }
+  function closeEgg() { stage.querySelectorAll('.np-egg').forEach((x) => x.remove()); if (eggOpen) { eggOpen = false; paused = false; } }
+  sceneEl.addEventListener('pointerdown', (e) => {
+    const g = e.target.closest && e.target.closest('[data-act]'); if (!g) return;
+    const a = g.dataset.act;
+    if (a === 'cat') { sceneEl.setPointerCapture(e.pointerId); catDrag = { x: e.clientX, y: e.clientY, d: 0, h: 0, moved: false }; return; }
+    if (a === 'clock') { sceneEl.setPointerCapture(e.pointerId); clkDrag = { a: angAt(e), x: e.clientX, y: e.clientY, moved: false }; return; }
+    touch(a);
+  });
+  sceneEl.addEventListener('pointermove', (e) => {
+    if (catDrag) {
+      const d = Math.hypot(e.clientX - catDrag.x, e.clientY - catDrag.y); catDrag.x = e.clientX; catDrag.y = e.clientY; catDrag.d += d;
+      if (!catDrag.moved && catDrag.d > 8) { catDrag.moved = true; $('#p-cat').classList.add('pet'); purrStart(); }
+      if (catDrag.moved) { catDrag.h += d; if (catDrag.h > 40 * k) { catDrag.h = 0; const p = sc(e); heart(p.x, p.y - 12); } }
+    } else if (clkDrag) {
+      const now = angAt(e); let d = now - clkDrag.a; if (d > 180) d -= 360; if (d < -180) d += 360; clkDrag.a = now;
+      if (Math.hypot(e.clientX - clkDrag.x, e.clientY - clkDrag.y) > 5) clkDrag.moved = true;
+      if (clkDrag.moved) { const b = clockAngle(); clkOff += d; const a2 = clockAngle(); paintClock(); if (Math.floor(b / 30) !== Math.floor(a2 / 30)) { sfx.tick(); if (Math.floor(b / 360) !== Math.floor(a2 / 360)) sfx.chime(); } }
     }
+  });
+  const endTouch = () => {
+    if (catDrag) {
+      const c = catDrag; catDrag = null; purrStop(); const cat = $('#p-cat');
+      if (c.moved) setTimeout(() => cat.classList.remove('pet'), 400); else { meow(); catWake(1700); heart(38, 322); }
+    }
+    if (clkDrag) { const c = clkDrag; clkDrag = null; if (!c.moved) sfx.chime(); else eggCheck(); }
+  };
+  sceneEl.addEventListener('pointerup', endTouch); sceneEl.addEventListener('pointercancel', endTouch);
+
+  /* Письма */
+  const center = () => ({ x: 133, y: 600 - 26 - letter.offsetHeight / 2 });
+  function place(l, fromWindow) {
+    cur = l; busy = true; letter.className = 'np-letter'; letter.style.transform = '';
+    letter.innerHTML = `<div class="np-sheet"><p>${esc(l.t)}</p></div><div class="np-env"><div class="np-addr"><span>Кому</span><b>${names[l.to]}</b><span>От кого</span><em>${esc(l.f)}</em></div><i class="np-seal" style="--c:${SEALS[l.seal]}"></i><i class="np-post" style="--c:${SEALS[(l.seal + 2) % SEALS.length]}"></i>${l.urg ? '<span class="np-urg">срочно</span>' : ''}<span class="np-mark">возврат</span></div>`;
+    letter.hidden = false; letter.setAttribute('aria-label', `Письмо для ${names[l.to]} от: ${l.f}. ${l.t}`);
+    const c = center(), from = fromWindow ? WIN : { x: 152, y: 352 };
+    const cat = $('#p-cat'); cat.classList.add('awake'); cat.classList.toggle('twitch', !!(L.cat && l.scam));
+    sfx.arrive(); buzz(6); paintHud();
+    const a = letter.animate([{ transform: `translate(${from.x - c.x}px, ${from.y - c.y}px) scale(.14) rotate(${fromWindow ? -32 : 8}deg)`, opacity: 0.4 }, { transform: 'translate(0, -26px) scale(.86) rotate(4deg)', opacity: 1, offset: 0.72 }, { transform: 'none' }], { duration: fromWindow ? 900 : 480, easing: 'cubic-bezier(.3,.7,.3,1)' });
+    a.onfinish = () => { busy = false; };
   }
-  function tick(now) {
+  function leave(to, rot, ms, then) {
+    const c = center(), cs = getComputedStyle(letter).transform;
+    letter.style.transition = 'none';
+    const a = letter.animate([{ transform: cs === 'none' ? 'none' : cs, opacity: 1 }, { transform: `translate(${to.x - c.x}px, ${to.y - c.y}px) scale(.12) rotate(${rot}deg)`, opacity: 0.25 }], { duration: ms, easing: 'cubic-bezier(.5,0,.6,1)', fill: 'forwards' });
+    a.onfinish = () => { letter.hidden = true; a.cancel(); letter.style.transition = ''; letter.style.transform = ''; then(); };
+  }
+  function consumed() {
+    cur = null; busy = false; done++; $('#p-cat').classList.remove('twitch'); paintHud();
+    setTimeout(() => {
+      if (!running) return;
+      $('#p-cat').classList.remove('awake');
+      if (pile.length) { const l = pile.shift(); paintPile(); place(l, false); }
+      else if (!deck.length) finish();
+    }, 320);
+  }
+  function giveStamp() {
+    const have = store.get('post_stamps'), free = STAMPS.map((_, i) => i).filter((i) => !(have >> i & 1));
+    if (!free.length) return;
+    const i = free[Math.random() * free.length | 0]; store.set('post_stamps', have | 1 << i); newStamps.push(i); sfx.stamp();
+  }
+  function act(t) {
+    if (!cur || busy || !running || paused) return;
+    const l = cur;
+    if (t === 'ret') {
+      busy = true; letter.style.transform = ''; letter.classList.add('stamped'); sfx.thud(); buzz(18);
+      $('#p-stamp').animate([{ transform: 'translateY(0)' }, { transform: 'translateY(26px)' }, { transform: 'translateY(0)' }], { duration: 260 });
+      if (l.scam) { okScam++; score += 15; say('<b>Верно.</b> Развод отправлен обратно.', true); }
+      else { mistakes++; sfx.soft(); say(`<b>Это было настоящее письмо.</b> ${names[l.to]} его не получит. Отправитель: ${l.f}.`); }
+      setTimeout(() => { sfx.fly(); leave(WIN, -40, 560, consumed); }, 520);
+      return;
+    }
+    const m = MB[t], target = { x: m.x + m.w / 2, y: m.y + 86 };
+    if (!l.scam && t !== l.to) { letter.style.transform = ''; sfx.soft(); say(`Не тот ящик. На конверте написано: <b>${names[l.to]}</b>.`); return; }
+    busy = true;
+    leave(target, 0, 380, () => {
+      stacks[t]++; sfx.drop(); buzz(10);
+      if (l.scam) { mistakes++; sfx.soft(); say(`<b>В ящик попал развод.</b> ${l.why}`); }
+      else { okReal++; score += 10; giveStamp(); sfx.purr(); say(`<b>Доставлено.</b> Письмо в ящике: ${names[t]}.`, true); }
+      consumed();
+    });
+  }
+  function hit(e) {
+    const r = box.getBoundingClientRect(), x = (e.clientX - r.left) / k, y = (e.clientY - r.top) / k;
+    const i = MB.findIndex((m) => x >= m.x && x <= m.x + m.w && y >= m.y - 10 && y <= m.y + m.h + 4);
+    if (i >= 0) return i;
+    return x >= RET.x - 4 && x <= RET.x + RET.w + 6 && y >= RET.y - 8 && y <= RET.y + RET.h + 8 ? 'ret' : null;
+  }
+  const hot = (t) => { box.querySelectorAll('.over').forEach((b) => b.classList.remove('over')); if (t === 'ret') $('#p-ret').classList.add('over'); else if (t !== null) box.querySelector(`[data-mb="${t}"]`).classList.add('over'); };
+  letter.addEventListener('pointerdown', (e) => { if (!cur || busy || paused || !running) return; letter.setPointerCapture(e.pointerId); const lr = letter.getBoundingClientRect(); drag = { x: e.clientX, y: e.clientY, moved: false, ox: (e.clientX - (lr.left + lr.width / 2)) / k, oy: (e.clientY - (lr.top + lr.height / 2)) / k }; });
+  letter.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const dx = (e.clientX - drag.x) / k, dy = (e.clientY - drag.y) / k;
+    if (!drag.moved && Math.hypot(dx, dy) > 6) { drag.moved = true; letter.classList.add('drag'); }
+    if (drag.moved) { const sc = 0.55; letter.style.transform = `translate(${dx + (1 - sc) * drag.ox}px, ${dy + (1 - sc) * drag.oy - 8}px) scale(${sc})`; hot(hit(e)); }
+  });
+  const drop = (e) => {
+    if (!drag) return; const d = drag; drag = null; letter.classList.remove('drag'); hot(null);
+    if (!d.moved) { $('#p-hint').textContent = 'Потяни письмо к ящику друга или к штампу «Возврат»'; return; }
+    const t = e.type === 'pointercancel' ? null : hit(e);
+    if (t === null) { letter.style.transform = ''; say('Отпусти письмо <b>над ящиком</b> друга или над штампом <b>«Возврат»</b>.'); } else act(t);
+  };
+  letter.addEventListener('pointerup', drop); letter.addEventListener('pointercancel', drop);
+  box.addEventListener('click', (e) => { const b = e.target.closest('.np-mb, .np-ret'); if (b) act(b.id === 'p-ret' ? 'ret' : +b.dataset.mb); });
+
+  /* Вечер */
+  function tick() {
     if (!running) return;
-    if (paused) { last = now; raf = requestAnimationFrame(tick); return; }
-    const dt = Math.min(50, now - last) / 1000; last = now;
-    const el = now - t0, k = Math.min(1, el / DURATION);
-    $('#f-time').textContent = Math.max(0, Math.ceil((DURATION - el) / 1000));
-    const speed = 42 + 70 * k;
-    if (now >= spawnAt) { spawn(); spawnAt = now + (1650 - 900 * k); }
-    const floor = stage.clientHeight - 64;
-    for (const b of bubs) {
-      if (b.done) continue;
-      b.y += speed * dt;
-      b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
-      if (b.y + b.h * 0.5 > floor) {
-        b.done = true;
-        if (b.m.s) {
-          combo = 1; missed.push(b.m);
-          b.el.classList.add('miss');
-          $('#f-hint').textContent = 'Развод проскочил в чат';
-          buzz(30); snd.bad();
-        } else {
-          score += 2; $('#f-score').textContent = score;
-          b.el.classList.add('ok');
-          b.el.style.transform = `translate(${b.x}px, ${b.y + 60}px) scale(.8)`;
-        }
-        setTimeout(() => b.el.remove(), 500);
-      }
-    }
-    bubs = bubs.filter((b) => b.el.isConnected);
-    if (el >= DURATION) return end();
-    raf = requestAnimationFrame(tick);
+    if (paused) { nextAt += 250; return; }
+    const now = Date.now();
+    if (deck.length && !cur && !pile.length && !busy && nextAt - now > 900) nextAt = now + 900;
+    if (!deck.length || now < nextAt) return;
+    const l = deck.shift(); nextAt = now + L.pace;
+    if (!cur && !busy) return place(l, true);
+    pile.push(l); T(1320, 0.2, 'sine', 0.035);
+    if (pile.length > 3) { pile.shift(); mistakes++; done++; say('<b>Стопка переполнилась.</b> Одно письмо унесло сквозняком.'); }
+    paintPile(); paintHud();
   }
-  function end() {
-    running = false; cancelAnimationFrame(raf);
-    bubs.forEach((b) => b.el.remove()); bubs = [];
-    const best = store.get('filter'), rec = score > best;
-    if (rec) store.set('filter', score);
-    $('#f-best').textContent = Math.max(best, score);
-    const uniq = [...new Map(missed.map((m) => [m.t, m])).values()].slice(0, 3);
-    const box = $('#f-end');
-    box.innerHTML = `<h2>${rec ? 'Новый рекорд!' : 'Время вышло'}</h2><div class="big">${score}</div>
-      ${uniq.length ? `<div class="recap recap--tight">${uniq.map((m) => `<div><b>${esc(m.t)}</b>${esc(m.why)}</div>`).join('')}</div>` : '<p>Ни один развод не проскочил. Сильный фильтр.</p>'}
-      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="f-again">Ещё раз</button></div>`;
-    box.hidden = false;
-    $('#f-again').onclick = start;
-    box.querySelector('[data-c]').onclick = close;
-    buzz([15, 60, 15]); rec || score > 0 ? snd.win() : snd.lose();
+  function start() {
+    L = LV[lv]; names = shuffle(FRIENDS).slice(0, 3);
+    const scams = shuffle(SCAM_LOOK).slice(0, L.look).concat(shuffle(SCAM).slice(0, L.scam - L.look)).map((s) => ({ f: s[0], t: s[1], why: s[2], urg: s[3], scam: true }));
+    const nReal = L.n - L.scam, reals = shuffle(REAL_URG).slice(0, L.urg).map((r) => ({ f: r[0], t: r[1], urg: 1 })).concat(shuffle(REAL).slice(0, nReal - L.urg).map((r) => ({ f: r[0], t: r[1] })));
+    deck = shuffle(scams.concat(reals)).map((l) => ({ ...l, to: Math.random() * 3 | 0, seal: Math.random() * SEALS.length | 0 }));
+    const first = deck.findIndex((l) => !l.scam); if (first > 0) [deck[0], deck[first]] = [deck[first], deck[0]];
+    total = deck.length; totScam = L.scam; totReal = nReal; done = score = mistakes = okReal = okScam = 0; stacks = [0, 0, 0]; pile = []; cur = null; newStamps = []; busy = false; paused = false;
+    sceneEl.innerHTML = sceneSvg(); [0, 1, 2].forEach((i) => box.querySelector(`[data-mb="${i}"]`).setAttribute('aria-label', `Ящик: ${names[i]}`));
+    letter.hidden = true; noteEl.classList.remove('on'); startEl.hidden = true; endEl.hidden = true; fit(); paintPile(); paintHud();
+    $('#p-hint').textContent = 'Перетащи письмо в ящик друга или на штамп «Возврат»';
+    snd.ambient(L.w === 'rain' ? { noise: [1500, 0.04] } : L.w === 'wind' ? { noise: [520, 0.022] } : {});
+    if (L.w === 'wind') setTimeout(() => running && snd.wind(), 1200);
+    running = true; nextAt = Date.now() + 1100; clearInterval(loop); loop = setInterval(tick, 250);
   }
-  $('#f-go').onclick = start;
+  const eggSlot = () => store.get('post_egg') ? `<div class="np-st np-gold" title="Тайная марка «Эхо»">${GOLD}</div>` : '<div class="np-st off np-q" title="Тайная марка. Подсказка: часы и номер помощи">?</div>';
+  const albumHtml = (fresh) => { const have = store.get('post_stamps'); return `<div class="np-album">${eggSlot()}${STAMPS.map((s, i) => `<div class="np-st${have >> i & 1 ? '' : ' off'}${fresh && fresh.includes(i) ? ' new' : ''}" title="${s[0]}">${stampSvg(i)}</div>`).join('')}</div>`; };
+  function finish() {
+    running = false; clearInterval(loop); snd.ambientEnd(); purrStop(); $('#p-cat').classList.remove('awake', 'twitch', 'pet');
+    const stars = mistakes === 0 ? 3 : mistakes <= 2 ? 2 : 1, best = store.get('post_b' + lv), rec = score > best;
+    if (rec) store.set('post_b' + lv, score);
+    if (stars >= 2 && lv + 1 < LV.length) store.set('post_lv', Math.max(maxLv(), lv + 2));
+    const next = stars >= 2 && lv + 1 < LV.length;
+    endEl.innerHTML = `<div class="np-card"><small>открытка с почты</small><h3>Вечер ${lv + 1}. ${L.name}</h3><div class="np-stars">${'★'.repeat(stars)}<i>${'★'.repeat(3 - stars)}</i></div>
+      <p>Доставлено писем: <b>${okReal} из ${totReal}</b><br>Развод возвращён: <b>${okScam} из ${totScam}</b>${newStamps.length ? `<br>Новых марок: <b>${newStamps.length}</b>` : ''}</p>${newStamps.length ? `<div class="np-new">${newStamps.map((i) => `<div class="np-st new" title="${STAMPS[i][0]}">${stampSvg(i)}</div>`).join('')}</div>` : ''}</div>
+      <p class="near">${stars === 3 ? 'Ни одной ошибки. Почта в надёжных руках.' : stars === 2 ? 'Почти идеально. Ещё немного внимания, и будет три звезды.' : 'Вечер выдался непростой. Попробуй ещё раз: читай письмо до конца.'}</p>
+      <div class="row"><button class="btn" data-again>Ещё раз</button>${next ? '<button class="btn btn--main" data-next>Следующий вечер</button>' : '<button class="btn btn--main" data-menu>К вечерам</button>'}</div>`;
+    endEl.hidden = false; sfx.done(); buzz([15, 60, 15]); $('#p-hint').textContent = 'Марки хранятся в альбоме на первом экране';
+    award('filter', { won: stars >= 2, rec });
+  }
+  function paintStart() {
+    lv = Math.min(lv, maxLv() - 1); L = LV[lv];
+    startEl.innerHTML = `<h2>Ночная почта</h2><div class="np-evs" aria-label="Вечер">${LV.map((_, i) => `<button data-ev="${i}" class="${i === lv ? 'on' : ''}" ${i >= maxLv() ? 'disabled' : ''} aria-label="Вечер ${i + 1}">${i >= maxLv() ? '🔒' : i + 1}</button>`).join('')}</div>
+      <p><b style="color:var(--ink)">Вечер ${lv + 1}: ${L.name}.</b> ${L.note}</p>
+      <div class="chips"><span class="chip">писем: ${L.n}</span><span class="chip">рекорд: <b>${store.get('post_b' + lv)}</b></span></div>
+      <p style="font-size:13.5px;margin:0 0 12px">В комнате всё можно потрогать: часы, календарь, шторы, лампу. И погладить кота.</p>
+      <p class="np-cap">Альбом марок</p>${albumHtml()}
+      <button class="btn btn--main btn--wide" id="f-go">Зажечь лампу</button>`;
+    startEl.hidden = false; endEl.hidden = true;
+  }
+  startEl.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.ev) { lv = +b.dataset.ev; paintStart(); } else if (b.id === 'f-go') start(); });
+  endEl.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.next !== undefined) { lv++; start(); } else if (b.dataset.again !== undefined) start(); else paintStart(); });
+  window.addEventListener('resize', () => { if (current === 'filter') fit(); });
   games.filter = {
-    enter() { $('#f-start').hidden = false; $('#f-end').hidden = true; $('#f-time').textContent = '60'; $('#f-score').textContent = '0'; $('#f-hint').textContent = 'Комбо растёт, если не ошибаешься'; },
-    leave() { running = false; paused = false; cancelAnimationFrame(raf); bubs.forEach((b) => b.el.remove()); bubs = []; },
-    pause() { if (running && !paused) { paused = true; pausedAt = performance.now(); } },
-    resume() { if (running && paused) { const d = performance.now() - pausedAt; t0 += d; spawnAt += d; last = performance.now(); paused = false; } },
+    enter() { running = false; clearInterval(loop); lv = maxLv() - 1; L = LV[lv]; names = FRIENDS.slice(0, 3); sceneEl.innerHTML = sceneSvg(); letter.hidden = true; fit(); paintPile(); paintHud(); paintStart(); },
+    leave() { running = false; clearInterval(loop); snd.ambientEnd(); purrStop(); closeEgg(); },
+    pause() { paused = true; },
+    resume() { paused = false; },
   };
 })();
 
@@ -1093,11 +1693,29 @@ function close() {
       ${rc(22, 78, 150, 128, '#203445', 6)}${rc(28, 84, 138, 116, 'url(#skyG)', 3)}<circle cx="140" cy="108" r="12" fill="#fff3d6"/>
       ${rc(34, 124, 40, 76, '#7a5c6e')}${rc(40, 132, 8, 8, '#ffd98a')}${rc(56, 132, 8, 8, '#ffd98a')}${rc(40, 146, 8, 8, '#ffd98a')}
       ${rc(120, 136, 44, 64, '#6a4f60')}${rc(128, 146, 8, 8, '#ffd98a')}
-      <path d="M176 508 C176 388 196 318 246 318 C296 318 318 388 318 508 Z" fill="#3fd0cc"/>${rc(234, 282, 24, 26, '#f2c4a4')}<path d="M212 318 q34 -14 68 0 l-10 14 h-48z" fill="#2fb3af"/>
-      <ellipse cx="246" cy="250" rx="40" ry="44" fill="#f2c4a4"/><path d="M204 248 C200 196 290 192 288 248 C288 230 270 214 246 214 C222 214 206 230 204 248z" fill="#5a3b2a"/>
-      <path d="M204 246 C198 290 206 316 214 326 L218 260z M288 246 C294 290 286 316 278 326 L274 260z" fill="#5a3b2a"/>
-      <circle cx="232" cy="254" r="4" fill="#232a32"/><circle cx="262" cy="254" r="4" fill="#232a32"/><path d="M234 274 q12 10 24 0" stroke="#b5654f" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <circle cx="222" cy="268" r="6" fill="#ff9fb0" opacity=".5"/><circle cx="272" cy="268" r="6" fill="#ff9fb0" opacity=".5"/>
+      <path d="M196 254 C186 190 306 184 296 254 C304 304 300 334 284 346 L208 346 C192 334 188 304 196 254Z" fill="#4a2f22"/>
+      <path d="M156 520 C152 430 164 366 212 342 Q246 330 280 342 C328 366 340 430 336 520 Z" fill="#3fd0cc"/>
+      <path d="M156 520 C152 440 160 392 180 362 C176 410 178 470 186 520Z M336 520 C340 440 332 392 312 362 C316 410 314 470 306 520Z" fill="#2fb3af" opacity=".75"/>
+      <path d="M214 342 Q246 372 278 342 Q246 328 214 342Z" fill="#2a9a97"/><path d="M233 358 L230 402 M259 358 L262 402" stroke="#e9fffe" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".85"/><circle cx="230" cy="404" r="2.6" fill="#e9fffe"/><circle cx="262" cy="404" r="2.6" fill="#e9fffe"/>
+      <path d="M204 452 Q246 438 288 452 L292 486 Q246 476 200 486Z" fill="#35bdb9" opacity=".7"/>
+      <g transform="rotate(8 292 408)"><rect x="272" y="372" width="38" height="66" rx="7" fill="#232a32"/><rect x="275" y="376" width="32" height="58" rx="5" fill="#a8e4ff"/><rect x="279" y="384" width="18" height="8" rx="4" fill="#fff"/><rect x="285" y="397" width="18" height="8" rx="4" fill="#ff9fb0"/><rect x="279" y="410" width="14" height="8" rx="4" fill="#fff"/></g>
+      <ellipse cx="270" cy="426" rx="9" ry="7" fill="#f2c4a4"/><ellipse cx="310" cy="420" rx="6" ry="9" fill="#f2c4a4" transform="rotate(8 310 420)"/>
+      <path d="M236 292 H258 V318 Q247 330 236 318Z" fill="#e8b896"/><path d="M236 306 Q247 316 258 306 V318 Q247 330 236 318Z" fill="#d49e7e" opacity=".6"/>
+      <circle cx="205" cy="260" r="6.5" fill="#f2c4a4"/><circle cx="287" cy="260" r="6.5" fill="#f2c4a4"/><circle cx="205" cy="261" r="3" fill="#e8ad8e"/><circle cx="287" cy="261" r="3" fill="#e8ad8e"/>
+      <ellipse cx="246" cy="252" rx="40" ry="44" fill="#f4c9aa"/>
+      <ellipse cx="246" cy="288" rx="24" ry="5" fill="#e0b08f" opacity=".5"/>
+      <ellipse cx="230" cy="271" rx="5.5" ry="3.6" fill="#ff9fb0" opacity=".5"/><ellipse cx="262" cy="271" rx="5.5" ry="3.6" fill="#ff9fb0" opacity=".5"/>
+      <path d="M203 254 C194 186 298 182 289 254 C289 240 281 232 272 232 Q262 246 252 232 Q242 246 232 233 Q222 244 213 236 C207 240 204 247 203 254Z" fill="#5a3b2a"/>
+      <path d="M214 236 Q222 246 232 234 Q242 248 252 234 Q262 248 272 234" stroke="#e0b08f" stroke-width="5" fill="none" opacity=".35" transform="translate(0 4)"/>
+      <path d="M212 214 C226 196 262 194 280 214" stroke="#8a5e42" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".85"/><path d="M224 204 C238 198 256 198 268 204" stroke="#a97a58" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>
+      <path d="M203 250 C194 296 202 330 212 344 C218 318 218 288 220 262Z M289 250 C298 296 290 330 280 344 C274 318 274 288 272 262Z" fill="#5a3b2a"/>
+      <path d="M208 268 C206 296 208 318 213 334 M284 268 C286 296 284 318 279 334" stroke="#7a5238" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>
+      <rect x="206" y="226" width="16" height="7" rx="3.5" fill="#ff8fb1" transform="rotate(-24 214 229)"/><rect x="209" y="228" width="7" height="3" rx="1.5" fill="#ffc2d4" transform="rotate(-24 214 229)"/>
+      <path d="M221 245 Q231 240 241 245 M251 245 Q261 240 271 245" stroke="#4a2f22" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <ellipse cx="231" cy="257" rx="4.8" ry="5.8" fill="#3a2a2a"/><ellipse cx="261" cy="257" rx="4.8" ry="5.8" fill="#3a2a2a"/><circle cx="233" cy="254.6" r="1.9" fill="#fff"/><circle cx="263" cy="254.6" r="1.9" fill="#fff"/><circle cx="229.6" cy="259.6" r="1" fill="#fff"/><circle cx="259.6" cy="259.6" r="1" fill="#fff"/>
+      <path d="M225.5 253 Q231 249 236.5 253 M255.5 253 Q261 249 266.5 253" stroke="#232a32" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M246 261 q-3 8 1 9" stroke="#d29a7c" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M235 277 Q246 287 257 277 Q246 281 235 277Z" fill="#fff" stroke="#b5504f" stroke-width="2.6" stroke-linejoin="round"/>
       ${rc(0, 440, 190, 80, '#6b4a3a')}${rc(0, 436, 196, 8, '#8a6150', 3)}`),
     spots: [
       { id: 'sign', kind: 'real', cat: 'home', xy: S1(92, 171), title: 'Табличка с улицей', why: 'По названию улицы и номеру дома находят дом.', fix: 'Не снимай таблички и номера домов на фоне.',
@@ -1418,7 +2036,7 @@ function close() {
     if (cats.length <= 1) {
       const stars = attempt === 1 ? 3 : attempt === 2 ? 2 : 1;
       if (stars > store.get('detective_e' + cs)) store.set('detective_e' + cs, stars);
-      snd.win(); buzz([15, 60, 15]);
+      snd.win(); buzz([15, 60, 15]); award('detective', { won: true });
       el.innerHTML = `<h2>Сыщик-робот не нашёл тебя</h2><div class="big" aria-label="${stars} из 3">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
         <div class="d-hero"><b>Сыщик-робот</b>«${seen.length ? 'Вижу только одну подсказку: ' + seen[0].title.toLowerCase() + '. По одной теме человека не найти.' : 'Ничего не вижу. Это фото безопасно.'}»</div>
         <p>${wasted ? `Ты потратил стикеров на безобидное: ${wasted}. Но всё равно справился.` : 'Ни одного стикера не потрачено зря.'}</p>
@@ -1437,7 +2055,7 @@ function close() {
     }
   }
   function lose() {
-    active = false; refreshUi(); $('#g-detective').classList.add('d-done'); snd.lose(); buzz([20, 40, 20]);
+    active = false; refreshUi(); $('#g-detective').classList.add('d-done'); snd.lose(); buzz([20, 40, 20]); award('detective', { won: false });
     const miss = spots.filter((q) => isReal(q) && !found.has(q.id));
     const el = $('#d-end');
     el.innerHTML = `<h2>Дело отложено</h2><p>Лампы погасли. Это нормально: детективы не всегда находят всё с первого раза. Вот что ты не успел заметить:</p>
@@ -1548,7 +2166,7 @@ function close() {
       ${notes}</svg>`;
   }
   function win() {
-    snd.win(); buzz([15, 60, 15]);
+    snd.win(); buzz([15, 60, 15]); award('detective', { won: true });
     dim.style.transition = 'opacity .5s'; dim.style.opacity = '0'; lens.style.display = 'none'; $('#d-info').hidden = true;
     $('#g-detective').classList.add('d-done');
     const stars = Math.max(1, lamps);
@@ -1645,111 +2263,6 @@ function close() {
   };
 })();
 
-/* ══════════ 3. КРЕПОСТЬ ══════════ */
-(() => {
-  // Запас блоков по видам. В каждом раунде из него берётся случайная выборка,
-  // поэтому набор всегда новый.
-  const POOL = {
-    word: ['кит', 'облако', 'гитара', 'ракета', 'луна', 'пицца', 'арбуз', 'мост', 'лампа', 'ёжик', 'шторм', 'компас', 'маяк', 'башня', 'пингвин', 'радуга', 'дракон', 'бублик', 'вулкан', 'зонтик', 'комета', 'баобаб', 'самокат', 'чайник', 'медуза', 'фонарь', 'кактус', 'парус', 'молния', 'тыква', 'глобус', 'сапог'],
-    me: ['Маша', 'Даня', 'Катя', 'Лёша', 'Барсик', 'Рекс', 'Мурка', 'Миша', '2012', '2013', '2014', 'Шарик'],
-    common: ['qwerty', '123456', 'пароль', '111111', 'admin', 'password', '000000', 'привет', '12345', 'qwerty123'],
-    num: ['57', '903', '48', '716', '25', '391', '64', '182', '305', '77'],
-    sym: ['!', '#', '_', '$', '%', '*', '@', '-'],
-  };
-  const COUNT = { word: 6, me: 3, common: 2, num: 3, sym: 3 };
-  let BLOCKS = [];
-  function newSet() {
-    BLOCKS = Object.keys(POOL).flatMap((t) => shuffle(POOL[t]).slice(0, COUNT[t]).map((v) => ({ v, t })));
-  }
-  newSet();
-  // Сколько «бит» добавляет блок: случайное слово из большого словаря
-  // даёт много, всё, что робот знает о тебе или что у всех, почти ничего
-  const BITS = { word: 12, me: 2, common: 1, num: 6.5, sym: 4 };
-  let pass = [], busy = false;
-  const tray = $('#k-tray'), passEl = $('#k-pass'), tower = $('#k-tower'), scene = $('#k-scene');
-
-  function renderTray() {
-    const groups = [['word'], ['me', 'common'], ['num', 'sym']];
-    tray.innerHTML = groups.map((g) => `<div class="tray__row">${BLOCKS.filter((b) => g.includes(b.t)).map((b) =>
-      `<button class="blk t-${b.t}" data-v="${esc(b.v)}">${esc(b.v)}</button>`).join('')}</div>`).join('');
-    tray.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => add(BLOCKS.find((b) => b.v === btn.dataset.v)));
-  }
-  function plural(n) {
-    const a = n % 10, b = n % 100;
-    return a === 1 && b !== 11 ? 'символ' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? 'символа' : 'символов';
-  }
-  function render() {
-    passEl.innerHTML = pass.map((b, i) => `<button class="blk t-${b.t}" data-i="${i}" aria-label="Убрать ${esc(b.v)}">${esc(b.v)}</button>`).join('');
-    passEl.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => { if (busy) return; pass.splice(+btn.dataset.i, 1); clearVerdict(); render(); });
-    tower.className = 'tower';
-    tower.innerHTML = pass.map((b) => `<div class="brick t-${b.t}">${esc(b.v)}</div>`).join('');
-    const len = pass.reduce((n, b) => n + b.v.length, 0);
-    $('#k-len').textContent = `${len} симв.`;
-  }
-  function add(b) {
-    if (busy) return;
-    if (pass.length >= 7) { flashMsg($('#g-fort .stage'), 'Максимум 7 блоков: убери один'); return; }
-    clearVerdict(); pass.push(b); buzz(6); snd.step(pass.length); render();
-  }
-  function clearVerdict() { scene.querySelector('.verdict')?.remove(); }
-  function bits() {
-    const seen = new Set();
-    let total = 0;
-    for (const b of pass) { total += seen.has(b.v) ? 1 : BITS[b.t]; seen.add(b.v); }
-    return total + (new Set(pass.map((b) => b.t)).size >= 3 ? 3 : 0);
-  }
-  function human(sec) {
-    if (sec < 1) return 'долю секунды';
-    if (sec < 60) return Math.round(sec) + ' сек';
-    if (sec < 3600) return Math.round(sec / 60) + ' мин';
-    if (sec < 86400) return Math.round(sec / 3600) + ' ч';
-    if (sec < 86400 * 365) return Math.round(sec / 86400) + ' дн.';
-    const y = sec / (86400 * 365);
-    if (y < 1000) { const n = Math.round(y), a = n % 10, b = n % 100; return n + (a === 1 && b !== 11 ? ' год' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? ' года' : ' лет'); }
-    if (y < 1e6) return Math.round(y / 1000) + ' тыс. лет';
-    if (y < 1e9) return Math.round(y / 1e6) + ' млн лет';
-    return 'дольше, чем светят звёзды';
-  }
-  function attack() {
-    if (busy) return;
-    if (!pass.length) { flashMsg($('#g-fort .stage'), 'Добавь хотя бы один блок'); passEl.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); return; }
-    busy = true; clearVerdict();
-    tower.className = 'tower';
-    [...tower.children].forEach((el) => { el.style.transform = ''; el.classList.remove('fall'); });
-    const robot = $('#k-robot');
-    robot.classList.remove('hit'); void robot.offsetWidth; robot.classList.add('hit');
-    tower.classList.add('shake');
-    buzz([30, 60, 30, 60, 30]); snd.robot();
-    const b = bits(), sec = Math.pow(2, b) / 1e9;
-    const me = pass.some((x) => x.t === 'me'), common = pass.some((x) => x.t === 'common');
-    setTimeout(() => {
-      tower.classList.remove('shake');
-      const bricks = [...tower.children];
-      let title, sub;
-      if (sec < 86400) {
-        bricks.forEach((el, i) => { const d = i % 2 ? 1 : -1; el.style.transform = `translate(${d * (60 + i * 15)}px, ${120 + i * 10}px) rotate(${d * 70}deg)`; el.classList.add('fall'); });
-        title = `Взломан за ${human(sec)}`;
-        sub = me ? 'Имя, год и кличку робот берёт прямо из твоего профиля.' : common ? 'Такие пароли робот пробует первыми.' : 'Слишком коротко. Добавь ещё слов.';
-        buzz(80); snd.lose();
-      } else if (sec < 86400 * 365) {
-        bricks.slice(-2).forEach((el, i) => { el.style.transform = `translate(${70 + i * 30}px, 90px) rotate(50deg)`; el.classList.add('fall'); });
-        title = `Продержался ${human(sec)}`;
-        sub = 'Уже неплохо. Ещё одно случайное слово, и робот сдастся.'; snd.bad();
-      } else {
-        tower.classList.add('hold');
-        title = `Роботу нужно ${human(sec)}`;
-        sub = me || common ? 'Крепость стоит, но блоки «про тебя» лучше убрать.' : 'Несколько случайных слов - сильный пароль, и его легко запомнить.';
-        buzz([15, 50, 15]); snd.win();
-      }
-      const v = document.createElement('div'); v.className = 'verdict'; v.innerHTML = `${esc(title)}<span>${esc(sub)}</span>`;
-      scene.appendChild(v);
-      busy = false;
-    }, 1100);
-  }
-  $('#k-attack').onclick = attack;
-  $('#k-clear').onclick = () => { if (busy) return; pass = []; newSet(); renderTray(); clearVerdict(); render(); };
-  games.fort = { enter() { pass = []; busy = false; newSet(); renderTray(); clearVerdict(); render(); } };
-})();
 
 /* ══════════ 4. СЕТЬ ══════════ */
 (() => {
@@ -1853,11 +2366,12 @@ function close() {
     const best = store.get('net'), rec = score > best; if (rec) store.set('net', score);
     $('#n-best').textContent = Math.max(best, score);
     const el = $('#n-end');
-    el.innerHTML = `<h2>${rec ? 'Новый рекорд!' : 'Сигнал заблудился'}</h2><div class="big">${score}</div>
+    el.innerHTML = `<h2>${rec ? 'Новый рекорд!' : 'Сигнал заблудился'}</h2><div class="big">${score}</div><p class="near">${nearLine(score, best, rec)}</p>
       <div class="recap recap--tight">${mistakes.slice(0, 2).map((r) => `<div><b>${esc(r.labels[r.bad])} → настоящий ${esc(r.s.real)}</b>${esc(r.s.whys[Math.max(0, r.s.fake.indexOf(r.labels[r.bad]))])}</div>`).join('')}</div>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="n-again">Ещё раз</button></div>`;
     el.hidden = false; $('#n-again').onclick = start; el.querySelector('[data-c]').onclick = close;
     buzz([15, 60, 15]); score > 0 ? snd.win() : snd.lose();
+    award('net', { won: score > 0, rec });
   }
   stage.querySelector('.pads').addEventListener('pointerdown', (e) => { e.preventDefault(); steerAt(e.clientX); });
   window.addEventListener('keydown', (e) => {
@@ -2795,7 +3309,7 @@ function close() {
     const names = Object.fromEntries(THEMES.map((t) => [t.id, t.name]));
     const some = shuffle(collected).slice(0, 2);
     const el = $('#r-end');
-    el.innerHTML = `<h2>${place === 1 ? 'Победа!' : place + ' место'}${rec ? ' · рекорд' : ''}</h2><div class="big">${my.score}</div>
+    el.innerHTML = `<h2>${place === 1 ? 'Победа!' : place + ' место'}${rec ? ' · рекорд' : ''}</h2><div class="big">${my.score}</div><p class="near">${nearLine(my.score, best, rec)}</p>
       <div class="recap recap--tight"><div>${order.map((c, i) => `<b style="display:inline">${i + 1}. ${c.name}</b> · ${c.score} · ${names[c.theme]}`).join('<br>')}</div>
       ${some.map((w) => `<div><b>${esc(w.w)}</b>${esc(w.why)}</div>`).join('')}</div>
       <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="r-again">Ещё раз</button></div>`;
@@ -2803,6 +3317,7 @@ function close() {
     $('#r-again').onclick = () => { $('#r-end').hidden = true; $('#r-start').hidden = false; $('#r-time').textContent = DURATION; $('#r-score').textContent = '0'; };
     el.querySelector('[data-c]').onclick = close;
     buzz([15, 60, 15]); place === 1 ? snd.win() : snd.good();
+    award('race', { won: place === 1, rec });
   }
 
   // Пульт: круг внизу. Куда сдвинул, туда и едет машинка; чем дальше, тем быстрее
@@ -2837,316 +3352,516 @@ function close() {
   };
 })();
 
-/* ══════════ 7. ДУЭЛЬ ПАРОЛЕЙ ══════════ */
+
+/* ══════════ 8. СЕЙФ НА ДВОИХ ══════════ */
 (() => {
-  // Игрок в дуэли - это запись { id, name, color, me, profile, blocks, pass, bot }.
-  // Сейчас соперники-боты (bot != null) сами добавляют блоки по таймеру.
-  // Когда появится онлайн, у живых игроков bot будет null, а pass станет
-  // обновляться сообщениями с сервера. Подсчёт, взлом и итоги работают
-  // с одним и тем же списком игроков и менять их не придётся.
-  // Для онлайна оценку надо пересчитывать на сервере по сырым строкам.
-  const DURATION = 45, MAXB = 7, DAY = 86400, YEAR = DAY * 365;
-  const POOL = {
-    word: ['кит', 'облако', 'гитара', 'ракета', 'луна', 'пицца', 'арбуз', 'мост', 'лампа', 'ёжик', 'шторм', 'компас', 'маяк', 'башня', 'пингвин', 'радуга', 'дракон', 'бублик', 'вулкан', 'зонтик', 'комета', 'баобаб', 'самокат', 'чайник', 'медуза', 'фонарь', 'кактус', 'парус', 'молния', 'тыква', 'глобус', 'сапог'],
-    common: ['qwerty', '123456', 'пароль', '111111', 'admin', 'password', '000000', 'привет', '12345', 'qwerty123'],
-    num: ['57', '903', '48', '716', '25', '391', '64', '182', '305', '77'],
-    sym: ['!', '#', '_', '$', '%', '*', '@', '-'],
-  };
-  const COUNT = { word: 5, common: 2, num: 3, sym: 3 };
-  const NAMES = ['Вика', 'Тимур', 'Соня', 'Артём', 'Лера', 'Егор', 'Алиса', 'Макс', 'Дана', 'Ян', 'Рома', 'Ника', 'Зефирка', 'Тоша'];
-  const PETS = ['Бублик', 'Пушок', 'Рекс', 'Снежок', 'Гоша', 'Персик', 'Мотя', 'Лаки', 'Чапа', 'Барон', 'Зефир', 'Тишка'];
-  const YEARS = ['2010', '2011', '2012', '2013', '2014', '1010', '0707', '1505'];
-  const RIVALS = [
-    { id: 'fox', name: 'Лиса', color: '#ffc27a', skill: 0.9 },
-    { id: 'whale', name: 'Кит', color: '#6ea8ff', skill: 0.6 },
-    { id: 'owl', name: 'Сова', color: '#c8a2ff', skill: 0.3 },
+  // Оба игрока вводят один код: из него собирается один и тот же сейф и
+  // один и тот же справочник. Сервера нет, договариваются голосом.
+  const TIME = [180, 160, 150, 130, 120], COUNT = [3, 3, 4, 4, 5];
+  const WC = [['красный', '#ff5a4d'], ['синий', '#4da3ff'], ['жёлтый', '#ffd24a'], ['зелёный', '#5fd58a'], ['белый', '#f1f4f5']];
+  const COND = { code: 'просят код или пароль', rush: 'торопят («срочно», «осталось 5 минут»)', prize: 'обещают приз или подарок', money: 'просят деньги' };
+  const MSGS = [
+    { f: 'Служба поддержки', t: 'Назови код из СМС, чтобы мы защитили твой аккаунт.', k: ['code'] },
+    { f: 'Неизвестный номер', t: 'Срочно! У тебя 5 минут, иначе аккаунт удалят. Пришли пароль.', k: ['code', 'rush'] },
+    { f: 'Розыгрыш призов', t: 'Поздравляем, ты выиграл наушники! Забери приз по ссылке.', k: ['prize'] },
+    { f: 'Розыгрыш призов', t: 'Ты выиграл телефон! Осталось 10 минут. Оплати доставку 200 рублей.', k: ['prize', 'rush', 'money'] },
+    { f: 'Новый знакомый', t: 'Привет! Скинь 300 рублей на карту, завтра верну.', k: ['money'] },
+    { f: 'Бабушка', t: 'Зайди после школы, я испекла пирог.', k: [] },
+    { f: 'Классный чат', t: 'Завтра первым уроком физкультура, не забудьте форму.', k: [] },
+    { f: 'Магазин скинов', t: 'Только сегодня! Через час скидка сгорит. Переведи 150 рублей.', k: ['rush', 'money'] },
+    { f: 'Админ сервера', t: 'Дарим 1000 монет! Чтобы получить, введи пароль от аккаунта.', k: ['prize', 'code'] },
+    { f: 'Неизвестный номер', t: 'Быстрее, времени нет! Перейди по ссылке прямо сейчас.', k: ['rush'] },
+    { f: 'Мама', t: 'Купи хлеб по дороге домой, пожалуйста.', k: [] },
+    { f: 'Курьер', t: 'Посылка ждёт. Переведи 99 рублей за хранение.', k: ['money'] },
   ];
-  // Сколько «бит» добавляет блок. Случайное слово даёт много,
-  // всё про владельца и всё популярное почти ничего.
-  const BITS = { word: 12, me: 2, common: 1, num: 6.5, sym: 4 };
-  const KIND = { word: 'случайное слово, сильное', me: 'про тебя, слабое', common: 'популярное, слабое', num: 'цифры', sym: 'знак', own: 'своё слово' };
-  const pick = (a) => a[Math.random() * a.length | 0];
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const SITES = [
+    ['ВКонтакте', 'vk.com', 'vk.c0m', 'vk-podarki.com', 'vk.com.login-top.ru'],
+    ['Госуслуги', 'gosuslugi.ru', 'g0suslugi.ru', 'gosuslugi-vhod.ru', 'gosuslugi.ru.kabinet-top.com'],
+    ['Roblox', 'roblox.com', 'r0blox.com', 'roblox-bonus.com', 'roblox.com.gift-top.ru'],
+    ['YouTube', 'youtube.com', 'y0utube.com', 'youtube-priz.com', 'youtube.com.video-top.ru'],
+    ['Сбер', 'sberbank.ru', 'sberb4nk.ru', 'sberbank-bonus.ru', 'sberbank.ru.vhod-top.com'],
+    ['Озон', 'ozon.ru', '0zon.ru', 'ozon-skidki.ru', 'ozon.ru.zakaz-top.com'],
+  ];
+  const KIND = ['real', 'swap', 'extra', 'tail'];
+  const KINDTXT = { real: 'Адрес точно как настоящий', swap: 'В адресе цифра вместо буквы', extra: 'К названию приписано слово через дефис', tail: 'После настоящего адреса идёт что-то ещё' };
+  const SIGNS = ['общих друзей нет', 'аккаунт создан меньше недели назад', 'нет ни одного фото', 'зовёт в другой мессенджер', 'просит никому не говорить'];
+  const SHAPES = {
+    star: ['звезда', '<path d="M20 3l5 11 12 1.5-9 8.5 2.5 12L20 30 9.5 36 12 24 3 15.5 15 14z"/>'],
+    circle: ['круг', '<circle cx="20" cy="20" r="15"/>'],
+    tri: ['треугольник', '<path d="M20 4L37 34H3z"/>'],
+    square: ['квадрат', '<rect x="5" y="5" width="30" height="30" rx="4"/>'],
+  };
+  const shapeSvg = (id) => `<svg viewBox="0 0 40 40" aria-hidden="true">${SHAPES[id][1]}</svg>`;
+  const GEMS = [['Рубин', '#ff4d6a'], ['Сапфир', '#4d8dff'], ['Изумруд', '#3fd68a'], ['Янтарь', '#ffb23f'], ['Аметист', '#a97bff'], ['Топаз', '#5fd7e8'], ['Опал', '#f3d6ff'], ['Гранат', '#c9304a'], ['Бирюза', '#3fd0cc'], ['Агат', '#b0b8c4'], ['Жемчуг', '#fff6e6'], ['Алмаз', '#dff6ff']];
+  const TITLE = { wires: 'Провода', dial: 'Диск', sym: 'Значки' };
+  const TIP = {
+    wires: 'Прочитай сообщение напарнику. Он скажет, какой провод резать',
+    dial: 'Назови сайт и адрес по буквам. Напарник скажет цифру',
+    sym: 'Расскажи про профиль. Напарник скажет, какой значок нажать',
+  };
 
-  let players = [], me = null, phase = 'idle', t0 = 0, pausedAt = 0, ticker = null, timers = [], skipFn = null, lastRivals = '', lastSaid = 0;
-  let profile = { name: '', pet: '', num: '' };
-  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
-  const clearAll = () => { timers.forEach(clearTimeout); timers = []; clearInterval(ticker); ticker = null; };
-  const say = (t) => { const l = $('#u-live'); l.textContent = ''; setTimeout(() => { l.textContent = t; }, 50); };
-  const shake = (el) => { if (!reduce.matches) el.animate([{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'none' }], 300); };
-  const focusEl = (el) => { if (!el) return; el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); };
-  const lower = (s) => s.toLowerCase();
-
-  function matchesProfile(v, prof) {
-    const s = lower(v);
-    return [prof.name, prof.pet, prof.num].filter((x) => x && x.length >= 2).map(lower)
-      .some((x) => s === x || (x.length >= 3 && s.includes(x)) || (s.length >= 3 && x.includes(s)));
+  function rng(seed) {
+    return () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   }
-  const COMMON_RE = /^(qwe|asd|zxc|йцу|фыв|admin|pass|парол|привет|love|dragon|monkey|iloveyou|letmein|abc)/;
-  function isCommon(v) {
-    const s = lower(v), core = s.replace(/[\d!@#$%*_-]+$/, '');
-    return POOL.common.includes(s) || COMMON_RE.test(core) || /^(.)\1{2,}$/.test(s)
-      || (s.length >= 3 && ('0123456789'.includes(s) || '9876543210'.includes(s))) || (s.length >= 4 && 'qwertyuiop'.includes(s));
-  }
-  // Блок, который игрок ввёл сам: слабый, если это данные героя или популярная строка.
-  // Свои буквы стоят меньше случайного слова из словаря, потому что робот мог их угадать.
-  const ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm', 'йцукенгшщзхъ', 'фывапролджэ', 'ячсмитьбю', 'abcdefghijklmnopqrstuvwxyz', 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя', '0123456789'];
-  function ownBlock(v, prof) {
-    const s = lower(v).replace(/\s+/g, '');
-    if (matchesProfile(s, prof)) return { v, t: 'me' };
-    // Подряд идущие клавиши или буквы алфавита (abcde, йцукен, 4567) тоже популярны
-    if (isCommon(s) || (s.length >= 3 && ROWS.some((r) => r.includes(s) || [...r].reverse().join('').includes(s)))) return { v, t: 'common' };
-    // Мало разных символов (ааааб) означает слабый пароль, даже если он длинный
-    const uniq = new Set(s).size, len = Math.min(s.length, uniq + 1);
-    const digits = /^\d+$/.test(s);
-    return { v, t: 'own', bits: digits ? Math.min(len * 2, 8) : Math.min(len * 1.5, 8) };
-  }
-  function blocksFor(prof) {
-    const mine = [prof.name, prof.pet, prof.num].filter(Boolean).map((v) => ({ v, t: 'me' }));
-    // Слово героя не должно ещё раз попасть в набор как «сильное»
-    const own = new Set(mine.map((b) => lower(b.v)));
-    const rest = Object.keys(COUNT).flatMap((t) => shuffle(POOL[t].filter((v) => !own.has(lower(v)))).slice(0, COUNT[t]).map((v) => ({ v, t })));
-    return [...rest.filter((b) => b.t === 'word'), ...mine, ...rest.filter((b) => b.t !== 'word')];
-  }
-  function bitsOf(p) {
-    const seen = new Set();
-    let total = 0;
-    for (const b of p.pass) { const k = lower(b.v); total += seen.has(k) ? 1 : (b.bits ?? BITS[b.t]); seen.add(k); }
-    // Бонус за разнообразие даём только за сильные виды блоков
-    return total + (new Set(p.pass.map((b) => b.t).filter((t) => t !== 'me' && t !== 'common')).size >= 3 ? 3 : 0);
-  }
-  // Что «думает» робот: так видно, чем пароль плох или хорош, а не только цифру
-  function robotLine(p) {
-    const mine = p.pass.find((x) => x.t === 'me'), common = p.pass.find((x) => x.t === 'common'), t = human(secOf(p)), end = human(secOf(p)).endsWith('.') ? '' : '.', when = t === 'сразу' ? 'сразу' : 'за ' + t;
-    if (!p.pass.length) return 'Пароля нет, захожу сразу.';
-    if (mine) return level(p) === 2 ? `В пароле есть данные героя («${mine.v}»), это минус. Но слов хватает: перебор займёт ${t}${end}` : `Пробую данные из профиля: «${mine.v}» подошло. Взлом ${when}${end}`;
-    if (common) return `«${common.v}» - один из самых частых паролей, его пробуют первым. Взлом ${when}${end}`;
-    const lv = level(p);
-    if (lv === 0) return `Пароль короткий, перебор быстрый: ${t}${end}`;
-    if (lv === 1) return `Слов мало, подбирать долго, но можно: ${t}${end}`;
-    return `Случайные слова в случайном порядке не угадать. Перебор займёт ${t}${end}`;
-  }
-  const secOf = (p) => Math.pow(2, bitsOf(p)) / 1e9;
-  // 0 - взломан (меньше суток), 1 - средний (меньше года), 2 - крепкий
-  const level = (p) => { const s = secOf(p); return s < DAY ? 0 : s < YEAR ? 1 : 2; };
-  const yearWord = (n) => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? 'год' : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? 'года' : 'лет'; };
-  function human(sec) {
-    if (sec < 1) return 'сразу';
-    if (sec < 59.5) return Math.round(sec) + ' сек';
-    const m = Math.round(sec / 60); if (m < 60) return m + ' мин';
-    const h = Math.round(sec / 3600); if (h < 24) return h + ' ч';
-    const d = Math.round(sec / DAY); if (d < 365) return d + ' дн.';
-    const y = Math.round(sec / YEAR);
-    if (y < 1000) return y + ' ' + yearWord(y);
-    if (y < 1e6) return Math.round(y / 1000) + ' тыс. лет';
-    if (y < 1e9) return Math.round(y / 1e6) + ' млн лет';
-    return 'вечность';
-  }
-
-  // Бот заранее решает, что соберёт: умелый берёт случайные слова, неумелый - данные героя и популярное
-  function planFor(p, skill) {
-    const n = 4 + (Math.random() * (MAXB - 3) | 0), used = new Set(), out = [];
-    const strong = ['word', 'word', 'word', 'num', 'sym'], weak = ['me', 'common', 'me', 'num'];
-    for (let i = 0; i < n; i++) {
-      const kinds = Math.random() < skill ? strong : weak, t = pick(kinds);
-      const pool = p.blocks.filter((b) => b.t === t && !used.has(b.v));
-      const b = pool.length ? pick(pool) : p.blocks.find((x) => kinds.includes(x.t) && !used.has(x.v));
-      if (b) { used.add(b.v); out.push(b); }
-    }
-    return out;
-  }
-
-  function newRound() {
-    const taken = new Set([lower(profile.name), lower(profile.pet)]);
-    const fresh = (list) => { let v; do { v = pick(list); } while (taken.has(lower(v))); taken.add(lower(v)); return v; };
-    me = { id: 'me', name: 'Ты', color: '#3fd0cc', me: true, profile: { ...profile }, pass: [], bot: null };
-    me.blocks = blocksFor(me.profile);
-    players = [me, ...RIVALS.map((r) => {
-      const prof = { name: fresh(NAMES), pet: fresh(PETS), num: pick(YEARS) };
-      // У бота в каждом раунде своё настроение: то собран, то рассеян, иногда удачный раунд
-      const skill = Math.random() < 0.15 ? 1 : Math.min(1, Math.max(0, r.skill + (Math.random() - 0.5) * 0.3));
-      const p = { id: r.id, name: r.name, color: r.color, profile: prof, pass: [], bot: { skill } };
-      p.blocks = blocksFor(prof);
-      p.plan = planFor(p, skill);
-      const gap = DURATION * 0.72 / p.plan.length;
-      p.times = p.plan.map((_, k) => gap * (k + 1) * (0.8 + Math.random() * 0.4));
-      return p;
-    })];
-  }
-
-  const passEl = $('#u-pass'), trayEl = $('#u-tray'), timeEl = $('#u-time');
-  function renderRivals() {
-    const key = players.map((p) => p.pass.length).join();
-    if (key === lastRivals) return;
-    lastRivals = key;
-    $('#u-rivals').innerHTML = players.filter((p) => !p.me).map((p) =>
-      `<div class="u-r" style="--c:${p.color}" role="group" aria-label="${esc(p.name)}: ${p.pass.length} из ${MAXB} блоков"><b><i aria-hidden="true"></i>${esc(p.name)}<em>${p.pass.length}/${MAXB}</em></b><div class="u-dots" aria-hidden="true">${Array.from({ length: MAXB }, (_, k) => `<u class="${k < p.pass.length ? 'on' : ''}"></u>`).join('')}</div></div>`).join('');
-  }
-  function renderTray() {
-    const groups = [['word'], ['me', 'common'], ['num', 'sym']];
-    trayEl.innerHTML = groups.map((g) => `<div class="tray__row">${me.blocks.map((b, i) => [b, i]).filter(([b]) => g.includes(b.t)).map(([b, i]) =>
-      `<button class="blk t-${b.t}" data-i="${i}" aria-label="${esc(b.v)}, ${KIND[b.t]}">${esc(b.v)}</button>`).join('')}</div>`).join('');
-    trayEl.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => add(me.blocks[+btn.dataset.i]));
-  }
-  function renderPass() {
-    passEl.innerHTML = me.pass.map((b, i) => `<button class="blk t-${b.t}" data-i="${i}" aria-label="Убрать ${esc(b.v)}, ${KIND[b.t]}">${esc(b.v)}</button>`).join('');
-    passEl.querySelectorAll('.blk').forEach((btn) => btn.onclick = () => { if (phase !== 'build') return; me.pass.splice(+btn.dataset.i, 1); renderPass(); });
-    trayEl.querySelectorAll('.blk').forEach((btn) => btn.classList.toggle('used', me.pass.includes(me.blocks[+btn.dataset.i])));
-  }
-  // Возвращает false, если блок не добавился (чтобы поле «своё слово» не очищалось зря)
-  function add(b) {
-    if (phase !== 'build' || me.pass.includes(b)) return false;
-    if (me.pass.length >= MAXB) { shake(passEl); flashMsg($('#u-stage'), `Максимум ${MAXB} блоков: убери один`); say(`Максимум ${MAXB} блоков. Убери один, чтобы добавить новый.`); return false; }
-    me.pass.push(b); buzz(6); snd.step(me.pass.length); renderPass();
-    say(`Добавлено: ${b.v}. В пароле ${me.pass.length} из ${MAXB}`);
-    return true;
-  }
-
-  function tick() {
-    if (phase !== 'build') return;
-    const e = (performance.now() - t0) / 1000, left = Math.max(0, Math.ceil(DURATION - e));
-    timeEl.textContent = left;
-    if ((left === 30 || left === 15 || left === 5) && lastSaid !== left) { lastSaid = left; say('Осталось секунд: ' + left); }
-    players.forEach((p) => { if (p.bot) while (p.pass.length < p.plan.length && p.times[p.pass.length] <= e) p.pass.push(p.plan[p.pass.length]); });
-    renderRivals();
-    if (e >= DURATION) finishBuild();
-  }
-
-  function randomHero() {
-    $('#u-name').value = pick(NAMES); $('#u-pet').value = pick(PETS); $('#u-num').value = pick(YEARS);
-  }
-  function start() {
-    const clean = (s) => s.trim().replace(/\s+/g, ' ');
-    profile = { name: clean($('#u-name').value) || pick(NAMES), pet: clean($('#u-pet').value) || pick(PETS), num: $('#u-num').value.replace(/\D/g, '') || pick(YEARS) };
-    $('#u-name').value = profile.name; $('#u-pet').value = profile.pet; $('#u-num').value = profile.num;
-    newRound();
-    $('#u-start').hidden = true; $('#u-end').hidden = true; $('#u-arena').hidden = true; $('#u-main').style.display = '';
-    lastRivals = ''; lastSaid = 0; skipFn = null;
-    renderRivals(); renderTray(); renderPass();
-    phase = 'build'; t0 = performance.now(); timeEl.hidden = false; timeEl.textContent = DURATION;
-    clearAll(); ticker = setInterval(tick, 250);
-    focusEl(passEl);
-    say('Дуэль началась. Собери пароль из блоков.');
-  }
-
-  function finishBuild() {
-    if (phase !== 'build') return;
-    phase = 'attack'; clearAll();
-    players.forEach((p) => { if (p.bot) p.pass = p.plan.slice(); });
-    attackAll();
-  }
-
-  function attackAll() {
-    $('#u-main').style.display = 'none'; $('#u-arena').hidden = false; timeEl.hidden = true;
-    const order = [...players.filter((p) => !p.me), me];
-    const ranked = players.map((p) => ({ p, b: bitsOf(p), r: Math.random() })).sort((a, b) => b.b - a.b || a.r - b.r).map((x) => x.p);
-    const place = (p) => 1 + ranked.filter((x) => bitsOf(x) > bitsOf(p)).length;
-    $('#u-cols').innerHTML = order.map((p) => `<div class="u-col" style="--c:${p.color}"><div class="u-name"><i></i>${esc(p.name)}</div>
-      <div class="u-tow" data-p="${p.id}" role="list" aria-label="Пароль: ${esc(p.name)}">${p.pass.map((b) => `<div class="u-b t-${b.t}" role="listitem" aria-label="${esc(b.v)}, ${KIND[b.t]}">${esc(b.v)}</div>`).join('')}</div><div class="u-res" data-r="${p.id}"></div></div>`).join('');
-    $('#u-skip').hidden = false;
-    focusEl($('#u-arena'));
-    const robot = $('#u-robot'), cols = $('#u-cols'), n = order.length, STEP = reduce.matches ? 600 : 2100;
-    cols.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
-    robot.classList.remove('hit'); robot.style.left = '0';
-    $('#u-say').textContent = 'Читаю профили героев и пробую самое очевидное.';
-    const revealed = new Set();
-    const reveal = (p, quiet) => {
-      if (revealed.has(p.id)) return;
-      revealed.add(p.id);
-      const tow = $(`.u-tow[data-p="${p.id}"]`), res = $(`[data-r="${p.id}"]`), bricks = [...tow.children], lv = level(p);
-      tow.classList.remove('shake');
-      let lab;
-      if (lv === 0) {
-        bricks.forEach((el, k) => { const d = k % 2 ? 1 : -1; el.style.transform = `translate(${d * 30}px, ${90 + k * 8}px) rotate(${d * 60}deg)`; el.classList.add('fall'); });
-        lab = '✕ взломан'; if (!quiet) { p.me ? snd.lose() : snd.bad(); }
-      } else if (lv === 1) {
-        bricks.slice(-1).forEach((el) => { el.style.transform = 'translate(40px, 80px) rotate(50deg)'; el.classList.add('fall'); });
-        lab = '▲ средний';
-      } else { tow.classList.add('hold'); lab = '✓ крепкий'; }
-      res.className = 'u-res lv' + lv;
-      res.innerHTML = `<b>${esc(human(secOf(p)))}</b><span class="lab">${lab}</span>`;
-      say(`${p.name}: ${human(secOf(p))}, ${lab.slice(2)}`);
+  function build(code) {
+    const level = Math.min(5, Math.max(1, +code[0])), r = rng(+code * 7919 + 13);
+    const pick = (a) => a[r() * a.length | 0];
+    const sh = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = r() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const cols = sh([0, 1, 2, 3, 4]), order = sh(Object.keys(COND));
+    const digits = sh([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), shapes = sh(Object.keys(SHAPES));
+    const manual = {
+      wires: order.map((c, i) => ({ c, w: cols[i] })), wiresElse: cols[4],
+      dial: Object.fromEntries(KIND.map((k, i) => [k, digits[i]])),
+      sym: shapes,
     };
-    const medals = () => {
-      order.forEach((p) => { const r = $(`[data-r="${p.id}"]`); if (!r.querySelector('.medal')) r.insertAdjacentHTML('afterbegin', `<span class="medal">${place(p)}</span>`); });
-      buzz([15, 50, 15]);
-    };
-    // «Показать сразу» и пауза во время атаки: все результаты разом
-    skipFn = () => { clearAll(); skipFn = null; order.forEach((p) => reveal(p, true)); medals(); later(() => showEnd(ranked), 900); };
-    order.forEach((p, i) => {
-      const t = i * STEP + 300;
-      later(() => { robot.style.left = `calc(${i * 100 / n}% + ${50 / n}% - 26px)`; }, t);
-      later(() => {
-        const tow = $(`.u-tow[data-p="${p.id}"]`);
-        robot.classList.remove('hit'); void robot.getBoundingClientRect(); if (!reduce.matches) robot.classList.add('hit');
-        tow.classList.add('shake'); buzz([20, 40, 20]); snd.robot(); $('#u-say').textContent = `${p.me ? 'Твой пароль' : p.name}: ${robotLine(p)}`;
-      }, t + Math.round(STEP * 0.3));
-      later(() => reveal(p), t + Math.round(STEP * 0.7));
+    const types = sh(['wires', 'dial', 'sym']);
+    while (types.length < COUNT[level - 1]) types.push(pick(['wires', 'dial', 'sym']));
+    const msgs = sh(MSGS), sites = sh(SITES);
+    const locks = types.map((type, i) => {
+      if (type === 'wires') {
+        const m = msgs[i % msgs.length], hit = manual.wires.find((x) => m.k.includes(x.c));
+        return { type, m, show: sh([0, 1, 2, 3, 4]), answer: hit ? hit.w : manual.wiresElse };
+      }
+      if (type === 'dial') {
+        const s = sites[i % sites.length], kind = pick(KIND);
+        return { type, name: s[0], url: s[1 + KIND.indexOf(kind)], answer: manual.dial[kind] };
+      }
+      const flags = SIGNS.map(() => r() < 0.45), n = flags.filter(Boolean).length;
+      return { type, flags, nick: pick(['max_2013', 'dimon4ik', 'gamer_pro', 'kot_v_tapkah', 'user48151', 'sasha.new']), friends: 4 + (r() * 20 | 0), photos: 9 + (r() * 60 | 0), answer: shapes[Math.min(3, n)] };
     });
-    later(() => { skipFn = null; medals(); }, n * STEP + 200);
-    later(() => showEnd(ranked), n * STEP + 1500);
+    return { code, level, time: TIME[level - 1], manual, locks };
   }
 
-  function showEnd(ranked) {
-    if (phase === 'done' || phase === 'idle') return;
-    phase = 'done'; skipFn = null;
-    $('#u-arena').hidden = true;
-    const ahead = (p) => ranked.filter((x) => bitsOf(x) > bitsOf(p)).length;
-    const place = 1 + ahead(me), won = place === 1;
-    let wins = store.get('duel'); if (won) { wins++; store.set('duel', wins); }
-    const weakMe = me.pass.find((x) => x.t === 'me'), weakCom = me.pass.find((x) => x.t === 'common'), lv = level(me);
-    let tip = !me.pass.length ? 'Без пароля робот заходит сразу.'
-      : weakMe ? `«${esc(weakMe.v)}» из данных героя: робот проверяет такое первым.`
-      : weakCom ? `«${esc(weakCom.v)}» все пробуют в первую очередь.`
-      : lv < 2 ? 'Добавь ещё одно случайное слово.'
-      : 'Несколько случайных слов: легко помнить, трудно взломать.';
-    if (!won && lv < 2) tip += ' Это тренировка: попробуй ещё раз.';
-    const el = $('#u-end');
-    el.innerHTML = `<h2>${won ? 'Победа!' : place + ' место'}</h2>
-      <p class="u-cap">Робот взломает за:</p>
-      <div class="u-rank">${ranked.map((p, i) => `<div class="${p.me ? 'me' : ''}" style="--c:${p.color}"><span class="medal">${1 + ahead(p)}</span><i></i><b>${esc(p.name)}</b><span>${esc(human(secOf(p)))}</span></div>`).join('')}</div>
-      <p class="u-tip">${tip}</p>
-      <div class="row"><button class="btn" data-c>В меню</button><button class="btn btn--main" id="u-again">Ещё раз</button></div>`;
-    el.hidden = false;
-    el.querySelector('[data-c]').onclick = close;
-    $('#u-again').onclick = () => { showStart(); focusEl($('#u-name')); };
-    focusEl(el.querySelector('h2'));
-    say(`${won ? 'Победа' : place + ' место'}. ${tip}`);
-    buzz([15, 60, 15]); won ? snd.win() : snd.good();
-  }
+  const stage = $('#s-stage'), room = $('#s-room'), book = $('#s-book'), startEl = $('#s-start'), endEl = $('#s-end');
+  let P = null, role = 'op', cur = 0, solved = [], cutW = {}, dialV = {}, strikes = 0, left = 0, timer = null, running = false, paused = false, tab = 'wires', lvSel = 1, drone = null, busy = false;
+  const fmt = (s) => `${Math.max(0, s) / 60 | 0}:${String(Math.max(0, s) % 60).padStart(2, '0')}`;
+  const maxLv = () => Math.min(5, store.get('safe_lv') + 1);
+  const newCode = (lv) => String(lv) + String(Math.random() * 1000 | 0).padStart(3, '0');
 
-  const showStart = () => {
-    clearAll(); phase = 'idle'; skipFn = null;
-    $('#u-end').hidden = true; $('#u-arena').hidden = true; $('#u-main').style.display = 'none';
-    timeEl.hidden = true; $('#u-start').hidden = false;
+  /* Звук: гул хранилища, тиканье, сирена, дверь */
+  const T = (...a) => snd.tone && snd.tone(...a);
+  function droneStart() {
+    droneStop();
+    const c = snd.ctx && snd.ctx(); if (!c) return;
+    const g = c.createGain(), f = c.createBiquadFilter();
+    g.gain.value = 0; g.connect(c.destination); g.gain.setTargetAtTime(0.045, c.currentTime, 1.2);
+    f.type = 'lowpass'; f.frequency.value = 210; f.connect(g);
+    const nodes = [55, 55.7, 82.4].map((fr) => { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = fr; o.connect(f); o.start(); return o; });
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = 0.13; lg.gain.value = 70; lfo.connect(lg); lg.connect(f.frequency); lfo.start(); nodes.push(lfo);
+    drone = { c, g, nodes };
+  }
+  function droneStop() {
+    if (!drone) return; const d = drone; drone = null;
+    try { d.g.gain.setTargetAtTime(0, d.c.currentTime, 0.15); setTimeout(() => { try { d.nodes.forEach((n) => n.stop()); d.g.disconnect(); } catch (e) {} }, 700); } catch (e) {}
+  }
+  const sfx = {
+    tick() { T(900, 0.02, 'square', 0.022); },
+    tock() { T(1250, 0.03, 'square', 0.035); T(1250, 0.03, 'square', 0.035, 0.14); },
+    heart() { T(62, 0.13, 'sine', 0.2); T(55, 0.13, 'sine', 0.15, 0.2); },
+    snip() { T(1900, 0.04, 'square', 0.05, 0, 500); T(280, 0.06, 'triangle', 0.07, 0.03); },
+    click() { T(1400, 0.015, 'square', 0.04); },
+    clunk() { T(95, 0.28, 'sine', 0.22, 0, 45); T(660, 0.1, 'sine', 0.08, 0.1); T(990, 0.16, 'sine', 0.08, 0.2); },
+    siren() { for (let i = 0; i < 4; i++) T(i % 2 ? 470 : 640, 0.18, 'square', 0.06, i * 0.18); },
+    count(last) { T(last ? 990 : 660, last ? 0.35 : 0.12, 'sine', 0.12); },
+    door() { T(70, 1.2, 'sawtooth', 0.05, 0, 38); T(140, 0.5, 'triangle', 0.05, 1.1, 60); [523, 659, 784, 1047, 1319].forEach((f, i) => T(f, 0.3, 'sine', 0.09, 2 + i * 0.09)); },
+    alarm() { for (let i = 0; i < 8; i++) T(i % 2 ? 420 : 620, 0.2, 'sawtooth', 0.05, i * 0.2); },
   };
-  $('#u-own').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = $('#u-own-in'), v = input.value.trim();
-    if (phase !== 'build' || !v) return;
-    if (add(ownBlock(v, me.profile))) input.value = '';
+
+  /* Экран сейфа */
+  function lockHtml(L, i) {
+    if (L.type === 'wires') {
+      return `<h3>Замок ${i + 1}. Провода</h3><div class="sf-msg"><b>${esc(L.m.f)}</b><p>${esc(L.m.t)}</p></div>
+        <div class="sf-wires">${L.show.map((w) => `<button class="sf-wire${(cutW[i] || []).includes(w) ? ' cut' : ''}" style="--w:${WC[w][1]}" data-wire="${w}" ${(cutW[i] || []).includes(w) ? 'disabled' : ''}>${WC[w][0]}</button>`).join('')}</div>`;
+    }
+    if (L.type === 'dial') {
+      const v = dialV[i] || 0;
+      return `<h3>Замок ${i + 1}. Диск</h3><p class="sf-site">Сайт называет себя: <b>${esc(L.name)}</b></p>
+        <div class="sf-url"><small>адрес сайта</small>${esc(L.url)}</div>
+        <div class="sf-dial"><button class="sf-step" data-step="-1" aria-label="Меньше">‹</button><div class="sf-knob"><i style="transform:rotate(${v * 36}deg)"></i><span id="s-dv">${v}</span></div><button class="sf-step" data-step="1" aria-label="Больше">›</button></div>
+        <button class="btn btn--main btn--wide" data-turn>Открыть замок</button>`;
+    }
+    const msg = L.flags[3] && L.flags[4] ? 'Перейдём в другой мессенджер? Только никому не говори.' : L.flags[3] ? 'Давай перейдём в другой мессенджер, тут неудобно.' : L.flags[4] ? 'Привет! Только никому не говори, что мы общаемся.' : 'Привет! Мы вместе ходим на плавание, помнишь?';
+    return `<h3>Замок ${i + 1}. Значки</h3><div class="sf-prof"><div>Тебе пишет<b>${esc(L.nick)}</b></div><div>Общих друзей<b>${L.flags[0] ? 0 : L.friends}</b></div><div>Аккаунт создан<b>${L.flags[1] ? '3 дня назад' : '2 года назад'}</b></div><div>Фото в профиле<b>${L.flags[2] ? 'нет ни одного' : L.photos}</b></div><p>${msg}</p></div>
+      <div class="sf-syms">${Object.keys(SHAPES).map((s) => `<button class="sf-sym" data-sym="${s}" aria-label="${SHAPES[s][0]}">${shapeSvg(s)}</button>`).join('')}</div>`;
+  }
+  function paintRoom() {
+    const L = P.locks[cur];
+    room.innerHTML = `<div class="sf-hud"><div class="sf-led" id="s-led">${fmt(left)}</div><div class="sf-serial">сейф<b>№ ${P.code}</b></div><div class="sf-lamps" aria-label="Ошибки: ${strikes} из 3">${[0, 1, 2].map((k) => `<i class="${k < strikes ? 'on' : ''}"></i>`).join('')}</div></div>
+      <div class="sf-locks">${P.locks.map((x, i) => `<button class="sf-lock${i === cur ? ' on' : ''}${solved[i] ? ' ok' : ''}" data-lock="${i}"><i></i>${TITLE[x.type]}</button>`).join('')}</div>
+      <div class="sf-panel${solved[cur] ? ' done' : ''}">${lockHtml(L, cur)}</div>
+      ${role === 'solo' ? '<button class="sf-peek" data-peek>Открыть шпаргалку</button>' : ''}`;
+    $('#s-hint').textContent = solved[cur] ? 'Этот замок открыт. Выбери следующий' : TIP[L.type];
+  }
+  function paintTime() {
+    const t = fmt(left); $('#s-time').textContent = t;
+    const led = $('#s-led'); if (led) led.textContent = t;
+    const bt = $('#s-bt'); if (bt) bt.textContent = t;
+    stage.classList.toggle('hot', running && left <= 30);
+  }
+  function strike() {
+    strikes++; left = Math.max(0, left - 10); buzz([60, 40, 60]); sfx.siren();
+    stage.classList.remove('strike'); void stage.offsetWidth; stage.classList.add('strike');
+    setTimeout(() => stage.classList.remove('strike'), 650);
+    flashMsg(stage, strikes >= 3 ? 'Третья ошибка!' : 'Ошибка! Минус 10 секунд');
+    if (strikes >= 3 || left <= 0) { paintRoom(); paintTime(); return finish(false, strikes >= 3 ? 'err' : 'time'); }
+    paintRoom(); paintTime();
+  }
+  function solve() {
+    solved[cur] = true; busy = true; buzz(20); sfx.clunk(); paintRoom();
+    setTimeout(() => {
+      busy = false; if (!running) return;
+      const next = P.locks.findIndex((_, i) => !solved[i]);
+      if (next < 0) return finish(true);
+      cur = next; paintRoom();
+    }, 900);
+  }
+  room.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || !running || paused) return;
+    if (b.dataset.peek !== undefined) { paintBook(); book.hidden = false; return; }
+    if (b.dataset.lock !== undefined) { if (!busy) { cur = +b.dataset.lock; sfx.click(); paintRoom(); } return; }
+    if (busy || solved[cur]) return;
+    const L = P.locks[cur];
+    if (b.dataset.wire !== undefined) {
+      const w = +b.dataset.wire; (cutW[cur] = cutW[cur] || []).push(w); sfx.snip();
+      if (w === L.answer) solve(); else strike();
+    } else if (b.dataset.step !== undefined) {
+      dialV[cur] = ((dialV[cur] || 0) + +b.dataset.step + 10) % 10; sfx.click(); buzz(6);
+      $('#s-dv').textContent = dialV[cur]; room.querySelector('.sf-knob i').style.transform = `rotate(${dialV[cur] * 36}deg)`;
+    } else if (b.dataset.turn !== undefined) {
+      if ((dialV[cur] || 0) === L.answer) solve(); else strike();
+    } else if (b.dataset.sym !== undefined) {
+      if (b.dataset.sym === L.answer) solve(); else strike();
+    }
   });
-  $('#u-done').onclick = () => {
-    if (phase !== 'build') return;
-    if (!me.pass.length) { shake(passEl); flashMsg($('#u-stage'), 'Добавь хотя бы один блок'); say('Пароль пустой. Добавь хотя бы один блок.'); return; }
-    finishBuild();
-  };
-  $('#u-skip').onclick = () => { if (skipFn) skipFn(); };
-  $('#u-num').addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, ''); });
-  $('#u-rand').onclick = randomHero;
-  $('#u-start').addEventListener('submit', (e) => { e.preventDefault(); start(); });
-  games.duel = {
-    enter() { randomHero(); showStart(); },
-    leave() { clearAll(); phase = 'idle'; skipFn = null; },
-    pause() {
-      if (phase === 'build' && ticker) { pausedAt = performance.now(); clearInterval(ticker); ticker = null; }
-      else if (phase === 'attack' && skipFn) skipFn();
-    },
-    resume() { if (phase === 'build' && !ticker) { t0 += performance.now() - pausedAt; ticker = setInterval(tick, 250); } },
+
+  /* Шпаргалка */
+  function pageHtml() {
+    const M = P.manual;
+    if (tab === 'wires') {
+      return `<p>Спроси напарника, от кого сообщение и что в нём написано. Читай правила <b>сверху вниз</b>. Первое подошло - дальше не читай.</p>
+        <ol>${M.wires.map((x) => `<li>Если <b>${COND[x.c]}</b> - режь <span class="sf-w" style="--w:${WC[x.w][1]}">${WC[x.w][0]}</span> провод.</li>`).join('')}
+        <li>Если ничего этого нет - режь <span class="sf-w" style="--w:${WC[M.wiresElse][1]}">${WC[M.wiresElse][0]}</span> провод.</li></ol>`;
+    }
+    if (tab === 'dial') {
+      return `<p>Спроси, как сайт себя называет, и попроси прочитать адрес <b>по буквам</b>. Сравни с настоящим.</p>
+        <h4>Настоящие адреса</h4><ul>${SITES.map((s) => `<li>${s[0]}: <b>${s[1]}</b></li>`).join('')}</ul>
+        <h4>На какую цифру повернуть диск</h4><ul>${KIND.map((k) => `<li>${KINDTXT[k]} - <span class="sf-num">${M.dial[k]}</span></li>`).join('')}</ul>`;
+    }
+    return `<p>Спроси про профиль того, кто пишет: друзья, когда создан, фото, что написал. Посчитай <b>тревожные признаки</b>.</p>
+      <h4>Тревожные признаки</h4><ul>${SIGNS.map((s) => `<li>${s}</li>`).join('')}</ul>
+      <h4>Сколько признаков - такой значок</h4><ul>${M.sym.map((s, n) => `<li>${n === 3 ? '3 и больше' : n} - <span class="sf-shape">${shapeSvg(s)}${SHAPES[s][0]}</span></li>`).join('')}</ul>`;
+  }
+  function paintBook() {
+    const solo = role === 'solo';
+    book.classList.toggle('sheet', solo);
+    book.innerHTML = `<div class="sf-book__top"><h3><small>шпаргалка к сейфу</small>№ ${P.code}</h3>${solo ? '<button class="sf-x" data-x aria-label="Закрыть шпаргалку">×</button>' : `<span class="sf-stamp">секретно</span><span class="sf-booktime" id="s-bt">${fmt(left)}</span>`}</div>
+      <div class="sf-tabs" role="tablist">${Object.keys(TITLE).map((t) => `<button class="sf-tab${t === tab ? ' on' : ''}" role="tab" aria-selected="${t === tab}" data-tab="${t}">${TITLE[t]}</button>`).join('')}</div>
+      <div class="sf-page">${pageHtml()}</div>
+      ${solo ? '' : '<div class="sf-bookend"><button data-won>Сейф открыт!</button><button data-lost>Сработала сирена</button></div>'}`;
+  }
+  book.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.tab) { tab = b.dataset.tab; sfx.click(); paintBook(); }
+    else if (b.dataset.x !== undefined) book.hidden = true;
+    else if (b.dataset.won !== undefined) finish(true);
+    else if (b.dataset.lost !== undefined) finish(false, 'err');
+  });
+
+  /* Ход игры */
+  function tick() {
+    if (!running || paused) return;
+    left--; paintTime();
+    if (left <= 0) return finish(false, 'time');
+    if (left <= 10) { sfx.tock(); sfx.heart(); } else if (left <= 30) { sfx.tick(); if (left % 2 === 0) sfx.heart(); } else sfx.tick();
+    if (drone && !snd.on) droneStop();
+  }
+  function begin() {
+    startEl.hidden = true; endEl.hidden = true; running = true; paused = false; busy = false;
+    cur = 0; solved = []; cutW = {}; dialV = {}; strikes = 0; left = P.time; tab = 'wires';
+    stage.classList.remove('hot', 'strike');
+    if (role === 'ex') { room.hidden = true; book.hidden = false; paintBook(); $('#s-hint').textContent = 'Слушай напарника и читай ему правила'; }
+    else { room.hidden = false; book.hidden = true; paintRoom(); }
+    paintTime(); droneStart();
+    clearInterval(timer); timer = setInterval(tick, 1000);
+  }
+  function countdown() {
+    let n = 3;
+    const show = () => {
+      if (current !== 'safe') return;
+      if (!n) { sfx.count(true); return begin(); }
+      startEl.innerHTML = `<h2>Приготовьтесь</h2><div class="sf-count" key="${n}">${n}</div>`;
+      sfx.count(false); n--; setTimeout(show, 900);
+    };
+    show();
+  }
+  function ready(r, code) {
+    role = r; P = build(code);
+    const who = r === 'op' ? ['Ты у сейфа', 'Ты видишь замки, но не знаешь, как их открыть. Рассказывай напарнику всё, что видишь.'] : r === 'ex' ? ['У тебя шпаргалка', 'Ты знаешь ответы, но не видишь сейф. Спрашивай напарника и говори, что делать.'] : ['Пробуем одному', 'И сейф, и шпаргалка у тебя. Шпаргалка открывается кнопкой внизу: загляни в неё перед каждым замком.'];
+    startEl.innerHTML = `<h2>${who[0]}</h2><p>${who[1]}</p>
+      <div class="chips"><span class="chip">сейф № <b>${code}</b></span><span class="chip">замков: ${P.locks.length}</span><span class="chip">${fmt(P.time)}</span></div>
+      ${r === 'solo' ? '' : '<p class="sf-tip">Сверьте код и нажмите «Старт» одновременно.</p>'}
+      <div class="row"><button class="btn" id="s-backs">Назад</button><button class="btn btn--main" id="s-run">Старт</button></div>`;
+    $('#s-run').onclick = countdown; $('#s-backs').onclick = () => toStart(r === 'solo' ? null : 'duo');
+  }
+  function gemsRow() {
+    const have = store.get('safe_gems');
+    return `<div class="sf-gems">${GEMS.map((g, i) => `<i class="${have >> i & 1 ? 'on' : ''}" style="--g:${g[1]}" title="${g[0]}"></i>`).join('')}<span>&nbsp;кристаллы: ${GEMS.filter((_, i) => have >> i & 1).length} из ${GEMS.length}</span></div>`;
+  }
+  // Старт в два шага: сначала «с другом или один», подробности только потом
+  function toStart(step) {
+    running = false; clearInterval(timer); droneStop(); stage.classList.remove('hot', 'strike');
+    room.hidden = true; book.hidden = true; endEl.hidden = true; startEl.hidden = false;
+    lvSel = Math.min(lvSel, maxLv());
+    $('#s-time').textContent = fmt(TIME[lvSel - 1]);
+    if (step !== 'duo') {
+      $('#s-hint').textContent = 'Сначала можно попробовать одному';
+      startEl.innerHTML = `<h2>Сейф на двоих</h2><p>Вас двое, у каждого свой телефон. Один видит замки, у другого шпаргалка с ответами. Говорите вслух и откройте сейф вместе.</p>
+        <button class="btn btn--main btn--wide" data-go="duo" style="margin-bottom:8px">Играю с другом</button>
+        <button class="btn btn--wide" data-go="solo">Попробовать одному</button>${gemsRow()}`;
+      return;
+    }
+    $('#s-hint').textContent = 'Нужны два телефона и один код';
+    startEl.innerHTML = `<h2>Играю с другом</h2>
+      <p class="sf-tip"><b>1.</b> Код у вас должен быть одинаковый. Продиктуй свой или введи код друга.</p>
+      <div class="sf-code"><input id="s-code" class="ym-disable-keys" inputmode="numeric" maxlength="4" aria-label="Код сейфа" value="${newCode(lvSel)}"><button class="btn" id="s-new">Новый код</button></div>
+      <p class="sf-tip"><b>2.</b> Сложность. Она же первая цифра кода.</p>
+      <div class="sf-lv" aria-label="Сложность">${[1, 2, 3, 4, 5].map((n) => `<button data-lv="${n}" class="${n === lvSel ? 'on' : ''}" ${n > maxLv() ? 'disabled' : ''} aria-label="Сложность ${n}">${n > maxLv() ? '🔒' : n}</button>`).join('')}</div>
+      <p class="sf-tip"><b>3.</b> Выберите разные роли.</p>
+      <div class="sf-roles"><button class="btn btn--main" data-role="op">Я у сейфа</button><button class="btn btn--main" data-role="ex">У меня шпаргалка</button></div>
+      <button class="btn btn--wide" data-go="back">Назад</button>`;
+  }
+  startEl.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.go === 'duo') toStart('duo');
+    else if (b.dataset.go === 'back') toStart();
+    else if (b.dataset.go === 'solo') ready('solo', newCode(lvSel));
+    else if (b.dataset.lv) { lvSel = +b.dataset.lv; toStart('duo'); }
+    else if (b.id === 's-new') { $('#s-code').value = newCode(lvSel); }
+    else if (b.dataset.role) {
+      const code = ($('#s-code').value || '').replace(/\D/g, '');
+      if (!/^[1-5]\d{3}$/.test(code)) { flashMsg(stage, 'Код: 4 цифры, первая от 1 до 5'); snd.bad(); return; }
+      ready(b.dataset.role, code);
+    }
+  });
+  const doorSvg = '<svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="96" fill="#2b383d" stroke="#566a71" stroke-width="6"/><circle cx="100" cy="100" r="78" fill="#1e282c" stroke="#3f5057" stroke-width="3"/><g><circle cx="100" cy="100" r="30" fill="#3a4a50" stroke="#7a9098" stroke-width="5"/><path d="M100 40v120M40 100h120M58 58l84 84M142 58l-84 84" stroke="#7a9098" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="11" fill="#ffc27a"/></g></svg>';
+  function finish(won, why) {
+    if (!running) return;
+    running = false; clearInterval(timer); droneStop(); stage.classList.remove('hot'); book.hidden = true; room.hidden = true;
+    let gem = null;
+    if (won) {
+      if (P.level >= maxLv() && P.level < 5) store.set('safe_lv', P.level);
+      store.set('safe_wins', store.get('safe_wins') + 1);
+      const have = store.get('safe_gems'), free = GEMS.map((_, i) => i).filter((i) => !(have >> i & 1));
+      if (free.length) { const gi = free[Math.random() * free.length | 0]; gem = GEMS[gi]; store.set('safe_gems', have | 1 << gi); }
+      sfx.door(); buzz([30, 60, 30, 60, 120]);
+    } else { sfx.alarm(); buzz([200, 80, 200]); }
+    award('safe', { won });
+    const nextLv = Math.min(5, P.level + 1);
+    endEl.innerHTML = won
+      ? `<div class="sf-door" style="--g:${gem ? gem[1] : '#ffd24a'}"><div class="sf-door__in"><div class="sf-door__gem"></div></div>${doorSvg}</div>
+        <h2>Сейф открыт!</h2><p>${gem ? `Внутри лежал кристалл: <b>${gem[0]}</b>.` : 'Все кристаллы уже собраны.'} ${role === 'ex' ? 'Вы справились вдвоём.' : `Осталось ${fmt(left)}, ошибок: ${strikes}.`}</p>${gemsRow()}
+        <div class="row" style="margin-top:14px"><button class="btn" data-again="${P.level}">Ещё раз</button><button class="btn btn--main" data-again="${nextLv}">${nextLv > P.level ? 'Сейф сложнее' : 'Новый сейф'}</button></div>`
+      : `<div class="sf-door shut">${doorSvg}</div><h2>${why === 'time' ? 'Время вышло' : 'Сработала сирена'}</h2>
+        <p>Сейф остался закрыт. ${role === 'ex' ? 'Спрашивай подробнее и читай правила по порядку.' : 'Не спеши с догадками: сначала расскажи напарнику, что видишь, и дождись ответа.'}</p>
+        <div class="row"><button class="btn" data-again="${P.level}">Другой сейф</button><button class="btn btn--main" data-retry>Этот же сейф</button></div>`;
+    endEl.hidden = false; $('#s-hint').textContent = won ? 'Поменяйтесь ролями и сыграйте ещё' : 'Попробуйте ещё раз';
+  }
+  endEl.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.retry !== undefined) { endEl.hidden = true; startEl.hidden = false; ready(role, P.code); }
+    else if (b.dataset.again) { lvSel = +b.dataset.again; if (role === 'solo') { endEl.hidden = true; startEl.hidden = false; ready('solo', newCode(Math.min(lvSel, maxLv()))); } else toStart('duo'); }
+  });
+
+  games.safe = {
+    enter() { lvSel = maxLv(); toStart(); },
+    leave() { running = false; clearInterval(timer); droneStop(); },
+    pause() { paused = true; },
+    resume() { paused = false; },
   };
 })();
 
-// Игра, которую просило приложение (?game=duel и т. п.), стартует сразу
+/* ══════════ 9. САМОЗВАНЕЦ ══════════ */
+(() => {
+  // Пока соперники - боты. Ход партии описан данными (кто, что и когда пишет),
+  // чтобы позже вместо ботов могли писать живые игроки через сервер.
+  const NAMES = ['Лёша', 'Дима', 'Саша', 'Миша', 'Женя', 'Паша', 'Катя', 'Аня', 'Соня', 'Вика', 'Лера', 'Маша'];
+  const COLORS = ['#ffb86b', '#7fd6ff', '#9be28a', '#ff9ac2', '#c7a6ff', '#ffe27a'];
+  const TAG = { vague: 'писал расплывчато: «нужна помощь», а какая - не говорил', rush: 'торопил', code: 'просил код из СМС', money: 'просил деньги', link: 'звал по незнакомой ссылке', pass: 'просил логин и пароль', secret: 'просил никому не говорить', gift: 'обещал подарок', dodge: 'ушёл от проверочного вопроса' };
+  const SCEN = [
+    { goal: 'выманил код из СМС', r: [
+      [['Ребят, кто сейчас онлайн? Нужна помощь, это быстро', 'vague'], ['Привет! Есть минутка? Очень нужно', 'vague']],
+      [['Кому-то из вас сейчас придёт код в СМС. Перешлите его мне', 'code'], ['У меня случайно указан чужой номер. Скиньте код, который придёт', 'code']],
+      [['Срочно, осталась минута! Просто скиньте цифры и никому не говорите', 'rush', 'secret'], ['Быстрее, код сгорит! Только взрослым не рассказывайте', 'rush', 'secret']]] },
+    { goal: 'выпросил деньги', r: [
+      [['Всем привет. Кто может выручить?', 'vague'], ['Ребят, тут такое дело. Нужна помощь', 'vague']],
+      [['Скиньте 500 рублей на карту, вечером верну', 'money'], ['Переведите мне 300 по номеру, завтра отдам', 'money']],
+      [['Мне прямо сейчас надо, потом объясню! Родителям не говорите', 'rush', 'secret'], ['Ну быстрее, это срочно! Только никому ни слова', 'rush', 'secret']]] },
+    { goal: 'заманил на поддельный сайт', r: [
+      [['Смотрите, что тут есть!', 'vague'], ['Ребят, тут такая тема есть', 'vague']],
+      [['Раздают скины бесплатно, заходите: skins-free.top', 'link', 'gift'], ['Тут дарят 1000 монет каждому: free-coins.top', 'link', 'gift']],
+      [['Раздача закончится через 5 минут! Введите там логин и пароль', 'rush', 'pass'], ['Успейте, осталось мало! Там просто войти через свой аккаунт', 'rush', 'pass']]] },
+    { goal: 'украл аккаунты через «голосование»', r: [
+      [['Ребята, помогите выиграть конкурс', 'vague'], ['Мне нужна ваша помощь, это на минуту', 'vague']],
+      [['Проголосуйте за меня по ссылке: vote-top.ru. Там вход через ваш аккаунт', 'link', 'pass'], ['Отдайте голос тут: konkurs-vote.top. Нужно войти со своим паролем', 'link', 'pass']],
+      [['Голосование закрывается через 3 минуты! Кто успеет, тому подарок', 'rush', 'gift'], ['Быстрее, осталось чуть-чуть! Всем, кто проголосует, приз', 'rush', 'gift']]] },
+  ];
+  // Обычные реплики. Среди них есть «шумные»: тоже срочно или со ссылкой, но безобидные
+  const TALK = [
+    'Срочно скиньте дз по матеше, у меня не записано!', 'Кто идёт завтра на футбол после уроков?', 'Гляньте видео на youtube.com, там кот падает с дивана',
+    'Мама зовёт ужинать, вернусь через полчаса', 'У кого есть лишняя ручка на завтра?', 'Презентация готова, могу показать завтра в школе',
+    'Быстрее отвечайте, кто в майн сегодня вечером?', 'Завтра контрольная или послезавтра?', 'У меня пропала сменка, никто не видел синий пакет?',
+    'Ахаха, вы видели, что было на перемене?', 'Кто понял задачу номер 5? Объясните завтра', 'Мне подарили новый рюкзак, завтра увидите',
+    'Давайте в субботу погуляем в парке', 'У меня температура, скажите классной, что меня не будет', 'Кто дежурит завтра? Не я, надеюсь',
+    'Собака съела мою тетрадь, я не шучу', 'Помогите выбрать: пицца или бургер?', 'Не забудьте форму на физру',
+    'Я дома, уроки почти готовы', 'Кто смотрел новую серию? Только без спойлеров', 'У нас отменили шестой урок, ура',
+    'Папа обещал отвезти нас на каток', 'Скиньте фотку расписания, пожалуйста', 'Стих выучен, спросите меня завтра',
+  ];
+  const QA = [['как зовут нашу классную?', 'Марина Сергеевна, ты чего'], ['что вчера было на физре?', 'Кросс бегали, еле дошли до финиша'], ['какой завтра первый урок?', 'Русский. И диктант, кстати'], ['где мы сегодня сидели в столовой?', 'У окна, как всегда'], ['кто дежурил на этой неделе?', 'Мы с тобой, уже не помнишь?']];
+  const DODGE = ['Не до этого сейчас, давай потом', 'Что за вопросы? Просто помогите', 'Ой, не помню. Так вы поможете или нет?'];
+  const OFFEND = ['Эй, это правда я! Обидно, между прочим', 'Ты чего? Это же я!', 'Это я, честно. Смотри внимательнее'];
+  const RANKS = [[15, 'Гроза самозванцев'], [8, 'Сыщик чата'], [3, 'Внимательный'], [0, 'Новичок']];
+  const rankOf = (w) => RANKS.find((r) => w >= r[0])[1];
+
+  const stage = $('#i-stage'), chat = $('#i-chat'), bar = $('#i-bar'), people = $('#i-people'), startEl = $('#i-start'), endEl = $('#i-end');
+  let G = null, tok = 0, paused = false, pad = null;
+  const T = (...a) => snd.tone && snd.tone(...a);
+  const sfx = {
+    msg(i) { T(520 + i * 70, 0.07, 'sine', 0.07); T(780 + i * 70, 0.09, 'sine', 0.05, 0.06); },
+    type() { T(1500, 0.012, 'square', 0.012); },
+    ask() { T(440, 0.1, 'triangle', 0.07, 0, 720); },
+    round(n) { for (let k = 0; k < n; k++) T(70, 0.16, 'sine', 0.2, k * 0.22); },
+    drum() { for (let k = 0; k < 9; k++) T(150 + k * 14, 0.05, 'triangle', 0.06, k * 0.07); },
+    caught() { [392, 523, 659, 784, 1047].forEach((f, k) => T(f, 0.22, 'sine', 0.1, 0.7 + k * 0.09)); T(180, 0.3, 'sawtooth', 0.05, 0.62, 60); },
+    wrong() { T(220, 0.3, 'triangle', 0.13, 0.7, 120); },
+    lost() { [330, 277, 220, 165].forEach((f, k) => T(f, 0.3, 'sawtooth', 0.05, k * 0.2)); },
+  };
+  function padStart() {
+    padStop(); const c = snd.ctx && snd.ctx(); if (!c) return;
+    const g = c.createGain(), f = c.createBiquadFilter(); g.gain.value = 0; g.connect(c.destination); g.gain.setTargetAtTime(0.035, c.currentTime, 1.5);
+    f.type = 'lowpass'; f.frequency.value = 260; f.connect(g);
+    const nodes = [110, 164.8, 220.6].map((fr) => { const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = fr; o.connect(f); o.start(); return o; });
+    pad = { c, g, f, nodes };
+  }
+  function padTense(n) { if (pad) try { pad.f.frequency.setTargetAtTime(260 + n * 170, pad.c.currentTime, 0.8); pad.nodes[2].frequency.setTargetAtTime(220.6 + n * 6, pad.c.currentTime, 0.8); } catch (e) {} }
+  function padStop() { if (!pad) return; const p = pad; pad = null; try { p.g.gain.setTargetAtTime(0, p.c.currentTime, 0.15); setTimeout(() => { try { p.nodes.forEach((n) => n.stop()); p.g.disconnect(); } catch (e) {} }, 700); } catch (e) {} }
+
+  // Пауза, которую можно отменить: при выходе из игры ожидание просто не продолжится
+  const wait = (ms) => new Promise((res) => { const my = tok; const step = () => { if (my !== tok) return; if (paused) return setTimeout(step, 200); if (ms <= 0) return res(); ms -= 100; setTimeout(step, 100); }; step(); });
+  const ava = (m) => `<span class="im-ava" style="--c:${m.c}">${m.n[0]}</span>`;
+  function say(m, text) {
+    const d = document.createElement('div');
+    if (m === 'me') { d.className = 'im-msg me'; d.innerHTML = `<div>${esc(text)}</div>`; }
+    else { d.className = 'im-msg'; d.style.setProperty('--c', m.c); d.innerHTML = `${ava(m)}<div><b>${m.n}</b>${esc(text)}</div>`; }
+    chat.querySelectorAll('.im-typing').forEach((t) => t.remove()); chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+  }
+  function sys(text, hot) { const d = document.createElement('div'); d.className = 'im-sys' + (hot ? ' hot' : ''); d.textContent = text; chat.appendChild(d); chat.scrollTop = chat.scrollHeight; }
+  async function typing(m, ms) {
+    const d = document.createElement('div'); d.className = 'im-typing'; d.innerHTML = `${m.n} печатает<span>...</span>`; chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+    for (let k = 0; k < ms / 220; k++) { sfx.type(); await wait(220); }
+  }
+  function paintPeople() {
+    people.innerHTML = G.m.map((m, i) => `<button class="im-p${G.sel === i ? ' sel' : ''}" data-p="${i}" ${G.phase !== 'act' || m.clear ? 'disabled' : ''}>${ava(m)}${m.n}<small class="${m.mark === 'ответа нет' ? 'bad' : ''}">${m.mark || ''}</small></button>`).join('');
+    $('#i-lives').textContent = '♥'.repeat(G.lives) + '♡'.repeat(2 - G.lives);
+    $('#i-round').textContent = `${Math.max(1, G.round)}/3`;
+    $('#i-threat').querySelectorAll('i').forEach((x, k) => x.classList.toggle('on', k < G.round));
+  }
+  function paintBar() {
+    if (G.phase !== 'act') { bar.innerHTML = '<p>Чат пишет...</p>'; return; }
+    if (G.sel === null) {
+      bar.innerHTML = G.round < 3
+        ? '<p>Нажми на того, кого подозреваешь</p><button class="btn btn--wide" id="i-next">Читать дальше</button>'
+        : '<p><b>Последний шанс.</b> Нажми на того, кто самозванец</p>';
+      return;
+    }
+    const m = G.m[G.sel];
+    bar.innerHTML = `<p>${m.n}: что делаем?</p><div class="row"><button class="btn" id="i-check" ${G.checks && !m.mark ? '' : 'disabled'}>Проверить вопросом (${G.checks})</button><button class="btn im-acc" id="i-acc">Это самозванец</button></div>`;
+  }
+  const paint = () => { paintPeople(); paintBar(); };
+
+  async function playRound() {
+    G.phase = 'talk'; G.sel = null; G.round++; paint(); padTense(G.round); sfx.round(G.round);
+    sys(G.round === 1 ? 'Чат 6 «Б». Вечер' : G.round === 2 ? 'Прошло 10 минут' : 'Самозванец почти у цели', G.round === 3);
+    await wait(700);
+    for (const i of shuffle(G.m.map((_, k) => k))) {
+      const m = G.m[i];
+      let text;
+      if (m.imp) { const line = G.scen.r[G.round - 1][G.variant]; text = line[0]; line.slice(1).forEach((t) => G.tags.add(t)); }
+      else text = G.talk.pop();
+      await typing(m, 700 + Math.random() * 600);
+      say(m, text); sfx.msg(i); buzz(5);
+      await wait(650);
+    }
+    G.phase = 'act'; paint();
+  }
+  async function check(i) {
+    const m = G.m[i], q = G.qa.pop(); G.checks--; G.phase = 'talk'; G.sel = null; paint();
+    say('me', `${m.n}, ${q[0]}`); sfx.ask(); await wait(500);
+    await typing(m, 900);
+    if (m.imp) { say(m, DODGE[Math.random() * DODGE.length | 0]); m.mark = 'ответа нет'; G.tags.add('dodge'); }
+    else { say(m, q[1]); m.mark = 'ответ верный'; }
+    sfx.msg(i); await wait(400);
+    G.phase = 'act'; paint();
+  }
+  async function accuse(i) {
+    const m = G.m[i]; G.phase = 'talk'; G.sel = null; paint();
+    say('me', `${m.n}, это не ты пишешь. Ты самозванец!`); sfx.drum(); await wait(900);
+    if (m.imp) return finish(true);
+    sfx.wrong(); buzz([60, 40, 60]); G.lives--; m.clear = true; m.mark = 'не самозванец';
+    await typing(m, 600); say(m, OFFEND[Math.random() * OFFEND.length | 0]);
+    if (!G.lives) { await wait(900); return finish(false); }
+    sys('Ошибка. Осталась одна попытка', true); G.phase = 'act'; paint();
+  }
+  function finish(won) {
+    tok++; padStop(); G.phase = 'end';
+    const imp = G.m.find((m) => m.imp), wins = store.get('imp_wins') + (won ? 1 : 0);
+    let score = 0;
+    if (won) {
+      score = [300, 200, 100][G.round - 1] + G.lives * 50 + G.checks * 50;
+      store.set('imp_wins', wins); store.set('imp_streak', store.get('imp_streak') + 1);
+      if (score > store.get('imp_best')) store.set('imp_best', score);
+      sfx.caught(); buzz([30, 50, 30, 50, 120]);
+    } else { store.set('imp_streak', 0); sfx.lost(); buzz([200, 80, 200]); }
+    award('imp', { won });
+    const why = [...G.tags].map((t) => `<li>${TAG[t]}</li>`).join('');
+    endEl.innerHTML = `<div class="im-big${won ? ' glitch' : ''}" style="--c:${imp.c}">${imp.n[0]}</div>
+      <h2>${won ? 'Самозванец пойман!' : 'Самозванец добился своего'}</h2>
+      <p>${won ? `Чужой писал с аккаунта <b>«${imp.n}»</b>. Настоящий хозяин аккаунта ничего не знал.` : `Он писал с аккаунта <b>«${imp.n}»</b>. Самозванец ${G.scen.goal}.`}</p>
+      ${won ? `<div class="big">${score}</div><div class="chips"><span class="chip">рекорд: <b>${store.get('imp_best')}</b></span><span class="chip">серия: <b>${store.get('imp_streak')}</b></span><span class="chip">${rankOf(wins)}</span></div>` : ''}
+      <p style="margin-bottom:4px;color:var(--ink)"><b>Что его выдавало:</b></p><ul class="im-why">${why}</ul>
+      <p class="im-tip">В жизни так же: если друг пишет странно, позвони ему или спроси то, что знает только он.</p>
+      <button class="btn btn--main btn--wide" id="i-again">${won ? 'Новый чат' : 'Попробовать ещё раз'}</button>`;
+    endEl.hidden = false;
+    $('#i-again').onclick = start;
+  }
+  function start() {
+    tok++; paused = false;
+    const names = shuffle(NAMES).slice(0, 4), cols = shuffle(COLORS), impIdx = Math.random() * 4 | 0;
+    G = { m: names.map((n, i) => ({ n, c: cols[i], imp: i === impIdx })), scen: SCEN[Math.random() * SCEN.length | 0], variant: Math.random() * 2 | 0,
+      talk: shuffle(TALK), qa: shuffle(QA), round: 0, lives: 2, checks: 2, sel: null, phase: 'talk', tags: new Set() };
+    chat.innerHTML = ''; startEl.hidden = true; endEl.hidden = true; padStart(); playRound();
+  }
+  people.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-p]'); if (!b || !G || G.phase !== 'act') return;
+    const i = +b.dataset.p; G.sel = G.sel === i ? null : i; snd.tap(); paint();
+  });
+  bar.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || !G || G.phase !== 'act') return;
+    if (b.id === 'i-next') playRound(); else if (b.id === 'i-check') check(G.sel); else if (b.id === 'i-acc') accuse(G.sel);
+  });
+  $('#i-go').addEventListener('click', start);
+  games.imp = {
+    enter() {
+      tok++; padStop(); G = null; chat.innerHTML = ''; people.innerHTML = ''; bar.innerHTML = ''; endEl.hidden = true; startEl.hidden = false;
+      $('#i-best').textContent = store.get('imp_best'); $('#i-streak').textContent = store.get('imp_streak'); $('#i-rank').textContent = rankOf(store.get('imp_wins'));
+      $('#i-lives').textContent = '♥♥'; $('#i-round').textContent = '1/3';
+    },
+    leave() { tok++; padStop(); },
+    pause() { paused = true; },
+    resume() { paused = false; },
+  };
+})();
+
+// Игра, которую просило приложение (?game=race и т. п.), стартует сразу
 if (direct && games[direct]) open(direct);
 </script>
 

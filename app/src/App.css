@@ -3039,3 +3039,55 @@ html[data-theme='day'] .toggle[aria-checked='true'] {
 .debrief__title--sub {
   margin-top: 14px;
 }
+
+/* Звание в разделе «Игры»: общий опыт за все мини-игры */
+.rank-card {
+  margin: 0 16px 14px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--bg-soft);
+}
+.rank-card__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.rank-card__row b {
+  font-size: 18px;
+}
+.rank-card__row span {
+  font-size: 13px;
+  color: var(--ink-muted);
+  text-align: right;
+}
+.rank-card__bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-soft);
+  overflow: hidden;
+  margin: 10px 0 8px;
+}
+.rank-card__bar i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--grad-icon);
+}
+.rank-card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.tile__x2 {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--grad-icon);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}

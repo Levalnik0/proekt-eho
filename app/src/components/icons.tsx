@@ -281,21 +281,6 @@ export function IconSwipe({ size = 24, className }: IconProps) {
 
 const GLYPH = 'var(--icon-glyph-bg, #5a94a5)';
 
-/** Две башни из блоков: «Дуэль паролей» */
-export function IconDuel({ size = 24, className }: IconProps) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <rect x="3" y="11" width="8" height="9.5" rx="1.8" fill="currentColor" />
-      <rect x="13" y="4.5" width="8" height="16" rx="1.8" fill="currentColor" />
-      <rect x="5" y="13.3" width="4" height="1.8" rx="0.9" fill={GLYPH} />
-      <rect x="5" y="16.6" width="4" height="1.8" rx="0.9" fill={GLYPH} />
-      <rect x="15" y="7" width="4" height="1.8" rx="0.9" fill={GLYPH} />
-      <rect x="15" y="10.6" width="4" height="1.8" rx="0.9" fill={GLYPH} />
-      <rect x="15" y="14.2" width="4" height="1.8" rx="0.9" fill={GLYPH} />
-    </svg>
-  );
-}
-
 /** Машинка сверху: «Автодром слов» */
 export function IconRace({ size = 24, className }: IconProps) {
   return (
@@ -311,28 +296,39 @@ export function IconRace({ size = 24, className }: IconProps) {
   );
 }
 
-/** Два пузыря сообщений: «Фильтр» */
-export function IconFilter({ size = 24, className }: IconProps) {
+/** Два человечка, у второго знак вопроса: «Самозванец» */
+export function IconImpostor({ size = 24, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <rect x="2.5" y="3.5" width="14" height="7.5" rx="3.75" fill="currentColor" />
-      <rect x="7.5" y="13" width="14" height="7.5" rx="3.75" fill="currentColor" opacity="0.7" />
-      <rect x="5.4" y="6.4" width="6.5" height="1.7" rx="0.85" fill={GLYPH} />
-      <rect x="10.4" y="15.9" width="6.5" height="1.7" rx="0.85" fill={GLYPH} />
+      <circle cx="8" cy="8.5" r="3.4" fill="currentColor" opacity="0.55" />
+      <path d="M2 20c.5-4.2 3-6 6-6s5.5 1.800 6 6z" fill="currentColor" opacity="0.55" />
+      <circle cx="16.500" cy="8.500" r="3.800" fill="currentColor" />
+      <path d="M10 20c.5-4.400 3.200-6.300 6.500-6.300s6 1.900 6.500 6.300z" fill="currentColor" />
+      <path d="M15.300 7.600a1.300 1.300 0 1 1 1.900 1.100c-.5.300-.7.500-.7 1" fill="none" stroke={GLYPH} strokeWidth="1.100" strokeLinecap="round" />
+      <circle cx="16.500" cy="11" r="0.700" fill={GLYPH} />
     </svg>
   );
 }
 
-/** Башня с зубцами: «Крепость» */
-export function IconFort({ size = 24, className }: IconProps) {
+/** Дверца сейфа с вентилем: «Сейф на двоих» */
+export function IconSafe({ size = 24, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <rect x="4.5" y="3.5" width="3.6" height="4.6" rx="0.8" fill="currentColor" />
-      <rect x="10.2" y="3.5" width="3.6" height="4.6" rx="0.8" fill="currentColor" />
-      <rect x="15.9" y="3.5" width="3.6" height="4.6" rx="0.8" fill="currentColor" />
-      <rect x="4.5" y="9.4" width="15" height="5" rx="1.2" fill="currentColor" />
-      <rect x="4.5" y="15.7" width="15" height="5" rx="1.2" fill="currentColor" />
-      <rect x="9.4" y="11" width="5.2" height="1.8" rx="0.9" fill={GLYPH} />
+      <rect x="3" y="3.5" width="18" height="17" rx="3.4" fill="currentColor" />
+      <circle cx="12" cy="12" r="4.4" fill="none" stroke={GLYPH} strokeWidth="1.8" />
+      <path d="M12 7.6v8.8M7.6 12h8.8" stroke={GLYPH} strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="18" cy="7" r="1.1" fill={GLYPH} />
+    </svg>
+  );
+}
+
+/** Конверт с сургучной печатью: «Ночная почта» */
+export function IconFilter({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <rect x="2.5" y="5.5" width="19" height="13.5" rx="2.6" fill="currentColor" />
+      <path d="M3.5 7.5l8.5 6 8.5-6" fill="none" stroke={GLYPH} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="15" r="2.3" fill={GLYPH} />
     </svg>
   );
 }

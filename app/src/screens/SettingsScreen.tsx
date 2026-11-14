@@ -3,7 +3,7 @@ import { buzz, centerOf, hapticsEnabled, hapticsSupported, setHaptics } from '..
 import { resetGames } from '../games/storage';
 import { setSound, soundEnabled } from '../sound';
 import { useProgress } from '../progress/useProgress';
-import { THEMES, useTheme } from '../theme/useTheme';
+import { useTheme, visibleThemes } from '../theme/useTheme';
 
 /**
  * Настройки. Здесь остались только вещи, которые работают: цвет и
@@ -29,7 +29,7 @@ export function SettingsScreen() {
           <span>Цвет</span>
         </div>
         <div className="theme-picker">
-          {THEMES.map((t) => (
+          {visibleThemes().map((t) => (
             <button
               key={t.id}
               className={`theme-swatch${theme === t.id ? ' is-active' : ''}`}
