@@ -50,7 +50,7 @@ export function FeedbackScreen({ onBack }: { onBack: () => void }) {
           <iframe
             className="feedback__frame"
             title="Форма отзыва"
-            src={`${FEEDBACK_URL}?embedded=true`}
+            src={`${FEEDBACK_URL}?iframe=1`}
             loading="lazy"
           />
           <p className="home2__trust">

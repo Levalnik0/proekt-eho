@@ -3098,7 +3098,8 @@ html[data-theme='day'] .toggle[aria-checked='true'] {
   width: 100%;
   height: calc(100dvh - 210px);
   min-height: 420px;
-  border: 0;
+  box-sizing: border-box;
+  border: 10px solid #fff;
   border-radius: 16px;
   background: #fff;
 }
