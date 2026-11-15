@@ -863,6 +863,123 @@ canvas { display: block; width: 100%; height: 100%; }
 .gl-seg button:disabled { opacity: .3; }
 .gl-map > div { width: 100%; max-width: 420px; }
 .gl-big .row .btn { flex: 1; }
+/* Glitch: устройства в заданиях */
+.gx-wires { width: 100%; height: auto; display: block; touch-action: none; }
+.gx-br { border-radius: 14px; overflow: hidden; background: #f4f5fa; color: #1a1d2e; }
+.gx-brtop { display: flex; align-items: center; gap: 5px; padding: 7px 10px 0; background: #dfe2ec; font-size: 11.5px; font-weight: 700; color: #4a5070; }
+.gx-brtop i { width: 9px; height: 9px; border-radius: 50%; background: #ff5f57; flex: none; }
+.gx-brtop i:nth-child(2) { background: #febc2e; } .gx-brtop i:nth-child(3) { background: #28c840; }
+.gx-brtop span { margin-left: 6px; background: #f4f5fa; border-radius: 8px 8px 0 0; padding: 5px 12px; }
+.gx-brbody { padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.gx-brbody b { font-size: 16px; color: #1a1d2e; } .gx-brbody small { color: #6a7090; font-size: 12px; margin-bottom: 4px; }
+.gx-logo { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 18px; box-shadow: 0 6px 14px rgba(0,0,0,.18); }
+.gx-url { width: 100%; display: flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 12px; border-radius: 999px; background: #e9ecf5; color: #1a1d2e; font-family: ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; text-align: left; border: 1.5px solid #d3d8e6; word-break: break-all; }
+.gx-url svg { width: 12px; height: 14px; color: #8a90a8; flex: none; }
+.gx-phone { position: relative; border-radius: 26px; background: #0b0a14; border: 3px solid #3a3456; padding: 24px 8px 10px; box-shadow: inset 0 0 0 2px #15122a; }
+.gx-notch { position: absolute; left: 50%; top: 7px; width: 70px; height: 10px; margin-left: -35px; border-radius: 6px; background: #22203a; }
+.gx-ph-h { font-weight: 900; font-size: 14px; padding: 0 6px 8px; color: #fff; }
+.gx-bub { display: flex; gap: 8px; align-items: flex-start; background: #1b1830; border-radius: 16px; padding: 8px 10px; margin-bottom: 6px; }
+.gx-ava { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; color: #10101a; }
+.gx-bub > div { flex: 1; min-width: 0; } .gx-bub b { font-size: 12.5px; color: #2de2e6; }
+.gl-card .gx-bub p { margin: 2px 0 6px; color: #fff; font-size: 13.5px; line-height: 1.35; }
+.gx-ch { display: flex; gap: 6px; }
+.gx-ch button { flex: 1; min-height: 34px; border-radius: 999px; background: #2b2450; color: #d8d0f5; font-weight: 800; font-size: 12.5px; }
+.gx-ch button.on { background: #1f7a50; color: #fff; } .gx-ch button.bad.on { background: #9a2448; }
+.gx-lap { margin: 4px auto 0; max-width: 300px; }
+.gx-lscr { background: #0f1424; border: 8px solid #2a2d3e; border-bottom-width: 12px; border-radius: 12px 12px 4px 4px; padding: 10px; }
+.gx-lbase { height: 12px; margin: 0 -14px; border-radius: 0 0 14px 14px; background: linear-gradient(#4a4e62, #2a2d3e); }
+.gx-wtit { display: flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 800; color: #b8c4e8; margin-bottom: 8px; }
+.gx-wtit i { width: 8px; height: 8px; border-radius: 50%; background: #3a4060; }
+.gx-files div { display: grid; grid-template-columns: 22px 1fr auto 16px; align-items: center; gap: 6px; padding: 4px 2px; font-size: 12.5px; color: #8a92b8; }
+.gx-files b { font-weight: 700; } .gx-files small { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; }
+.gx-files em { font-style: normal; text-align: center; }
+.gx-fi { width: 16px; height: 20px; border-radius: 3px; background: #3a4a7a; box-shadow: inset -5px 5px 0 rgba(255,255,255,.12); }
+.gx-files div.go { color: #fff; } .gx-files div.go em::after { content: "…"; color: #2de2e6; }
+.gx-files div.ok { color: #c9ffe2; } .gx-files div.ok em::after { content: "✓"; color: #39d98a; font-weight: 900; } .gx-files div.ok .gx-fi { background: #1f7a50; }
+.gx-chalk { position: relative; border-radius: 10px; border: 10px solid #8a5a34; box-shadow: inset 0 0 0 2px #5a3a20, 0 6px 14px rgba(0,0,0,.4); background: radial-gradient(120% 90% at 30% 20%, #2a4a38, #1a3326); overflow: hidden; padding-bottom: 14px; }
+.gx-chalk canvas { display: block; width: 100%; height: auto; touch-action: none; }
+.gx-tray { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: #6b4428; display: flex; gap: 8px; align-items: center; padding: 0 16px; }
+.gx-tray i { width: 26px; height: 5px; border-radius: 3px; background: #f1ece0; } .gx-tray i:nth-child(2) { background: #ff9ac2; width: 18px; } .gx-tray i:nth-child(3) { background: #9ad0ff; width: 22px; }
+.gx-sponge { position: absolute; width: 44px; height: 28px; margin: -14px 0 0 -22px; border-radius: 6px; background: #ffd24a; box-shadow: inset 0 -9px 0 #3a7ad9; pointer-events: none; }
+.gx-osc { position: relative; border-radius: 12px; border: 6px solid #2a2d3e; background: #06140c; background-image: linear-gradient(rgba(57,217,138,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(57,217,138,.12) 1px, transparent 1px); background-size: 20px 20px; }
+.gx-osc canvas { display: block; width: 100%; height: auto; }
+.gx-ok { position: absolute; right: 8px; top: 6px; font-size: 10px; font-weight: 900; letter-spacing: .08em; color: #39d98a; opacity: 0; transition: opacity .2s; }
+.gx-osc.hit .gx-ok { opacity: 1; }
+.gx-spk { display: flex; justify-content: space-around; margin: 10px 0 2px; }
+.gx-spk i { width: 58px; height: 58px; border-radius: 50%; border: 3px solid #3d3566; background: radial-gradient(#4a4270 18%, #15112a 20% 38%, #2b2450 40% 58%, #15112a 60%); }
+.gx-osc.hit ~ .gx-spk i { animation: gxpulse .22s infinite alternate; }
+@keyframes gxpulse { to { transform: scale(1.08); } }
+.gx-scan { position: relative; height: 170px; border-radius: 14px; background: #081a18; border: 3px solid #1f6b5a; overflow: hidden; display: flex; justify-content: flex-end; padding-right: 8px; }
+.gx-scan svg { height: 100%; }
+.gx-beam { position: absolute; left: 0; right: 0; top: 8%; height: 4px; background: #39d98a; box-shadow: 0 0 18px #39d98a; opacity: 0; }
+.gx-scan.on .gx-beam { opacity: 1; animation: gxbeam 1.1s ease-in-out infinite alternate; }
+@keyframes gxbeam { to { top: 92%; } }
+.gx-read { position: absolute; left: 8px; top: 8px; max-width: 58%; font: 700 10.5px ui-monospace, Menlo, monospace; color: #39d98a; line-height: 1.6; text-align: left; }
+.gx-set { display: flex; align-items: center; gap: 10px; background: #1b1830; border-radius: 14px; padding: 8px 10px; margin-bottom: 6px; }
+.gx-ic { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: #2b2450; font-size: 16px; flex: none; }
+.gx-set > div { flex: 1; min-width: 0; } .gx-set b { display: block; font-size: 13px; color: #fff; }
+.gx-set small { font-size: 11.5px; color: #ff8fa8; font-weight: 700; } .gx-set.ok small { color: #6fe0a6; }
+.gx-sw { flex: none; width: 50px; height: 30px; border-radius: 999px; background: #6b2a40; position: relative; transition: background .2s; }
+.gx-sw i { position: absolute; left: 3px; top: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: left .2s; box-shadow: 0 2px 4px rgba(0,0,0,.3); }
+.gx-sw.on { background: #1f9a5a; } .gx-sw.on i { left: 23px; }
+.gx-reader { display: flex; align-items: center; gap: 8px; justify-content: center; background: #2a2f40; border-radius: 12px; padding: 9px; font-size: 11px; font-weight: 900; letter-spacing: .1em; color: #b8c0d8; }
+.gx-led { width: 12px; height: 12px; border-radius: 50%; background: #ffd24a; box-shadow: 0 0 10px #ffd24a; }
+.gx-reader.ok .gx-led { background: #39d98a; box-shadow: 0 0 12px #39d98a; } .gx-reader.bad .gx-led { background: #ff3d5a; box-shadow: 0 0 12px #ff3d5a; }
+.gl-track .gx-pass { display: block; background: linear-gradient(135deg, #f4fbff, #a9d6ff); }
+.gx-pass .gx-ph { position: absolute; left: 7px; top: 7px; width: 20px; height: 26px; border-radius: 4px; background: #5a6a90; }
+.gx-pass .gx-ln { position: absolute; left: 32px; top: 11px; width: 38px; height: 5px; border-radius: 3px; background: #5a6a90; } .gx-pass .gx-ln.s { top: 21px; width: 26px; }
+.gx-pass em { position: absolute; left: 7px; bottom: 4px; font-style: normal; font-size: 9px; font-weight: 900; color: #2f4a7a; }
+.gx-box { position: relative; background: linear-gradient(#6a7080, #4a4f5e); border-radius: 14px; padding: 12px 10px 8px; box-shadow: inset 0 2px 0 rgba(255,255,255,.2), 0 6px 14px rgba(0,0,0,.35); margin-bottom: 8px; }
+.gx-box::before, .gx-box::after { content: ""; position: absolute; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: #2a2d3e; box-shadow: inset 1px 1px 0 rgba(255,255,255,.3); }
+.gx-box::before { left: 8px; } .gx-box::after { right: 8px; }
+.gx-warn { display: inline-block; background: #ffd24a; color: #1a1424; font-size: 11px; font-weight: 900; padding: 2px 8px; border-radius: 6px; margin: 0 0 8px 14px; }
+.gx-nums { display: grid; grid-template-columns: repeat(var(--n), 1fr); text-align: center; font-weight: 900; color: #1a1d2e; font-size: 12px; margin-top: 4px; }
+.gx-rack { background: #0b0e1a; border: 3px solid #2f3860; border-radius: 12px; padding: 10px; }
+.gx-rh { display: flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 900; letter-spacing: .08em; color: #2de2e6; margin-bottom: 8px; }
+.gx-rh i { width: 8px; height: 8px; border-radius: 50%; background: #ff3d5a; box-shadow: 0 0 8px #ff3d5a; animation: glblink 1s steps(2) infinite; }
+.gx-rack .gl-key { aspect-ratio: auto; height: 56px; border-radius: 8px; background: #1b2140; font-size: 22px; position: relative; }
+.gx-rack .gl-key::after { content: ""; position: absolute; right: 7px; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: #3a4060; }
+.gx-rack .gl-key.ok { background: #1f6b4a; border-color: #39d98a; }
+.gx-rack .gl-key.ok::after { background: #39d98a; box-shadow: 0 0 8px #39d98a; }
+.gx-crit { border-radius: 14px; padding: 12px; background: repeating-linear-gradient(-45deg, #2a1018 0 12px, #3a1420 12px 24px); border: 2px solid #ff3d5a; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.gx-crit .gl-prog { width: 100%; }
+.gx-bigbtn { width: 116px; height: 116px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #ff7a8a, #c9203a 60%, #7a0f22); box-shadow: 0 8px 0 #5a0a18, 0 0 30px rgba(255,61,90,.5); color: #fff; font-weight: 900; font-size: 15px; letter-spacing: .08em; touch-action: none; }
+.gx-bigbtn:active { transform: translateY(5px); box-shadow: 0 3px 0 #5a0a18, 0 0 30px rgba(255,61,90,.5); }
+.gx-cool { display: flex; align-items: center; justify-content: center; gap: 28px; margin: 4px 0 4px; }
+.gx-therm { position: relative; width: 34px; height: 170px; border-radius: 17px; background: #e9eef5; border: 3px solid #9aa3b8; overflow: hidden; }
+.gx-therm .zone { position: absolute; left: 0; right: 0; bottom: 38%; height: 22%; background: rgba(57,217,138,.35); border-top: 2px solid #39d98a; border-bottom: 2px solid #39d98a; }
+.gx-therm .lvl { position: absolute; left: 8px; right: 8px; bottom: 0; border-radius: 8px 8px 0 0; background: #ff3d5a; }
+.gx-fan { width: 112px; height: 112px; border-radius: 50%; background: #1b2140; border: 5px solid #3a4060; display: grid; place-items: center; }
+.gx-fan svg { width: 86px; height: 86px; } .gx-fan.on svg { animation: gxspin .3s linear infinite; }
+@keyframes gxspin { to { transform: rotate(360deg); } }
+.gx-aq { width: 100%; height: auto; display: block; border-radius: 12px; border: 6px solid #3a4a6a; touch-action: none; }
+.gx-shelf { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 146px; padding: 0 10px; background: linear-gradient(#3a2618, #2a1a10); border-radius: 12px 12px 0 0; }
+.gx-plank { height: 14px; background: #8a5a34; border-radius: 0 0 8px 8px; margin-bottom: 4px; }
+.gx-book { position: relative; width: 38px; border-radius: 5px 5px 2px 2px; background: var(--c); box-shadow: inset -6px 0 0 rgba(0,0,0,.18), inset 0 8px 0 rgba(255,255,255,.18); transition: transform .15s; }
+.gx-book span { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); width: 24px; height: 24px; border-radius: 50%; background: #fff; color: #1a1424; font-weight: 900; font-size: 14px; display: grid; place-items: center; }
+.gx-book.sel { transform: translateY(-14px); box-shadow: 0 0 0 3px #fff; }
+.gx-gym { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; height: 170px; padding: 10px 14px; background: repeating-linear-gradient(90deg, #5c4226 0 24px, #66492b 24px 26px); border-radius: 14px; }
+.gx-ball { width: 120px; height: 120px; display: grid; place-items: center; }
+.gx-ball svg { width: 100%; transition: transform .15s; }
+.gx-gauge { position: relative; align-self: flex-start; width: 70px; height: 40px; border-radius: 70px 70px 0 0; background: #f1ece0; overflow: hidden; border: 3px solid #2a2d3e; border-bottom: 0; }
+.gx-gauge::after { content: ""; position: absolute; right: 3px; bottom: 2px; width: 14px; height: 14px; border-radius: 50%; background: #39d98a; }
+.gx-gauge i { position: absolute; left: 50%; bottom: 0; width: 3px; height: 32px; margin-left: -1.5px; background: #c9203a; transform-origin: bottom center; transform: rotate(-80deg); transition: transform .2s; }
+.gx-pump { position: relative; width: 52px; height: 150px; }
+.gx-pump .b { position: absolute; left: 12px; right: 12px; bottom: 0; height: 90px; border-radius: 6px; background: linear-gradient(90deg, #3a7ad9, #6aa8ff); }
+.gx-pump .h { position: absolute; left: 0; right: 0; top: 10px; height: 12px; border-radius: 6px; background: #2a2d3e; transition: top .1s; }
+.gx-pump .h::after { content: ""; position: absolute; left: 22px; top: 12px; width: 8px; height: 40px; background: #9aa3b8; }
+.gx-pump.down .h { top: 42px; }
+.gx-bed { position: relative; height: 200px; border-radius: 14px; background: linear-gradient(#1c2c4a 0 42%, #1a3a26 42%); overflow: hidden; touch-action: none; }
+.gx-bed::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 34px; background: #4a3020; box-shadow: inset 0 4px 0 #5a3a28; }
+.gx-fl { position: absolute; bottom: 26px; width: 60px; height: 110px; margin-left: -30px; z-index: 1; pointer-events: none; }
+.gx-fl svg { width: 100%; height: 100%; transform: scaleY(.35); transform-origin: bottom; transition: transform .4s; }
+.gx-fl.s1 svg { transform: scaleY(.7); } .gx-fl.s2 svg { transform: none; }
+.gx-fl .pet { transform: scale(0); transform-origin: 20px 18px; transition: transform .4s; } .gx-fl.s2 .pet { transform: scale(1); }
+.gx-fl i { position: absolute; left: 12px; right: 12px; bottom: -18px; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #3fa8ff var(--w, 0%), #1a2a40 0); }
+.gx-can { position: absolute; width: 60px; height: 44px; margin: -54px 0 0 -8px; pointer-events: none; z-index: 2; }
+.gx-can.pour::after { content: ""; position: absolute; left: 0; top: 10px; width: 10px; height: 46px; background: repeating-linear-gradient(transparent 0 6px, #6ab8ff 6px 10px); animation: gxdrop .3s linear infinite; opacity: .85; }
+@keyframes gxdrop { to { background-position-y: 10px; } }
+
 .gl-row .btn { padding: 0 10px; font-size: 15px; }
 .gl-card p b { color: #fff; }
 </style>
@@ -1127,7 +1244,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <button class="gl-b sab" id="gl-bsab" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Сбой</span><i></i></button>
         <button class="gl-b rep" id="gl-brep" disabled><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>Тревога</span></button>
         <button class="gl-b kill" id="gl-bkill" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h3M13 9h3M8 15l3-2 2 2 3-2"/></svg>Взлом</span><i></i></button>
-        <button class="gl-b vent" id="gl-bvent" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 12h10M7 15h10"/></svg>Ход</span></button>
+        <button class="gl-b vent" id="gl-bvent" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 12h10M7 15h10"/></svg>Кабель</span></button>
         <button class="gl-b use" id="gl-buse" disabled><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11V5a2 2 0 0 1 4 0v6M13 10a2 2 0 0 1 4 0v4a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-4a2 2 0 0 1 3-2l2 2"/></svg>Действие</span></button>
       </div>
       <div class="gl-toast" id="gl-toast" hidden></div>
@@ -1321,7 +1438,7 @@ const HOWTO = {
   safe: ['<b>Вас двое</b>, у каждого свой телефон. Экран друга подсматривать нельзя.', 'Один видит <b>замки</b>, но не знает, как их открыть. У второго <b>шпаргалка</b> с ответами, но сейф он не видит.', '<b>Говорите вслух:</b> один рассказывает, что видит, второй подсказывает, что нажать. Можно сидеть рядом или созвониться.', 'Введите <b>один код</b>, и телефоны найдут друг друга: старт, таймер и ошибки будут общими.', 'Нет напарника? Нажми <b>«Попробовать одному»</b>: и сейф, и шпаргалка будут у тебя.'],
   imp: ['В чате класса четыре друга. Один аккаунт <b>взломали</b>: от имени друга пишет чужой.', 'Читай сообщения. Самозванец <b>торопит, просит код или деньги, зовёт по ссылке</b>.', 'Сомневаешься? Нажми на человека и <b>задай проверочный вопрос</b>. Уверен? Жми «Это самозванец».'],
   windows: ['Во двор приходят гости. <b>Друзья</b> с тёплым фонариком, <b>незнакомцы</b> без него.', '<b>Потяни штору</b> в сторону или нажми на окно: открыто всем, друзьям или закрыто.', 'Друзьям нужны фото и личка. Незнакомцам <b>ничего</b> не нужно. «Где я» лучше закрыть.', 'Гость с подписью <b>«0 общих»</b> не друг. Нажми на него, и его заблокируют.', 'Ветер сам приоткрывает шторы - успей закрыть. <b>Фонарь</b> показывает подписи гостей.'],
-  glitch: ['Вечер в школе. Ты <b>защитник</b>: ходи по карте и выполняй <b>задания</b> из списка. Чтобы идти, нажми на экран и веди пальцем.', 'Среди вас прячутся <b>глитчи</b>. Они выглядят как все, но тайком <b>взламывают</b> защитников и устраивают сбои: гасят свет и перегревают сервер.', 'Нашёл взломанного? Жми <b>«Тревога»</b>. На собрании <b>пиши в чат</b> или выбирай готовые фразы, потом выбери игрока и голосуй, кого выгнать. Имя, адрес, телефон и ссылки не пиши: игра такие сообщения не пропустит.', 'Защитники побеждают, когда сделаны все задания или выгнаны все глитчи. Глитчи - когда их стало столько же, сколько защитников.', 'Играй с ботами или <b>с друзьями по коду комнаты</b>. Придумай себе ник, но настоящее имя, фамилию и школу не пиши. Роль выпадает случайно.'],
+  glitch: ['Вечер в школе. Ты <b>защитник</b>: ходи по карте и выполняй <b>задания</b> из списка. Чтобы идти, нажми на экран и веди пальцем.', 'Среди вас прячутся <b>глитчи</b>. Они выглядят как все, но тайком <b>взламывают</b> защитников и устраивают сбои: гасят свет и перегревают сервер. Ещё они умеют быстро перебегать по <b>кабелям</b> под школой: из любого люка в любой другой.', 'Нашёл взломанного? Жми <b>«Тревога»</b>. На собрании <b>пиши в чат</b> или выбирай готовые фразы, потом выбери игрока и голосуй, кого выгнать. Имя, адрес, телефон и ссылки не пиши: игра такие сообщения не пропустит.', 'Защитники побеждают, когда сделаны все задания или выгнаны все глитчи. Глитчи - когда их стало столько же, сколько защитников.', 'Играй с ботами или <b>с друзьями по коду комнаты</b>. Придумай себе ник, но настоящее имя, фамилию и школу не пиши. Роль выпадает случайно.'],
 };
 // Правила показываются по одному шагу на карточке: «Дальше», «Дальше», «Приступить»
 const START = { imp: '#i-go', filter: '#f-go', detective: '#d-go', net: '#n-go', windows: '#w-go', race: '#r-go' };
@@ -4338,13 +4455,17 @@ function relayJoin(topic, onMsg, onState) {
     { id: 'server', r: 'server', x: 290, y: 1532, n: 'Перезапусти сервер' },
     { id: 'cool', r: 'server', x: 960, y: 1532, n: 'Охлади стойку' },
     { id: 'files', r: 'arch', x: 1300, y: 1552, n: 'Спрячь личные фото' },
+    { id: 'fish', r: 'class', x: 604, y: 320, sx: 582, sy: 320, n: 'Покорми рыбок' },
+    { id: 'books', r: 'lib', x: 1082, y: 334, sx: 1050, sy: 334, n: 'Расставь книги' },
+    { id: 'ball', r: 'gym', x: 830, y: 812, n: 'Накачай мяч' },
+    { id: 'flowers', r: 'yard', x: 2330, y: 965, sx: 2330, sy: 922, n: 'Полей цветы' },
   ];
   ST.forEach((s) => { s.sx = s.sx || s.x; s.sy = s.sy || s.y + 28; });
   const STI = Object.fromEntries(ST.map((s) => [s.id, s]));
   const FIX = { lights: { x: 560, y: 1272, sx: 560, sy: 1300 }, critA: { x: 700, y: 1532, sx: 700, sy: 1560 }, critB: { x: 1520, y: 1552, sx: 1520, sy: 1580 } };
   const EMG = { x: 1800, y: 310 };
   const VENTS = [[250, 465], [690, 1105], [570, 1372], [1050, 1825], [1560, 1805], [1600, 1105], [1920, 1105], [2225, 170], [1920, 465]];
-  const vlinks = (i) => [(i + 8) % 9, (i + 1) % 9];
+  const vlinks = (i) => VENTS.map((_, k) => k).filter((k) => k !== i);
   const SEATS = [0, 1, 2, 3, 4].map((i) => [1720 + i * 40, 248]).concat([0, 1, 2, 3, 4].map((i) => [1720 + i * 40, 372]));
   const spawnPos = (i) => [900 + i * 45, 648];
   const EYES = [[1078, 1502], [214, 1846], [1586, 1522], [606, 1392], [1592, 1828]];
@@ -4534,6 +4655,10 @@ function relayJoin(topic, onMsg, onState) {
     if (s.id === 'board') return;
     if (s.id === 'scan') { c.fillStyle = '#12302e'; c.beginPath(); c.arc(x, y, 30, 0, 7); c.fill(); c.strokeStyle = 'rgba(57,217,138,.6)'; c.lineWidth = 3; c.beginPath(); c.arc(x, y, 26, 0, 7); c.stroke(); c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, 15, 0, 7); c.moveTo(x - 26, y); c.lineTo(x + 26, y); c.moveTo(x, y - 26); c.lineTo(x, y + 26); c.stroke(); return; }
     if (s.id === 'card') { c.fillStyle = '#30384a'; rrf(c, x - 9, y - 18, 18, 36, 4); c.fillStyle = '#39d98a'; c.fillRect(x - 4, y - 12, 8, 5); c.fillStyle = '#0b0e1a'; c.fillRect(x - 2, y - 2, 4, 16); return; }
+    if (s.id === 'fish') { c.fillStyle = 'rgba(0,0,0,.4)'; rrf(c, x - 11, y - 22, 26, 50, 4); c.fillStyle = '#3a4a6a'; rrf(c, x - 13, y - 25, 26, 50, 4); c.fillStyle = '#2a7ab8'; c.fillRect(x - 10, y - 21, 20, 42); c.fillStyle = '#d9b77a'; c.fillRect(x - 10, y + 15, 20, 6); c.fillStyle = '#3da85a'; c.fillRect(x + 4, y + 2, 3, 13); c.fillStyle = '#ff9a3d'; c.beginPath(); c.ellipse(x - 2, y - 7, 5, 3, 0, 0, 7); c.fill(); c.fillStyle = '#ffd24a'; c.beginPath(); c.ellipse(x + 2, y + 5, 4, 2.5, 0, 0, 7); c.fill(); return; }
+    if (s.id === 'books') { c.fillStyle = 'rgba(0,0,0,.4)'; rrf(c, x - 11, y - 16, 26, 38, 4); c.fillStyle = '#5a3b26'; rrf(c, x - 13, y - 19, 26, 38, 4); ['#c9304a', '#3fa8ff', '#ffd24a', '#5fd58a'].forEach((col, i) => { c.fillStyle = col; c.fillRect(x - 10 + i * 5, y - 16, 4, 14); c.fillRect(x - 10 + i * 5, y + 1, 4, 14); }); c.fillStyle = '#20202c'; c.beginPath(); c.arc(x - 8, y + 21, 3, 0, 7); c.arc(x + 8, y + 21, 3, 0, 7); c.fill(); return; }
+    if (s.id === 'ball') { c.fillStyle = 'rgba(0,0,0,.35)'; rrf(c, x - 21, y - 11, 44, 28, 5); c.fillStyle = '#6a6f80'; rrf(c, x - 22, y - 14, 44, 28, 5); [[-12, -3, '#ff8a3d'], [0, -5, '#3fa8ff'], [12, -3, '#ff8a3d'], [-6, 6, '#eef0f5'], [6, 6, '#ff8a3d']].forEach(([dx, dy, col]) => { c.fillStyle = col; c.beginPath(); c.arc(x + dx, y + dy, 7, 0, 7); c.fill(); }); return; }
+    if (s.id === 'flowers') { c.fillStyle = '#4a3020'; c.beginPath(); c.ellipse(x, y, 44, 21, 0, 0, 7); c.fill(); c.strokeStyle = '#6b4a30'; c.lineWidth = 3; c.stroke(); [[-26, -3, '#ff5a6e'], [-9, -9, '#ffd24a'], [9, -5, '#ff8fd0'], [26, -1, '#b07be8'], [0, 8, '#ff5a6e']].forEach(([dx, dy, col]) => { c.fillStyle = '#3d8a55'; c.fillRect(x + dx - 1, y + dy, 2, 7); c.fillStyle = col; c.beginPath(); c.arc(x + dx, y + dy, 5, 0, 7); c.fill(); c.fillStyle = '#ffd24a'; c.beginPath(); c.arc(x + dx, y + dy, 1.8, 0, 7); c.fill(); }); return; }
     const hue = { site: '#3fa8ff', wires: '#ffd24a', update: '#5fd58a', msgs: '#ff8fd0', dial: '#b07be8', privacy: '#2de2e6', fuse: '#ffd24a', server: '#2de2e6', cool: '#ff9a3d', files: '#ff8fd0' }[s.id];
     c.fillStyle = 'rgba(0,0,0,.4)'; rrf(c, x - 18, y - 12, 38, 28, 5);
     c.fillStyle = s.id === 'fuse' ? '#5a5f6a' : '#1a1830'; rrf(c, x - 19, y - 16, 38, 28, 5);
@@ -5242,17 +5367,18 @@ function relayJoin(topic, onMsg, onState) {
   });
   B.vent.addEventListener('click', () => {
     if (!G || G.phase !== 'play') return; const me = ME();
-    if (me.vent < 0) { const v = nearVent(me); if (v < 0) return; me.vent = v; me.x = VENTS[v][0]; me.y = VENTS[v][1]; joyStop(); act({ k: 'vent', v }); }
+    if (me.vent < 0) { const v = nearVent(me); if (v < 0) return; if (me.ventCd > G.c) { toast('Кабель ещё остывает'); return; } me.vent = v; me.x = VENTS[v][0]; me.y = VENTS[v][1]; joyStop(); act({ k: 'vent', v }); }
     ventPanel();
   });
   function ventPanel() {
-    const me = ME(), k = taskCard('Служебный ход', 'Здесь тебя никто не видит. Куда дальше?');
+    const me = ME(), k = taskCard('Кабельный ход', 'Под школой проходят кабели. Тебя никто не видит. Выбери, где вылезти.');
     k.el.querySelector('.gl-x').hidden = true;
-    k.b.innerHTML = '<div class="gl-vent">' + vlinks(me.vent).map((i) => `<button class="gl-opt" data-v="${i}">Ползти: ${roomOf(VENTS[i][0], VENTS[i][1]).n}</button>`).join('') + `<button class="gl-opt on" data-v="out">Вылезти: ${roomOf(me.x, me.y).n}</button></div>`;
+    k.b.innerHTML = '<div class="gl-vent">' + vlinks(me.vent).map((i) => `<button class="gl-opt" data-v="${i}">${roomOf(VENTS[i][0], VENTS[i][1]).n}</button>`).join('') + `<button class="gl-opt on" data-v="here">Вылезти здесь: ${roomOf(me.x, me.y).n}</button></div>`;
     k.b.onclick = (e) => {
       const x = e.target.closest('[data-v]'); if (!x) return;
-      if (x.dataset.v === 'out') { const v = me.vent; me.vent = -1; closePanel(); act({ k: 'vent', v }); return; }
-      me.vent = +x.dataset.v; me.x = VENTS[me.vent][0]; me.y = VENTS[me.vent][1]; G.camX = me.x; G.camY = me.y; S.vent(); ventPanel();
+      const to = x.dataset.v === 'here' ? me.vent : +x.dataset.v;
+      me.vent = -1; me.x = VENTS[to][0]; me.y = VENTS[to][1]; G.camX = me.x; G.camY = me.y; me.ventCd = G.c + 4;
+      closePanel(); S.clank(); act({ k: 'vent', v: to });
     };
   }
   function showMap() {
@@ -5292,14 +5418,14 @@ function relayJoin(topic, onMsg, onState) {
   const openTask = (st) => runMG(st.id, st.n, SUB[st.id], () => act({ k: 'task', st: st.id }));
   function openFix(part) { runMG(part === 'lights' ? 'lights' : 'crit', part === 'lights' ? 'Щиток' : 'Пульт охлаждения', SUB[part === 'lights' ? 'lights' : 'crit'], () => act({ k: 'fix', part })); fixOpen = true; }
   const SUB = {
-    board: 'Кто-то записал пароль на доске. Сотри его пальцем: пароль на виду увидит кто угодно.',
+    board: 'Кто-то записал пароль на доске. Сотри его губкой: пароль на виду увидит кто угодно.',
     site: 'Подделку выдаёт одна буква или лишнее слово в адресе.',
-    wires: 'Соедини провода одного цвета, и в школе снова будет интернет.',
+    wires: 'Соедини провода одного цвета от компьютера к роутеру, и в школе снова будет интернет.',
     update: 'Обновления закрывают дыры, через которые лезут взломщики.',
     msgs: 'Отметь, какие сообщения обычные, а какие - развод.',
     dial: 'Двигай ползунок, пока твоя волна не совпадёт с зелёной.',
     scan: 'Сканер проверяет, что ты настоящий ученик. Те, кто рядом, видят проверку.',
-    privacy: 'Переключи каждую настройку на безопасную. Зелёная - значит, всё хорошо.',
+    privacy: 'Переключи каждую настройку так, чтобы она загорелась зелёным.',
     card: 'Свой пропуск никому не отдают. Проведи его через считыватель.',
     fuse: 'Рубильники мигнут по очереди. Повтори порядок.',
     server: 'Нажимай числа от 1 до 9 по порядку.',
@@ -5307,10 +5433,14 @@ function relayJoin(topic, onMsg, onState) {
     files: 'Отметь фото, которые нельзя выкладывать: по ним тебя могут найти.',
     lights: 'Подними все рубильники, чтобы вернуть свет.',
     crit: 'Держи кнопку, пока полоска не заполнится. Чинить нужно оба пульта.',
+    fish: 'Рыбки проголодались. Нажимай над водой, чтобы насыпать корм.',
+    books: 'Кто-то перепутал книги. Нажми на две, чтобы поменять их местами, и расставь по номерам.',
+    ball: 'Мяч сдулся. Качай насос, пока стрелка не дойдёт до зелёного.',
+    flowers: 'Зажми палец и води лейкой над цветами, пока каждый не распустится.',
   };
-  const SITES = [['ВКонтакте', 'vk.com', 'vk.c0m', 'vk-podarki.com', 'vk.com.login-top.ru'], ['Госуслуги', 'gosuslugi.ru', 'g0suslugi.ru', 'gosuslugi-vhod.ru', 'gosuslugi.ru.kabinet-top.com'], ['Roblox', 'roblox.com', 'r0blox.com', 'roblox-bonus.com', 'roblox.com.gift-top.ru'], ['YouTube', 'youtube.com', 'y0utube.com', 'youtube-priz.com', 'youtube.com.video-top.ru'], ['Minecraft', 'minecraft.net', 'minecraf1.net', 'minecraft-skins-free.net', 'minecraft.net.bonus-top.ru'], ['Озон', 'ozon.ru', '0zon.ru', 'ozon-skidki.ru', 'ozon.ru.zakaz-top.com']];
+  const SITES = [['ВКонтакте', 'vk.com', 'vk.c0m', 'vk-podarki.com', 'vk.com.login-top.ru', '#2787f5', 'VK'], ['Госуслуги', 'gosuslugi.ru', 'g0suslugi.ru', 'gosuslugi-vhod.ru', 'gosuslugi.ru.kabinet-top.com', '#0d4cd3', 'ГУ'], ['Roblox', 'roblox.com', 'r0blox.com', 'roblox-bonus.com', 'roblox.com.gift-top.ru', '#30333b', 'R'], ['YouTube', 'youtube.com', 'y0utube.com', 'youtube-priz.com', 'youtube.com.video-top.ru', '#ff0033', '▶'], ['Minecraft', 'minecraft.net', 'minecraf1.net', 'minecraft-skins-free.net', 'minecraft.net.bonus-top.ru', '#5a9e3c', 'M'], ['Озон', 'ozon.ru', '0zon.ru', 'ozon-skidki.ru', 'ozon.ru.zakaz-top.com', '#005bff', 'O']];
   const MSGS = [['Неизвестный номер', 'Скинь код из СМС, я случайно указал твой номер', 1], ['Розыгрыш призов', 'Ты выиграл телефон! Оплати доставку 200 рублей', 1], ['Поддержка игры', 'Назови пароль, иначе аккаунт удалят через 5 минут', 1], ['Новый знакомый', 'Давай дружить, только родителям про меня не говори', 1], ['Магазин скинов', 'Скидка сгорит через час! Переведи 150 рублей', 1], ['Мама', 'Я задержусь, ужин в холодильнике', 0], ['Классный чат', 'Завтра контрольная, повторите дроби', 0], ['Друг', 'Пойдём завтра на каток?', 0], ['Бабушка', 'Позвони, когда будешь дома', 0], ['Тренер', 'Тренировка в четыре, не опаздывай', 0]];
-  const PRIV = [['Кто видит профиль', 'Все', 'Только друзья'], ['Геолокация', 'Включена', 'Выключена'], ['Сообщения от незнакомых', 'Разрешены', 'Запрещены'], ['Номер телефона', 'Виден всем', 'Скрыт'], ['Отметки на фото', 'Кто угодно', 'Только я']];
+  const PRIV = [['Кто видит профиль', 'Все', 'Только друзья', '👤'], ['Геолокация', 'Включена', 'Выключена', '📍'], ['Сообщения от незнакомых', 'Разрешены', 'Запрещены', '✉️'], ['Номер телефона', 'Виден всем', 'Скрыт', '📞'], ['Отметки на фото', 'Кто угодно', 'Только я', '🏷️']];
   const PHOTOS = [['Котик на диване', 0, 'cat'], ['Закат над рекой', 0, 'sun'], ['Мой рисунок', 0, 'art'], ['Торт', 0, 'cake'], ['Замок из кубиков', 0, 'lego'], ['Билет с QR-кодом', 1, 'ticket'], ['Дом и номер подъезда', 1, 'house'], ['Бейдж с названием школы', 1, 'school'], ['Скрин с паролем', 1, 'pass'], ['Ключи от квартиры', 1, 'keys']];
   const PIC = {
     cat: '<rect width="60" height="40" fill="#3a3558"/><rect y="28" width="60" height="12" fill="#6b4a8a"/><circle cx="30" cy="22" r="10" fill="#ffb86b"/><path d="M21 16l2-9 6 6zM39 16l-2-9-6 6z" fill="#ffb86b"/><circle cx="26" cy="21" r="1.6" fill="#1a1424"/><circle cx="34" cy="21" r="1.6" fill="#1a1424"/>',
@@ -5324,54 +5454,81 @@ function relayJoin(topic, onMsg, onState) {
     pass: '<rect width="60" height="40" fill="#15112a"/><rect x="18" y="4" width="24" height="32" rx="3" fill="#2b2450"/><rect x="21" y="10" width="18" height="4" fill="#8a82b0"/><text x="30" y="24" font-size="5" font-weight="800" text-anchor="middle" fill="#2de2e6">пароль:</text><text x="30" y="31" font-size="5" font-weight="800" text-anchor="middle" fill="#fff">kot2014</text>',
     keys: '<rect width="60" height="40" fill="#5a4430"/><circle cx="20" cy="20" r="8" fill="none" stroke="#ffd24a" stroke-width="4"/><rect x="27" y="18" width="24" height="4" fill="#ffd24a"/><rect x="42" y="22" width="4" height="6" fill="#ffd24a"/><rect x="48" y="22" width="3" height="5" fill="#ffd24a"/>',
   };
+  const avaCol = (n) => COLS[[...n].reduce((s, ch) => s + ch.charCodeAt(0), 0) % 10][0];
+  const panelBox = (n, label, body) => `<div class="gx-box"><span class="gx-warn">⚡ ${label}</span>${body}<div class="gx-nums" style="--n:${n}">${[...Array(n)].map((_, i) => `<span>${i + 1}</span>`).join('')}</div></div>`;
+  const flowerSvg = (col) => `<svg viewBox="0 0 40 70" aria-hidden="true"><path d="M20 70V22" stroke="#3d8a55" stroke-width="3"/><path d="M20 52q-12-4-14-12q10 0 14 8M20 44q12-4 14-12q-10 0-14 8" fill="#3d8a55"/><circle cx="20" cy="20" r="4.5" fill="#5fb85f"/><g class="pet">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="20" cy="9" rx="5.5" ry="9" fill="${col}" transform="rotate(${a} 20 18)"/>`).join('')}<circle cx="20" cy="18" r="5" fill="#ffd24a"/></g></svg>`;
+  const CAN = '<svg viewBox="0 0 60 44" aria-hidden="true"><path d="M20 14h30v24a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4z" fill="#3fa8ff"/><path d="M20 20L3 7" stroke="#3fa8ff" stroke-width="5" stroke-linecap="round"/><path d="M50 18q12 2 6 16" stroke="#2f7df0" stroke-width="4" fill="none"/><rect x="24" y="18" width="22" height="4" rx="2" fill="rgba(255,255,255,.35)"/></svg>';
   const MG = {
     board(k, ok) {
-      k.b.innerHTML = '<canvas class="gl-board" width="600" height="300"></canvas>';
-      const c = k.b.firstChild, x = c.getContext('2d');
-      x.fillStyle = 'rgba(240,245,235,.92)'; x.font = '700 56px ' + FONT; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(rnd(['пароль: kot2014', 'пароль: masha12', 'пин-код: 4815', 'пароль: qwerty7']), 300, 140);
-      x.fillRect(100, 196, 400, 4);
-      const count = () => { const d = x.getImageData(0, 0, 600, 300).data; let n = 0; for (let i = 3; i < d.length; i += 16) if (d[i] > 60) n++; return n; };
+      k.b.innerHTML = '<div class="gx-chalk"><canvas width="600" height="300"></canvas><span class="gx-sponge" hidden></span><div class="gx-tray"><i></i><i></i><i></i></div></div>';
+      const box = k.b.firstChild, c = box.querySelector('canvas'), x = c.getContext('2d'), sp = box.querySelector('.gx-sponge');
+      x.strokeStyle = 'rgba(240,245,235,.45)'; x.lineWidth = 4; x.lineCap = 'round';
+      x.beginPath(); x.arc(64, 60, 20, 0, 7); x.stroke();
+      for (let i = 0; i < 8; i++) { const a = i * 0.785; x.beginPath(); x.moveTo(64 + Math.cos(a) * 28, 60 + Math.sin(a) * 28); x.lineTo(64 + Math.cos(a) * 38, 60 + Math.sin(a) * 38); x.stroke(); }
+      x.fillStyle = 'rgba(240,245,235,.5)'; x.font = '700 26px ' + FONT; x.textAlign = 'left'; x.fillText('2 + 2 = 4', 440, 272);
+      x.fillStyle = 'rgba(240,245,235,.95)'; x.font = '700 54px ' + FONT; x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(rnd(['пароль: kot2014', 'пароль: masha12', 'пин-код: 4815', 'пароль: qwerty7']), 300, 140); x.fillRect(120, 186, 360, 4);
+      const count = () => { const d = x.getImageData(80, 90, 440, 110).data; let n = 0; for (let i = 3; i < d.length; i += 16) if (d[i] > 60) n++; return n; };
       const total = count() || 1; let moves = 0, down = false;
-      const rub = (e) => { const r = c.getBoundingClientRect(); x.globalCompositeOperation = 'destination-out'; x.fillStyle = '#000'; x.beginPath(); x.arc((e.clientX - r.left) * 600 / r.width, (e.clientY - r.top) * 300 / r.height, 36, 0, 7); x.fill(); x.globalCompositeOperation = 'source-over'; if (++moves % 6 === 0) { snd.burst(0.06, 1800, 900, 1, 0.012); if (count() / total < 0.08) { down = false; ok(); } } };
+      const rub = (e) => {
+        const r = c.getBoundingClientRect(), px = (e.clientX - r.left) * 600 / r.width, py = (e.clientY - r.top) * 300 / r.height;
+        sp.hidden = false; sp.style.left = (e.clientX - r.left) + 'px'; sp.style.top = (e.clientY - r.top) + 'px';
+        x.globalCompositeOperation = 'destination-out'; x.fillStyle = '#000'; x.beginPath(); x.ellipse(px, py, 42, 28, 0, 0, 7); x.fill(); x.globalCompositeOperation = 'source-over';
+        if (++moves % 6 === 0) { snd.burst(0.06, 1800, 900, 1, 0.012); if (count() / total < 0.08) { down = false; ok(); } }
+      };
       c.onpointerdown = (e) => { down = true; try { c.setPointerCapture(e.pointerId); } catch (err) {} rub(e); };
       c.onpointermove = (e) => { if (down) rub(e); };
-      c.onpointerup = c.onpointercancel = () => { down = false; };
+      c.onpointerup = c.onpointercancel = () => { down = false; sp.hidden = true; };
     },
     site(k, ok) {
       let n = 0;
+      const lock = '<svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7" rx="1.5" fill="currentColor"/><path d="M3 6V4a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
       const go = () => {
         const s = rnd(SITES);
-        k.b.innerHTML = `<p>Нужно войти: <b>${s[0]}</b>. Какой адрес настоящий? (${n + 1} из 2)</p>` + shuffle(s.slice(1)).map((a) => `<button class="gl-opt" data-a="${a}">${a}</button>`).join('');
+        k.b.innerHTML = `<div class="gx-br"><div class="gx-brtop"><i></i><i></i><i></i><span>Вход · ${s[0]}</span></div><div class="gx-brbody"><div class="gx-logo" style="background:${s[5]}">${s[6]}</div><b>Войти в ${s[0]}</b><small>Шаг ${n + 1} из 2. Какой адрес настоящий?</small>${shuffle(s.slice(1, 5)).map((a) => `<button class="gx-url" data-a="${a}">${lock}${a}</button>`).join('')}</div></div>`;
         k.b.onclick = (e) => { const x = e.target.closest('[data-a]'); if (!x) return; if (x.dataset.a === s[1]) { snd.tap(); if (++n >= 2) ok(); else go(); } else { bad(k); go(); } };
       };
       go();
     },
     wires(k, ok) {
-      const C = ['#ff5a6e', '#3fa8ff', '#ffd24a', '#b07be8'], L = shuffle([0, 1, 2, 3]), Rt = shuffle([0, 1, 2, 3]), Y = [38, 92, 146, 200], NS = 'http://www.w3.org/2000/svg';
-      k.b.innerHTML = '<svg class="gl-wires" viewBox="0 0 300 236"><rect width="300" height="236" rx="14" fill="#0f0c1f"/></svg>';
+      const C = ['#ff5a6e', '#3fa8ff', '#ffd24a', '#b07be8'], L = shuffle([0, 1, 2, 3]), Rt = shuffle([0, 1, 2, 3]), Y = [70, 118, 166, 214], NS = 'http://www.w3.org/2000/svg';
+      k.b.innerHTML = `<svg class="gx-wires" viewBox="0 0 300 250"><rect width="300" height="250" rx="14" fill="#0f0c1f"/><g stroke="#2b2450">${[...Array(11)].map((_, i) => `<line x1="${i * 27 + 15}" y1="0" x2="${i * 27 + 15}" y2="250"/>`).join('')}</g>
+        <rect x="6" y="46" width="34" height="192" rx="6" fill="#2b2f45" stroke="#4a5070" stroke-width="2"/><rect x="8" y="14" width="30" height="24" rx="3" fill="#1a1d2e"/><rect x="11" y="17" width="24" height="16" fill="#2f7df0"/><rect x="14" y="20" width="12" height="2" fill="#bcd6ff"/><rect x="14" y="24" width="16" height="2" fill="#bcd6ff"/>
+        <rect x="256" y="46" width="38" height="192" rx="8" fill="#1d2a3a" stroke="#3a5070" stroke-width="2"/><line x1="264" y1="46" x2="259" y2="16" stroke="#5a6a80" stroke-width="4" stroke-linecap="round"/><line x1="286" y1="46" x2="291" y2="16" stroke="#5a6a80" stroke-width="4" stroke-linecap="round"/>
+        <g id="gx-wifi" opacity=".15" stroke="#39d98a" stroke-width="3" fill="none" stroke-linecap="round"><path d="M262 26q13-12 26 0"/><path d="M267 33q8-7 16 0"/></g></svg>`;
       const svg = k.b.firstChild, mk = (t, a) => { const e = document.createElementNS(NS, t); for (const n in a) e.setAttribute(n, a[n]); svg.appendChild(e); return e; };
-      L.forEach((ci, i) => mk('rect', { x: 8, y: Y[i] - 11, width: 32, height: 22, rx: 5, fill: C[ci] }));
-      Rt.forEach((ci, i) => mk('rect', { x: 260, y: Y[i] - 11, width: 32, height: 22, rx: 5, fill: '#2b2450', stroke: C[ci], 'stroke-width': 4 }));
+      const leds = [];
+      L.forEach((ci, i) => { mk('rect', { x: 34, y: Y[i] - 9, width: 24, height: 18, rx: 4, fill: C[ci] }); mk('rect', { x: 40, y: Y[i] - 3, width: 14, height: 6, rx: 2, fill: 'rgba(0,0,0,.28)' }); });
+      Rt.forEach((ci, i) => { mk('rect', { x: 238, y: Y[i] - 11, width: 22, height: 22, rx: 4, fill: '#0b0e1a', stroke: C[ci], 'stroke-width': 3 }); leds.push(mk('circle', { cx: 283, cy: Y[i], r: 5, fill: '#2a2f40' })); });
       const done = new Set(); let drag = null;
-      const pos = (e) => { const r = svg.getBoundingClientRect(); return [(e.clientX - r.left) * 300 / r.width, (e.clientY - r.top) * 236 / r.height]; };
-      const move = (e) => { if (!drag) return; const [px, py] = pos(e); drag.line.setAttribute('d', `M40 ${drag.y0} C ${px * 0.5 + 20} ${drag.y0}, ${px * 0.5 + 20} ${py}, ${px} ${py}`); };
-      svg.onpointerdown = (e) => { const [px, py] = pos(e); if (px > 90) return; const i = Y.findIndex((y) => Math.abs(y - py) < 26); if (i < 0 || done.has(L[i])) return; drag = { ci: L[i], y0: Y[i], line: mk('path', { stroke: C[L[i]], 'stroke-width': 10, 'stroke-linecap': 'round', fill: 'none' }) }; try { svg.setPointerCapture(e.pointerId); } catch (err) {} move(e); };
+      const path = (y0, px, py) => `M58 ${y0} C ${px * 0.5 + 29} ${y0}, ${px * 0.5 + 29} ${py}, ${px} ${py}`;
+      const pos = (e) => { const r = svg.getBoundingClientRect(); return [(e.clientX - r.left) * 300 / r.width, (e.clientY - r.top) * 250 / r.height]; };
+      const move = (e) => { if (!drag) return; const [px, py] = pos(e), d = path(drag.y0, px, py); drag.a.setAttribute('d', d); drag.b.setAttribute('d', d); };
+      svg.onpointerdown = (e) => {
+        const [px, py] = pos(e); if (px > 90) return; const i = Y.findIndex((y) => Math.abs(y - py) < 24); if (i < 0 || done.has(L[i])) return;
+        drag = { ci: L[i], y0: Y[i], a: mk('path', { stroke: 'rgba(0,0,0,.5)', 'stroke-width': 13, 'stroke-linecap': 'round', fill: 'none' }), b: mk('path', { stroke: C[L[i]], 'stroke-width': 8, 'stroke-linecap': 'round', fill: 'none' }) };
+        try { svg.setPointerCapture(e.pointerId); } catch (err) {} move(e);
+      };
       svg.onpointermove = move;
       svg.onpointerup = svg.onpointercancel = (e) => {
-        if (!drag) return; const [px, py] = pos(e), j = Y.findIndex((y) => Math.abs(y - py) < 26);
-        if (px > 210 && j >= 0 && Rt[j] === drag.ci) { drag.line.setAttribute('d', `M40 ${drag.y0} C 150 ${drag.y0}, 150 ${Y[j]}, 260 ${Y[j]}`); done.add(drag.ci); snd.step(done.size); if (done.size === 4) ok(); } else { drag.line.remove(); snd.bump(); }
+        if (!drag) return; const [px, py] = pos(e), j = Y.findIndex((y) => Math.abs(y - py) < 24);
+        if (px > 200 && j >= 0 && Rt[j] === drag.ci) { const d = path(drag.y0, 240, Y[j]); drag.a.setAttribute('d', d); drag.b.setAttribute('d', d); leds[j].setAttribute('fill', '#39d98a'); done.add(drag.ci); snd.step(done.size); if (done.size === 4) { svg.querySelector('#gx-wifi').setAttribute('opacity', '1'); ok(); } }
+        else { drag.a.remove(); drag.b.remove(); snd.bump(); }
         drag = null;
       };
     },
     update(k, ok) {
-      const F = ['антивирус.базы', 'защита-входа.pkg', 'исправления.bin', 'браузер.upd'];
-      k.b.innerHTML = '<div class="gl-msg"><b>Обновление защиты</b><span>Готово к установке</span></div><div class="gl-prog"><i></i></div><button class="gl-hold">Установить</button>';
-      const sp = k.b.querySelector('span'), bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gl-hold'); let v = -1;
-      btn.onclick = () => { if (v >= 0) return; v = 0; btn.disabled = true; btn.textContent = 'Устанавливаю…'; loop(k, (dt) => { if (v >= 100) return; v = Math.min(100, v + dt * 18); bar.style.width = v + '%'; sp.textContent = F[Math.min(3, v / 25 | 0)]; if (v >= 100) ok(); }); };
+      const F = [['Антивирус', 'bazy.dat'], ['Защита входа', 'login.pkg'], ['Исправления', 'fix.bin'], ['Браузер', 'browser.upd']];
+      k.b.innerHTML = `<div class="gx-lap"><div class="gx-lscr"><div class="gx-wtit"><i></i><i></i><i></i>Эхо-защита · установка</div><div class="gx-files">${F.map((f) => `<div><span class="gx-fi"></span><b>${f[0]}</b><small>${f[1]}</small><em></em></div>`).join('')}</div><div class="gl-prog"><i></i></div><button class="gl-hold">Установить</button></div><div class="gx-lbase"></div></div>`;
+      const rows = k.b.querySelectorAll('.gx-files div'), bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gl-hold'); let v = -1;
+      btn.onclick = () => {
+        if (v >= 0) return; v = 0; btn.disabled = true; btn.textContent = 'Устанавливаю…';
+        loop(k, (dt) => { if (v >= 100) return; v = Math.min(100, v + dt * 18); bar.style.width = v + '%'; rows.forEach((r, i) => { r.classList.toggle('go', v >= i * 25 && v < (i + 1) * 25); r.classList.toggle('ok', v >= (i + 1) * 25); }); if (v >= 100) { btn.textContent = 'Готово'; ok(); } });
+      };
     },
     msgs(k, ok) {
       const set = shuffle(shuffle(MSGS.filter((m) => m[2])).slice(0, 2).concat(shuffle(MSGS.filter((m) => !m[2])).slice(0, 1))), ans = {};
-      const paint = () => { k.b.innerHTML = set.map((m, i) => `<div class="gl-msg"><b>${m[0]}</b>${m[1]}<div class="gl-row2"><button data-i="${i}" data-v="0" class="${ans[i] === 0 ? 'on' : ''}">Обычное</button><button data-i="${i}" data-v="1" class="${ans[i] === 1 ? 'on' : ''}">Развод</button></div></div>`).join(''); };
+      const paint = () => { k.b.innerHTML = `<div class="gx-phone"><div class="gx-notch"></div><div class="gx-ph-h">Сообщения</div>${set.map((m, i) => `<div class="gx-bub"><span class="gx-ava" style="background:${avaCol(m[0])}">${m[0][0]}</span><div><b>${m[0]}</b><p>${m[1]}</p><div class="gx-ch"><button data-i="${i}" data-v="0" class="${ans[i] === 0 ? 'on' : ''}">Обычное</button><button data-i="${i}" data-v="1" class="bad ${ans[i] === 1 ? 'on' : ''}">Развод</button></div></div></div>`).join('')}</div>`; };
       paint();
       k.b.onclick = (e) => {
         const x = e.target.closest('[data-i]'); if (!x) return;
@@ -5382,58 +5539,58 @@ function relayJoin(topic, onMsg, onState) {
       };
     },
     card(k, ok) {
-      k.b.innerHTML = '<div class="gl-track"><div class="gate"></div><div class="gl-pass">ПРОПУСК</div></div><p>Веди пропуск вправо до жёлтой полосы: ровно и не спеша</p>';
-      const tr = k.b.firstChild, cd = tr.querySelector('.gl-pass'), msg = k.b.querySelector('p'); let st = null;
+      k.b.innerHTML = '<div class="gx-reader"><span class="gx-led"></span>СЧИТЫВАТЕЛЬ ВОРОТ</div><div class="gl-track"><div class="gate"></div><div class="gl-pass gx-pass"><span class="gx-ph"></span><span class="gx-ln"></span><span class="gx-ln s"></span><em>ПРОПУСК</em></div></div><p>Веди пропуск вправо до жёлтой полосы: ровно и не спеша</p>';
+      const rd = k.b.firstChild, tr = k.b.querySelector('.gl-track'), cd = tr.querySelector('.gl-pass'), msg = k.b.querySelector('p'); let st = null;
       const max = () => tr.clientWidth - cd.offsetWidth - 26;
-      const fail = (t) => { msg.textContent = t; bad(k); cd.style.transform = ''; };
-      cd.onpointerdown = (e) => { st = { x: e.clientX, t: performance.now() }; try { cd.setPointerCapture(e.pointerId); } catch (err) {} };
+      const fail = (t) => { msg.textContent = t; rd.className = 'gx-reader bad'; bad(k); cd.style.transform = ''; };
+      cd.onpointerdown = (e) => { st = { x: e.clientX, t: performance.now() }; rd.className = 'gx-reader'; try { cd.setPointerCapture(e.pointerId); } catch (err) {} };
       cd.onpointermove = (e) => {
         if (!st) return; const dx = clamp(e.clientX - st.x, 0, max()); cd.style.transform = `translateX(${dx}px)`;
         if (dx < max()) return;
         const dt = performance.now() - st.t; st = null;
-        if (dt < 400) fail('Слишком быстро. Попробуй ещё раз'); else if (dt > 1700) fail('Слишком медленно. Попробуй ещё раз'); else { msg.textContent = 'Пропуск принят'; ok(); }
+        if (dt < 400) fail('Слишком быстро. Попробуй ещё раз'); else if (dt > 1700) fail('Слишком медленно. Попробуй ещё раз'); else { msg.textContent = 'Пропуск принят'; rd.className = 'gx-reader ok'; ok(); }
       };
       cd.onpointerup = cd.onpointercancel = () => { if (st) { st = null; fail('Доведи до самого конца'); } };
     },
     dial(k, ok) {
       const tg = 2 + Math.random() * 6;
-      k.b.innerHTML = `<canvas class="gl-wave" width="600" height="180"></canvas><input class="gl-sl" type="range" min="1" max="9" step="0.01" value="${tg > 5 ? 1.4 : 8.6}" aria-label="Частота">`;
-      const x = k.b.firstChild.getContext('2d'), sl = k.b.querySelector('input'); let hl = 0, ph = 0;
-      const wave = (f, col, w) => { x.strokeStyle = col; x.lineWidth = w; x.beginPath(); for (let i = 0; i <= 600; i += 6) { const y = 90 + Math.sin(i / 600 * f * 6.283 + ph) * 60; i ? x.lineTo(i, y) : x.moveTo(i, y); } x.stroke(); };
-      loop(k, (dt) => { ph += dt * 3; const v = +sl.value, hit = Math.abs(v - tg) < 0.28; hl = hit ? hl + dt : 0; x.clearRect(0, 0, 600, 180); wave(tg, 'rgba(57,217,138,.4)', 12); wave(v, hit ? '#39d98a' : '#2de2e6', 4); if (hl > 0.9) ok(); });
+      k.b.innerHTML = `<div class="gx-osc"><canvas width="600" height="200"></canvas><span class="gx-ok">СИГНАЛ ЕСТЬ</span></div><div class="gx-spk"><i></i><i></i></div><input class="gl-sl" type="range" min="1" max="9" step="0.01" value="${tg > 5 ? 1.4 : 8.6}" aria-label="Частота">`;
+      const osc = k.b.firstChild, x = osc.querySelector('canvas').getContext('2d'), sl = k.b.querySelector('input'); let hl = 0, ph = 0;
+      const wave = (f, col, w) => { x.strokeStyle = col; x.lineWidth = w; x.beginPath(); for (let i = 0; i <= 600; i += 6) { const y = 100 + Math.sin(i / 600 * f * 6.283 + ph) * 64; i ? x.lineTo(i, y) : x.moveTo(i, y); } x.stroke(); };
+      loop(k, (dt) => { ph += dt * 3; const v = +sl.value, hit = Math.abs(v - tg) < 0.28; hl = hit ? hl + dt : 0; osc.classList.toggle('hit', hit); x.clearRect(0, 0, 600, 200); wave(tg, 'rgba(57,217,138,.4)', 12); wave(v, hit ? '#39d98a' : '#2de2e6', 4); if (hl > 0.9) ok(); });
     },
     fuse(k, ok) {
-      k.b.innerHTML = '<div class="gl-sw">' + [0, 1, 2, 3].map((i) => `<button data-s="${i}" aria-label="Рубильник ${i + 1}"></button>`).join('') + '</div><p>Смотри, какие мигнут, и нажми их в том же порядке</p>';
-      const bs = [...k.b.querySelectorAll('[data-s]')], msg = k.b.querySelector('p'), seq = Array.from({ length: 4 }, () => Math.random() * 4 | 0); let at = 0, busy = true;
+      k.b.innerHTML = panelBox(4, 'Щиток', '<div class="gl-sw">' + [0, 1, 2, 3].map((i) => `<button data-s="${i}" aria-label="Рубильник ${i + 1}"></button>`).join('') + '</div>') + '<p>Смотри, какие мигнут, и нажми их в том же порядке</p>';
+      const bs = [...k.b.querySelectorAll('[data-s]')], msg = k.b.querySelector('.gl-tb > p'), seq = Array.from({ length: 4 }, () => Math.random() * 4 | 0); let at = 0, busy = true;
       const show = () => { busy = true; at = 0; seq.forEach((s, i) => setTimeout(() => { if (!k.alive()) return; bs[s].classList.add('lit'); snd.step(s); setTimeout(() => bs[s].classList.remove('lit'), 320); if (i === seq.length - 1) setTimeout(() => { busy = false; }, 360); }, 500 + i * 540)); };
       show();
-      k.b.onclick = (e) => { const x = e.target.closest('[data-s]'); if (!x || busy) return; const s = +x.dataset.s; x.classList.add('up'); setTimeout(() => x.classList.remove('up'), 220); if (s === seq[at]) { snd.step(s); if (++at === seq.length) ok(); } else { bad(k); msg.textContent = 'Не тот. Смотри ещё раз'; show(); } };
+      k.b.onclick = (e) => { const x = e.target.closest('[data-s]'); if (!x || busy) return; const s = +x.dataset.s; x.classList.add('up'); setTimeout(() => x.classList.remove('up'), 220); if (s === seq[at]) { snd.step(s); if (++at === seq.length) ok(); } else { bad(k); if (msg) msg.textContent = 'Не тот. Смотри ещё раз'; show(); } };
     },
     lights(k, ok) {
       const st = Array.from({ length: 5 }, () => Math.random() < 0.5); st[Math.random() * 5 | 0] = false; st[Math.random() * 5 | 0] = false;
-      k.b.innerHTML = '<div class="gl-sw" style="grid-template-columns:repeat(5,1fr)">' + st.map((u, i) => `<button data-s="${i}" class="${u ? 'up' : ''}" aria-label="Рубильник ${i + 1}"></button>`).join('') + '</div>';
+      k.b.innerHTML = panelBox(5, 'Свет', '<div class="gl-sw" style="grid-template-columns:repeat(5,1fr)">' + st.map((u, i) => `<button data-s="${i}" class="${u ? 'up' : ''}" aria-label="Рубильник ${i + 1}"></button>`).join('') + '</div>');
       k.b.onclick = (e) => { const x = e.target.closest('[data-s]'); if (!x) return; const i = +x.dataset.s; st[i] = !st[i]; x.classList.toggle('up', st[i]); snd.tap(); if (st.every(Boolean)) ok(); };
     },
     server(k, ok) {
       let at = 1;
-      k.b.innerHTML = '<div class="gl-grid3">' + shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).map((v) => `<button class="gl-key" data-n="${v}">${v}</button>`).join('') + '</div>';
+      k.b.innerHTML = '<div class="gx-rack"><div class="gx-rh"><i></i>СЕРВЕР 01 · ПЕРЕЗАПУСК</div><div class="gl-grid3">' + shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).map((v) => `<button class="gl-key" data-n="${v}">${v}</button>`).join('') + '</div></div>';
       k.b.onclick = (e) => { const x = e.target.closest('[data-n]'); if (!x || x.classList.contains('ok')) return; if (+x.dataset.n === at) { x.classList.add('ok'); snd.step(at % 7); if (++at > 9) ok(); } else { bad(k); at = 1; k.b.querySelectorAll('.ok').forEach((b) => b.classList.remove('ok')); } };
     },
     crit(k, ok) {
-      k.b.innerHTML = '<div class="gl-prog"><i></i></div><button class="gl-hold" style="background:#ff3d7f;color:#fff">Держи, чтобы сбросить перегрев</button>';
-      const bar = k.b.querySelector('i'), btn = k.b.querySelector('.gl-hold'); let v = 0, on = false;
+      k.b.innerHTML = '<div class="gx-crit"><div class="gl-prog"><i></i></div><button class="gx-bigbtn">ДЕРЖИ</button></div>';
+      const bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gx-bigbtn'); let v = 0, on = false;
       hold(btn, (d) => { on = d; });
       loop(k, (dt) => { v = clamp(v + (on ? 42 : -25) * dt, 0, 100); bar.style.width = v + '%'; if (v >= 100) ok(); });
     },
     cool(k, ok) {
-      k.b.innerHTML = '<div class="gl-gauge"><div class="zone" style="bottom:38%;height:22%"></div><div class="lvl"></div></div><div class="gl-prog"><i></i></div><button class="gl-hold">Держи, чтобы охлаждать</button>';
-      const lv = k.b.querySelector('.lvl'), bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gl-hold'); let v = 78, on = false, inT = 0;
-      hold(btn, (d) => { on = d; });
-      loop(k, (dt) => { v = clamp(v + (on ? -55 : 24) * dt, 0, 100); lv.style.height = v + '%'; const inz = v >= 38 && v <= 60; lv.style.background = inz ? 'linear-gradient(0deg,#39d98a,#7ff0b8)' : ''; inT = inz ? inT + dt : Math.max(0, inT - dt * 0.5); bar.style.width = Math.min(100, inT / 3 * 100) + '%'; if (inT >= 3) ok(); });
+      k.b.innerHTML = '<div class="gx-cool"><div class="gx-therm"><div class="zone"></div><div class="lvl"></div></div><div class="gx-fan"><svg viewBox="0 0 84 84" aria-hidden="true"><g fill="#8fb6ff">' + [0, 90, 180, 270].map((a) => `<path d="M42 42c-4-16 2-30 14-32 6 8 0 24-14 32z" transform="rotate(${a} 42 42)"/>`).join('') + '</g><circle cx="42" cy="42" r="8" fill="#3a4060"/></svg></div></div><div class="gl-prog"><i></i></div><button class="gl-hold">Держи, чтобы охлаждать</button>';
+      const lv = k.b.querySelector('.lvl'), fan = k.b.querySelector('.gx-fan'), bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gl-hold'); let v = 78, on = false, inT = 0;
+      hold(btn, (d) => { on = d; fan.classList.toggle('on', d); });
+      loop(k, (dt) => { v = clamp(v + (on ? -55 : 24) * dt, 0, 100); lv.style.height = v + '%'; const inz = v >= 38 && v <= 60; lv.style.background = inz ? '#39d98a' : v > 60 ? '#ff3d5a' : '#3fa8ff'; inT = inz ? inT + dt : Math.max(0, inT - dt * 0.5); bar.style.width = Math.min(100, inT / 3 * 100) + '%'; if (inT >= 3) ok(); });
     },
     files(k, ok) {
       const set = shuffle(shuffle(PHOTOS.filter((p) => p[1])).slice(0, 3).concat(shuffle(PHOTOS.filter((p) => !p[1])).slice(0, 3))), sel = new Set();
-      k.b.innerHTML = '<div class="gl-photos">' + set.map((p, i) => `<button data-i="${i}"><svg viewBox="0 0 60 40" aria-hidden="true">${PIC[p[2]]}</svg>${p[0]}</button>`).join('') + '</div><button class="gl-hold">Убрать отмеченное в архив</button>';
+      k.b.innerHTML = '<div class="gx-phone"><div class="gx-notch"></div><div class="gx-ph-h">Галерея · выложить в профиль</div><div class="gl-photos">' + set.map((p, i) => `<button data-i="${i}"><svg viewBox="0 0 60 40" aria-hidden="true">${PIC[p[2]]}</svg>${p[0]}</button>`).join('') + '</div><button class="gl-hold">Убрать отмеченное в архив</button></div>';
       k.b.onclick = (e) => {
         const x = e.target.closest('[data-i]');
         if (x) { const i = +x.dataset.i; if (sel.has(i)) sel.delete(i); else sel.add(i); x.classList.toggle('on', sel.has(i)); snd.tap(); return; }
@@ -5443,15 +5600,96 @@ function relayJoin(topic, onMsg, onState) {
     },
     privacy(k, ok) {
       const rows = shuffle(PRIV).slice(0, 4), st = rows.map((_, i) => i > 1 && Math.random() < 0.4);
-      const paint = () => { k.b.innerHTML = rows.map((r, i) => `<div class="gl-tg"><span>${r[0]}</span><button data-i="${i}" class="${st[i] ? 'ok' : ''}">${st[i] ? r[2] : r[1]}</button></div>`).join(''); };
+      const paint = () => { k.b.innerHTML = `<div class="gx-phone"><div class="gx-notch"></div><div class="gx-ph-h">Настройки приватности</div>${rows.map((r, i) => `<div class="gx-set ${st[i] ? 'ok' : ''}"><span class="gx-ic">${r[3]}</span><div><b>${r[0]}</b><small>${st[i] ? r[2] : r[1]}</small></div><button class="gx-sw ${st[i] ? 'on' : ''}" data-i="${i}" aria-label="${r[0]}"><i></i></button></div>`).join('')}</div>`; };
       paint();
       k.b.onclick = (e) => { const x = e.target.closest('[data-i]'); if (!x) return; const i = +x.dataset.i; st[i] = !st[i]; snd.tap(); paint(); if (st.every(Boolean)) ok(); };
     },
     scan(k, ok) {
-      const L = ['Рост: измеряю…', 'Капюшон: на месте', 'Уши: настоящие', 'Ученик школы: да'];
-      k.b.innerHTML = '<div class="gl-msg"><b>Сканер</b><span>Встань ровно и нажми «Начать»</span></div><div class="gl-prog"><i></i></div><button class="gl-hold">Начать</button>';
-      const sp = k.b.querySelector('span'), bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gl-hold'); let v = -1;
-      btn.onclick = () => { if (v >= 0) return; v = 0; btn.disabled = true; btn.textContent = 'Не двигайся…'; act({ k: 'scan' }); loop(k, (dt) => { if (v >= 100) return; v = Math.min(100, v + dt * 25); bar.style.width = v + '%'; sp.textContent = L[Math.min(3, v / 25 | 0)]; if (v >= 100) ok(); }); };
+      const L = ['Рост: 1 клетка 12 пикселей', 'Капюшон: на месте', 'Уши: настоящие', 'Пропуск: совпадает', 'Ученик школы: да'];
+      k.b.innerHTML = '<div class="gx-scan"><svg viewBox="0 0 120 160" aria-hidden="true"><g fill="none" stroke="#39d98a" stroke-width="2" opacity=".8"><path d="M40 30l4-22 12 14M80 30l-4-22-12 14"/><circle cx="60" cy="46" r="26"/><ellipse cx="64" cy="50" rx="15" ry="13"/><path d="M34 152c0-40 10-62 26-62s26 22 26 62z"/><path d="M50 120h22"/></g></svg><i class="gx-beam"></i><div class="gx-read"></div></div><div class="gl-prog"><i></i></div><button class="gl-hold">Начать</button>';
+      const box = k.b.firstChild, rd = box.querySelector('.gx-read'), bar = k.b.querySelector('.gl-prog i'), btn = k.b.querySelector('.gl-hold'); let v = -1, shown = 0;
+      btn.onclick = () => {
+        if (v >= 0) return; v = 0; btn.disabled = true; btn.textContent = 'Не двигайся…'; box.classList.add('on'); act({ k: 'scan' });
+        loop(k, (dt) => { if (v >= 100) return; v = Math.min(100, v + dt * 25); bar.style.width = v + '%'; while (shown < L.length && v >= shown * 20 + 10) { rd.insertAdjacentHTML('beforeend', `<div>${L[shown++]}</div>`); snd.tone(1400, 0.04, 'sine', 0.03); } if (v >= 100) { btn.textContent = 'Проверка пройдена'; ok(); } });
+      };
+    },
+    fish(k, ok) {
+      k.b.innerHTML = '<canvas class="gx-aq" width="600" height="340"></canvas><div class="gl-prog"><i></i></div>';
+      const c = k.b.firstChild, x = c.getContext('2d'), bar = k.b.querySelector('.gl-prog i');
+      const F = [['#ff9a3d', 1], ['#ffd24a', 0.85], ['#ff5a6e', 1.1]].map(([col, s], i) => ({ x: 120 + i * 160, y: 110 + i * 50, vx: 1, col, s, tx: 300, ty: 160, ph: i }));
+      const fl = [], bub = []; let eat = 0, t = 0;
+      c.onpointerdown = (e) => { const r = c.getBoundingClientRect(), px = (e.clientX - r.left) * 600 / r.width; if (fl.length > 10) return; for (let i = 0; i < 3; i++) fl.push({ x: clamp(px + Math.random() * 40 - 20, 20, 580), y: 14 + Math.random() * 8, vy: 28 + Math.random() * 18 }); snd.tone(1200, 0.04, 'sine', 0.04); };
+      loop(k, (dt) => {
+        t += dt;
+        fl.forEach((f) => { if (f.y < 300) f.y += f.vy * dt; f.x += Math.sin(t * 3 + f.vy) * 8 * dt; });
+        F.forEach((f) => {
+          let tg = null, bd = 1e9; fl.forEach((p) => { const d = Math.hypot(p.x - f.x, p.y - f.y); if (d < bd) { bd = d; tg = p; } });
+          if (tg) { f.tx = tg.x; f.ty = tg.y; } else if (Math.hypot(f.tx - f.x, f.ty - f.y) < 20) { f.tx = 60 + Math.random() * 480; f.ty = 60 + Math.random() * 210; }
+          const dx = f.tx - f.x, dy = f.ty - f.y, d = Math.hypot(dx, dy) || 1, sp = (tg ? 150 : 60) * dt;
+          f.x += dx / d * Math.min(sp, d); f.y += dy / d * Math.min(sp, d); if (Math.abs(dx) > 2) f.vx = dx < 0 ? -1 : 1;
+          if (tg && bd < 18) { fl.splice(fl.indexOf(tg), 1); eat++; snd.step(eat % 7); bub.push({ x: f.x, y: f.y, r: 4 }); }
+        });
+        if (Math.random() < dt * 2) bub.push({ x: 470 + Math.random() * 30, y: 300, r: 2 + Math.random() * 4 });
+        bub.forEach((b) => { b.y -= 50 * dt; b.x += Math.sin(t * 4 + b.r) * 10 * dt; });
+        for (let i = bub.length - 1; i >= 0; i--) if (bub[i].y < 0) bub.splice(i, 1);
+        const g = x.createLinearGradient(0, 0, 0, 340); g.addColorStop(0, '#2a7ab8'); g.addColorStop(1, '#0f3a5c'); x.fillStyle = g; x.fillRect(0, 0, 600, 340);
+        x.fillStyle = 'rgba(255,255,255,.06)'; for (let i = 0; i < 4; i++) { const rx = 80 + i * 140 + Math.sin(t * 0.5 + i) * 20; x.beginPath(); x.moveTo(rx, 0); x.lineTo(rx + 40, 0); x.lineTo(rx - 20, 300); x.lineTo(rx - 60, 300); x.fill(); }
+        x.fillStyle = '#d9b77a'; x.beginPath(); x.moveTo(0, 310); for (let i = 0; i <= 600; i += 30) x.lineTo(i, 304 + Math.sin(i * 0.05) * 6); x.lineTo(600, 340); x.lineTo(0, 340); x.fill();
+        x.fillStyle = '#b8955a'; [[60, 320], [200, 326], [380, 318], [520, 324]].forEach(([a, b]) => { x.beginPath(); x.ellipse(a, b, 10, 6, 0, 0, 7); x.fill(); });
+        x.lineWidth = 7; x.lineCap = 'round';
+        [[80, 0], [520, 1.5]].forEach(([px, p]) => { for (let j = 0; j < 3; j++) { x.strokeStyle = j % 2 ? '#2f8a4a' : '#3da85a'; x.beginPath(); x.moveTo(px + j * 14, 315); x.quadraticCurveTo(px + j * 14 + Math.sin(t * 1.5 + p + j) * 18, 250, px + j * 14 + Math.sin(t * 1.2 + p + j) * 10, 190 + j * 20); x.stroke(); } });
+        x.fillStyle = '#c9a26a'; fl.forEach((f) => x.fillRect(f.x - 3, f.y - 2, 6, 4));
+        F.forEach((f) => {
+          x.save(); x.translate(f.x, f.y); x.scale(f.vx * f.s, f.s); const w = Math.sin(t * 10 + f.ph) * 5;
+          x.fillStyle = f.col; x.beginPath(); x.moveTo(-18, 0); x.lineTo(-34, -12 + w); x.lineTo(-34, 12 + w); x.closePath(); x.fill();
+          x.beginPath(); x.ellipse(0, 0, 22, 14, 0, 0, 7); x.fill(); x.fillStyle = 'rgba(255,255,255,.35)'; x.beginPath(); x.ellipse(2, -5, 12, 4, 0, 0, 7); x.fill();
+          x.fillStyle = '#fff'; x.beginPath(); x.arc(11, -3, 4.5, 0, 7); x.fill(); x.fillStyle = '#1a1424'; x.beginPath(); x.arc(12, -3, 2.3, 0, 7); x.fill(); x.restore();
+        });
+        x.strokeStyle = 'rgba(255,255,255,.6)'; x.lineWidth = 1.5; bub.forEach((b) => { x.beginPath(); x.arc(b.x, b.y, b.r, 0, 7); x.stroke(); });
+        bar.style.width = Math.min(100, eat / 9 * 100) + '%'; if (eat >= 9) ok();
+      });
+    },
+    books(k, ok) {
+      const cols = ['#c9304a', '#3fa8ff', '#ffd24a', '#5fd58a', '#b07be8', '#ff9a3d'], hs = [96, 116, 104, 122, 100, 110];
+      let ord; do ord = shuffle([1, 2, 3, 4, 5, 6]); while (ord.every((n, i) => n === i + 1));
+      let sel = -1;
+      const paint = () => { k.b.innerHTML = `<div class="gx-shelf">${ord.map((n, i) => `<button class="gx-book ${sel === i ? 'sel' : ''}" data-i="${i}" style="--c:${cols[n - 1]};height:${hs[n - 1]}px" aria-label="Книга ${n}"><span>${n}</span></button>`).join('')}</div><div class="gx-plank"></div>`; };
+      paint();
+      k.b.onclick = (e) => {
+        const x = e.target.closest('[data-i]'); if (!x) return; const i = +x.dataset.i;
+        if (sel < 0) { sel = i; snd.tap(); } else if (sel === i) sel = -1; else { [ord[sel], ord[i]] = [ord[i], ord[sel]]; sel = -1; snd.step(i % 7); }
+        paint(); if (ord.every((n, j) => n === j + 1)) ok();
+      };
+    },
+    ball(k, ok) {
+      k.b.innerHTML = '<div class="gx-gym"><div class="gx-ball"><svg viewBox="0 0 100 100" style="transform:scale(.45)" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#ff8a3d" stroke="#3a1a08" stroke-width="3"/><path d="M50 4v92M4 50h92M18 18q32 32 0 64M82 18q-32 32 0 64" stroke="#3a1a08" stroke-width="3" fill="none"/><ellipse cx="34" cy="28" rx="12" ry="6" fill="rgba(255,255,255,.3)"/></svg></div><div class="gx-gauge"><i></i></div><button class="gx-pump" aria-label="Насос"><span class="b"></span><span class="h"></span></button></div><p>Нажимай на насос</p>';
+      const sv = k.b.querySelector('.gx-ball svg'), nd = k.b.querySelector('.gx-gauge i'), pm = k.b.querySelector('.gx-pump'); let v = 0;
+      pm.onclick = () => {
+        if (v >= 100) return; v = Math.min(100, v + 8);
+        pm.classList.add('down'); setTimeout(() => pm.classList.remove('down'), 120);
+        snd.burst(0.12, 900, 2400, 1, 0.04);
+        sv.style.transform = `scale(${0.45 + v / 100 * 0.55})`; nd.style.transform = `rotate(${-80 + v * 1.6}deg)`;
+        if (v >= 100) ok();
+      };
+    },
+    flowers(k, ok) {
+      const P = ['#ff5a6e', '#ff8fd0', '#b07be8', '#ffd24a'], w = [0, 0, 0, 0];
+      k.b.innerHTML = `<div class="gx-bed"><div class="gx-can" hidden>${CAN}</div>${P.map((c, i) => `<div class="gx-fl" style="left:${16 + i * 22}%">${flowerSvg(c)}<i></i></div>`).join('')}</div>`;
+      const bed = k.b.firstChild, can = bed.querySelector('.gx-can'), fl = [...bed.querySelectorAll('.gx-fl')]; let down = false, px = -999;
+      const pos = (e) => { const r = bed.getBoundingClientRect(); px = e.clientX - r.left; can.style.left = px + 'px'; can.style.top = (e.clientY - r.top) + 'px'; };
+      bed.onpointerdown = (e) => { down = true; can.hidden = false; can.classList.add('pour'); pos(e); try { bed.setPointerCapture(e.pointerId); } catch (err) {} };
+      bed.onpointermove = (e) => { if (down) pos(e); };
+      bed.onpointerup = bed.onpointercancel = () => { down = false; can.classList.remove('pour'); };
+      loop(k, (dt) => {
+        if (!down) return;
+        fl.forEach((f, i) => {
+          const fx = f.offsetLeft + f.offsetWidth / 2; if (Math.abs(px - fx) > 42 || w[i] >= 100) return;
+          w[i] = Math.min(100, w[i] + dt * 45); f.querySelector('i').style.setProperty('--w', w[i] + '%');
+          f.className = 'gx-fl' + (w[i] >= 100 ? ' s2' : w[i] > 45 ? ' s1' : '');
+          if (w[i] >= 100) snd.step(i + 2);
+        });
+        if (w.every((v) => v >= 100)) ok();
+      });
     },
   };
 
