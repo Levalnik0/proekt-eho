@@ -14,7 +14,7 @@ const RANKS: [number, string][] = [
   [1000, 'Мастер Эха'],
   [1400, 'Легенда Эха'],
 ];
-const DAY_GAMES = ['imp', 'safe', 'race', 'filter', 'detective', 'net', 'windows'];
+const DAY_GAMES = ['imp', 'safe', 'race', 'filter', 'detective', 'net', 'windows', 'glitch'];
 
 export interface LabRank {
   name: string;

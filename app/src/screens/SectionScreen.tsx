@@ -12,6 +12,7 @@ import {
   IconMirror,
   IconNet,
   IconPerson,
+  IconGlitch,
   IconImpostor,
   IconRace,
   IconSafe,
@@ -38,6 +39,7 @@ const KIND_ICON: Record<Activity['kind'], (props: { size?: number }) => ReactNod
 const ROUTE_ICON: Record<string, (props: { size?: number }) => ReactNode> = {
   'game/swipe': IconSwipe,
   'game/slang': IconBubble,
+  'game/lab/glitch': IconGlitch,
   'game/lab/imp': IconImpostor,
   'game/lab/safe': IconSafe,
   'game/lab/race': IconRace,

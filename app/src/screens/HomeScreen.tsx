@@ -44,7 +44,7 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
   const tests = TESTS.filter((id) => progress.tests[id]).length;
 
   const tiles: Tile[] = [
-    { route: 'games', label: 'Игры', sub: labUnlocked() ? '9 игр на скорость' : '2 игры на скорость', Icon: IconGamepad },
+    { route: 'games', label: 'Игры', sub: labUnlocked() ? '10 игр: одному и с друзьями' : '2 игры на скорость', Icon: IconGamepad },
     {
       route: 'stories',
       label: 'Истории',

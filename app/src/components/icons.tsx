@@ -355,3 +355,18 @@ export function IconWindows({ size = 24, className }: IconProps) {
     </svg>
   );
 }
+
+/** Зверёк в капюшоне с ушками и «битые» полоски: Glitch */
+export function IconGlitch({ size = 24, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path d="M6.200 9.200 5 3.600l4.300 2.700zM17.800 9.200 19 3.600l-4.300 2.700z" fill="currentColor" />
+      <circle cx="12" cy="11" r="6.600" fill="currentColor" />
+      <path d="M5.500 21c.3-3.600 2.800-5.400 6.500-5.400s6.200 1.800 6.500 5.400z" fill="currentColor" />
+      <ellipse cx="12" cy="11.800" rx="4.300" ry="3.700" fill={GLYPH} />
+      <circle cx="10.300" cy="11.500" r="0.900" fill="currentColor" />
+      <circle cx="13.700" cy="11.500" r="0.900" fill="currentColor" />
+      <path d="M1.500 12.500h3M19.500 15h3M20 8.500h2.500" stroke="currentColor" strokeWidth="1.500" opacity="0.6" />
+    </svg>
+  );
+}

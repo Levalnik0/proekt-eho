@@ -40,6 +40,7 @@ export const SECTIONS: Section[] = [
       { route: 'game/swipe', label: 'Развод или нет?', kind: 'game' },
       // Игры на отдельной странице (рамка в App.tsx): теперь открыты всем,
       // без кода. Лучшие стоят выше: их дети называют «самыми моими»
+      { route: 'game/lab/glitch', label: 'Glitch', kind: 'game' },
       { route: 'game/lab/imp', label: 'Самозванец', kind: 'game' },
       { route: 'game/lab/safe', label: 'Сейф на двоих', kind: 'game' },
       { route: 'game/lab/race', label: 'Автодром слов', kind: 'game' },
