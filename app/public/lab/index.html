@@ -736,16 +736,37 @@ canvas { display: block; width: 100%; height: 100%; }
 .gl-crit { align-self: center; padding: 6px 12px; border-radius: 12px; background: rgba(220,30,60,.85); color: #fff; font-weight: 800; font-size: 13.5px; animation: glblink 1s steps(2) infinite; }
 .gl-crit[hidden] { display: none; }
 @keyframes glblink { 50% { background: rgba(120,10,30,.85); } }
-.gl-btns { position: absolute; right: 12px; bottom: 14px; z-index: 6; display: grid; grid-template-columns: repeat(2, 66px); gap: 10px; justify-items: center; }
+.gl-btns { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
 .gl-btns[hidden] { display: none; }
-.gl-b { position: relative; width: 66px; height: 66px; border-radius: 50%; background: rgba(20,16,40,.82); border: 2px solid rgba(255,255,255,.25); color: #fff; font-size: 10.5px; font-weight: 900; letter-spacing: .02em; display: grid; place-items: center; text-transform: uppercase; padding: 0; line-height: 1.1; }
-.gl-b svg { width: 26px; height: 26px; display: block; margin: 0 auto 2px; }
+.gl-b { position: absolute; pointer-events: auto; width: 54px; height: 54px; border-radius: 50%; background: rgba(20,16,40,.82); border: 2px solid rgba(255,255,255,.25); color: #fff; font-size: 9px; font-weight: 900; letter-spacing: .02em; display: grid; place-items: center; text-transform: uppercase; padding: 0; line-height: 1.1; transition: transform .12s, opacity .2s; }
+.gl-b:active:not(:disabled) { transform: scale(.92); }
+.gl-b svg { width: 22px; height: 22px; display: block; margin: 0 auto 1px; }
+.gl-b em { position: absolute; right: -4px; top: -4px; min-width: 20px; height: 20px; padding: 0 4px; border-radius: 10px; background: #ff3d7f; color: #fff; font: 900 12px/20px system-ui, sans-serif; font-style: normal; text-align: center; box-shadow: 0 0 0 2px #15112a; }
+/* главная кнопка: «Взлом» у глитча, «Действие» у остальных */
+.gl-b.use, .gl-b.kill { right: 14px; bottom: 18px; width: 88px; height: 88px; font-size: 11px; border-width: 3px; box-shadow: 0 0 18px rgba(0,0,0,.5), inset 0 0 14px rgba(255,255,255,.06); }
+.gl-b.use svg, .gl-b.kill svg { width: 32px; height: 32px; margin-bottom: 3px; }
+.gl-b.use { background: radial-gradient(circle at 50% 35%, rgba(255,211,77,.28), rgba(20,16,40,.88) 70%); }
+.gl-b.use:not(:disabled) { box-shadow: 0 0 22px rgba(255,211,77,.4), inset 0 0 14px rgba(255,211,77,.12); }
+.gl-b.kill { background: radial-gradient(circle at 50% 35%, rgba(255,61,127,.3), rgba(20,16,40,.88) 70%); }
+.gl-b.kill:not(:disabled) { box-shadow: 0 0 22px rgba(255,61,127,.5), inset 0 0 14px rgba(255,61,127,.14); }
+/* второстепенные: слева от главной дугой */
+.gl-b.rep { right: 112px; bottom: 20px; }
+.gl-b.sab { right: 100px; bottom: 82px; }
+/* появляются только рядом с нужным местом, над главной кнопкой */
+.gl-b.vent { right: 38px; bottom: 116px; }
+.gl-b.lock { right: 38px; bottom: 116px; }
+.gl-b.vent:not([hidden]) ~ .gl-b.lock { right: 98px; bottom: 140px; }
+/* карта: маленькая кнопка сверху */
+.gl-b.map { right: 12px; top: 54px; width: 42px; height: 42px; font-size: 0; }
+.gl-b.map svg { width: 22px; height: 22px; margin: 0; }
+.gl-b.map span { display: grid; place-items: center; }
 .gl-b:disabled { opacity: .3; }
 .gl-b[hidden] { display: none; }
 .gl-b.use { border-color: #ffd34d; color: #ffd34d; }
 .gl-b.kill { border-color: #ff3d7f; color: #ff6fa0; }
 .gl-b.rep { border-color: #ff8a3d; color: #ffb27a; }
 .gl-b.sab { border-color: #b07be8; color: #cfa8ff; }
+.gl-b.lock { border-color: #ffb13d; color: #ffcb7a; }
 .gl-b.vent { border-color: #2de2e6; color: #2de2e6; }
 .gl-b.map { border-color: rgba(255,255,255,.4); }
 .gl-b i { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 22px; background: rgba(5,4,12,.65); color: #fff; }
@@ -885,6 +906,19 @@ canvas { display: block; width: 100%; height: 100%; }
 .gx-ch { display: flex; gap: 6px; }
 .gx-ch button { flex: 1; min-height: 34px; border-radius: 999px; background: #2b2450; color: #d8d0f5; font-weight: 800; font-size: 12.5px; }
 .gx-ch button.on { background: #1f7a50; color: #fff; } .gx-ch button.bad.on { background: #9a2448; }
+.gx-call { margin-top: 8px; } .gx-call button { min-height: 42px; }
+.gx-sms { background: #1b1830; border-radius: 16px; padding: 14px 12px; text-align: center; }
+.gx-sms b { font-size: 12.5px; color: #2de2e6; } .gx-sms p { margin: 8px 0 0; font-size: 14px; }
+.gx-sms em { display: block; margin: 4px 0 6px; font-style: normal; font-size: 38px; font-weight: 900; letter-spacing: .25em; color: #ffd24a; }
+.gx-sms small { color: #b8b0d8; font-size: 12.5px; }
+.gx-bar { height: 6px; margin-top: 12px; border-radius: 3px; background: #2b2450; overflow: hidden; } .gx-bar i { display: block; height: 100%; background: #ffd24a; animation: gxbar 3.2s linear forwards; }
+@keyframes gxbar { from { width: 100%; } to { width: 0; } }
+.gx-code { display: flex; gap: 8px; justify-content: center; margin-bottom: 8px; }
+.gx-code span { width: 46px; height: 54px; border-radius: 12px; background: #0f0c1f; border: 2px solid #4b4370; display: grid; place-items: center; font-size: 28px; font-weight: 900; color: #ffd24a; }
+.gx-cap { margin: 0 0 8px; text-align: center; font-size: 13.5px; color: #b8b0d8; line-height: 1.35; } .gx-cap.bad { color: #ff6fa0; }
+.gx-rep .gl-msg { display: block; width: 100%; text-align: left; color: #f1edff; font: inherit; font-size: 14px; border: 2px solid transparent; }
+.gx-rep .gl-msg.on { border-color: #ff6fa0; background: #2a1530; }
+.gx-rep .gx-go { margin: 8px 0 0; text-align: center; background: #9a2448; }
 .gx-lap { margin: 4px auto 0; max-width: 300px; }
 .gx-lscr { background: #0f1424; border: 8px solid #2a2d3e; border-bottom-width: 12px; border-radius: 12px 12px 4px 4px; padding: 10px; }
 .gx-lbase { height: 12px; margin: 0 -14px; border-radius: 0 0 14px 14px; background: linear-gradient(#4a4e62, #2a2d3e); }
@@ -900,7 +934,7 @@ canvas { display: block; width: 100%; height: 100%; }
 .gx-chalk canvas { display: block; width: 100%; height: auto; touch-action: none; }
 .gx-tray { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: #6b4428; display: flex; gap: 8px; align-items: center; padding: 0 16px; }
 .gx-tray i { width: 26px; height: 5px; border-radius: 3px; background: #f1ece0; } .gx-tray i:nth-child(2) { background: #ff9ac2; width: 18px; } .gx-tray i:nth-child(3) { background: #9ad0ff; width: 22px; }
-.gx-sponge { position: absolute; width: 44px; height: 28px; margin: -14px 0 0 -22px; border-radius: 6px; background: #ffd24a; box-shadow: inset 0 -9px 0 #3a7ad9; pointer-events: none; }
+.gx-sponge { position: absolute; width: 44px; height: 28px; margin: -14px 0 0 -22px; border-radius: 6px; background: #b98a58; box-shadow: inset 0 -10px 0 #4b4b55, 0 2px 0 rgba(0,0,0,.35); pointer-events: none; }
 .gx-osc { position: relative; border-radius: 12px; border: 6px solid #2a2d3e; background: #06140c; background-image: linear-gradient(rgba(57,217,138,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(57,217,138,.12) 1px, transparent 1px); background-size: 20px 20px; }
 .gx-osc canvas { display: block; width: 100%; height: auto; }
 .gx-ok { position: absolute; right: 8px; top: 6px; font-size: 10px; font-weight: 900; letter-spacing: .08em; color: #39d98a; opacity: 0; transition: opacity .2s; }
@@ -1241,10 +1275,11 @@ canvas { display: block; width: 100%; height: 100%; }
       <div class="gl-joy" id="gl-joy" hidden><i></i></div>
       <div class="gl-btns" id="gl-btns" hidden>
         <button class="gl-b map" id="gl-bmap" aria-label="Карта"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Карта</span></button>
-        <button class="gl-b sab" id="gl-bsab" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Сбой</span><i></i></button>
+        <button class="gl-b sab" id="gl-bsab" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Силы</span><i></i></button>
         <button class="gl-b rep" id="gl-brep" disabled><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>Тревога</span></button>
         <button class="gl-b kill" id="gl-bkill" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h3M13 9h3M8 15l3-2 2 2 3-2"/></svg>Взлом</span><i></i></button>
         <button class="gl-b vent" id="gl-bvent" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 12h10M7 15h10"/></svg>Кабель</span></button>
+        <button class="gl-b lock" id="gl-block" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3M12 15v2"/></svg>Замок</span><em></em></button>
         <button class="gl-b use" id="gl-buse" disabled><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11V5a2 2 0 0 1 4 0v6M13 10a2 2 0 0 1 4 0v4a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-4a2 2 0 0 1 3-2l2 2"/></svg>Действие</span></button>
       </div>
       <div class="gl-toast" id="gl-toast" hidden></div>
@@ -1438,7 +1473,7 @@ const HOWTO = {
   safe: ['<b>Вас двое</b>, у каждого свой телефон. Экран друга подсматривать нельзя.', 'Один видит <b>замки</b>, но не знает, как их открыть. У второго <b>шпаргалка</b> с ответами, но сейф он не видит.', '<b>Говорите вслух:</b> один рассказывает, что видит, второй подсказывает, что нажать. Можно сидеть рядом или созвониться.', 'Введите <b>один код</b>, и телефоны найдут друг друга: старт, таймер и ошибки будут общими.', 'Нет напарника? Нажми <b>«Попробовать одному»</b>: и сейф, и шпаргалка будут у тебя.'],
   imp: ['В чате класса четыре друга. Один аккаунт <b>взломали</b>: от имени друга пишет чужой.', 'Читай сообщения. Самозванец <b>торопит, просит код или деньги, зовёт по ссылке</b>.', 'Сомневаешься? Нажми на человека и <b>задай проверочный вопрос</b>. Уверен? Жми «Это самозванец».'],
   windows: ['Во двор приходят гости. <b>Друзья</b> с тёплым фонариком, <b>незнакомцы</b> без него.', '<b>Потяни штору</b> в сторону или нажми на окно: открыто всем, друзьям или закрыто.', 'Друзьям нужны фото и личка. Незнакомцам <b>ничего</b> не нужно. «Где я» лучше закрыть.', 'Гость с подписью <b>«0 общих»</b> не друг. Нажми на него, и его заблокируют.', 'Ветер сам приоткрывает шторы - успей закрыть. <b>Фонарь</b> показывает подписи гостей.'],
-  glitch: ['Вечер в школе. Ты <b>защитник</b>: ходи по карте и выполняй <b>задания</b> из списка. Чтобы идти, нажми на экран и веди пальцем.', 'Среди вас прячутся <b>глитчи</b>. Они выглядят как все, но тайком <b>взламывают</b> защитников и устраивают сбои: гасят свет и перегревают сервер. Ещё они умеют быстро перебегать по <b>кабелям</b> под школой: из любого люка в любой другой.', 'Нашёл взломанного? Жми <b>«Тревога»</b>. На собрании <b>пиши в чат</b> или выбирай готовые фразы, потом выбери игрока и голосуй, кого выгнать. Имя, адрес, телефон и ссылки не пиши: игра такие сообщения не пропустит.', 'Защитники побеждают, когда сделаны все задания или выгнаны все глитчи. Глитчи - когда их стало столько же, сколько защитников.', 'Играй с ботами или <b>с друзьями по коду комнаты</b>. Придумай себе ник, но настоящее имя, фамилию и школу не пиши. Роль выпадает случайно.'],
+  glitch: ['Вечер в школе. Ты <b>защитник</b>: ходи по карте и выполняй <b>задания</b> из списка. Чтобы идти, нажми на экран и веди пальцем.', 'Среди вас прячутся <b>глитчи</b>. Они выглядят как все, но тайком <b>взламывают</b> защитников и устраивают сбои: гасят свет и перегревают сервер. Ещё они умеют быстро перебегать по <b>кабелям</b> под школой: из любого люка в любой другой. А ещё глитч может <b>запереть дверь</b> на 18 секунд, но только два раза за игру.', 'Нашёл взломанного? Жми <b>«Тревога»</b>. На собрании <b>пиши в чат</b> или выбирай готовые фразы, потом выбери игрока и голосуй, кого выгнать. Имя, адрес, телефон и ссылки не пиши: игра такие сообщения не пропустит.', 'Защитники побеждают, когда сделаны все задания или выгнаны все глитчи. Глитчи - когда их стало столько же, сколько защитников.', 'Играй с ботами или <b>с друзьями по коду комнаты</b>. Придумай себе ник, но настоящее имя, фамилию и школу не пиши. Роль выпадает случайно.'],
 };
 // Правила показываются по одному шагу на карточке: «Дальше», «Дальше», «Приступить»
 const START = { imp: '#i-go', filter: '#f-go', detective: '#d-go', net: '#n-go', windows: '#w-go', race: '#r-go' };
@@ -4386,11 +4421,11 @@ function relayJoin(topic, onMsg, onState) {
   const stage = $('#gl-stage'), cv = $('#gl-cv'), cx = cv.getContext('2d');
   const hud = $('#gl-hud'), btnBox = $('#gl-btns'), joyEl = $('#gl-joy'), toastEl = $('#gl-toast');
   const panel = $('#gl-panel'), mapEl = $('#gl-map'), meetEl = $('#gl-meet'), bigEl = $('#gl-big'), startEl = $('#gl-start');
-  const B = { use: $('#gl-buse'), kill: $('#gl-bkill'), rep: $('#gl-brep'), sab: $('#gl-bsab'), vent: $('#gl-bvent'), map: $('#gl-bmap') };
+  const B = { use: $('#gl-buse'), kill: $('#gl-bkill'), rep: $('#gl-brep'), sab: $('#gl-bsab'), vent: $('#gl-bvent'), lock: $('#gl-block'), map: $('#gl-bmap') };
   const fog = document.createElement('canvas'), fx = fog.getContext('2d');
   const FONT = '"Nunito Variable", sans-serif';
 
-  const SPEED = 165, GSPEED = 205, HACK_R = 80, HACK_CD = 30, SAB_CD = 35, CRIT_T = 45, USE_R = 72, REP_R = 100, VIS = 260, VIS_DARK = 105, TALK = 20, VOTE = 35, TASKN = 6, INTRO = 3.5;
+  const SPEED = 165, GSPEED = 205, HACK_R = 80, HACK_CD = 30, SAB_CD = 35, CRIT_T = 45, USE_R = 72, REP_R = 100, VIS = 260, VIS_DARK = 105, TALK = 20, VOTE = 35, TASKN = 6, INTRO = 3.5, LOCK_N = 2, LOCK_T = 18, LOCK_R = 150, GLV = 4;
   const COLS = [['#ff5a6e', 'Красный'], ['#3fa8ff', 'Синий'], ['#5fd58a', 'Зелёный'], ['#ffd24a', 'Жёлтый'], ['#ff9a3d', 'Оранжевый'], ['#b07be8', 'Фиолетовый'], ['#2de2e6', 'Бирюзовый'], ['#ff8fd0', 'Розовый'], ['#eef0f5', 'Белый'], ['#b08560', 'Коричневый']];
   const KINDS = ['cat', 'bunny', 'bear', 'fox'], KINDN = ['Котик', 'Зайка', 'Мишка', 'Лис'];
   // Ник собирается из готовых слов: настоящее имя и чужие слова в игру не попадают
@@ -4459,7 +4494,13 @@ function relayJoin(topic, onMsg, onState) {
     { id: 'books', r: 'lib', x: 1082, y: 334, sx: 1050, sy: 334, n: 'Расставь книги' },
     { id: 'ball', r: 'gym', x: 830, y: 812, n: 'Накачай мяч' },
     { id: 'flowers', r: 'yard', x: 2330, y: 965, sx: 2330, sy: 922, n: 'Полей цветы' },
+    { id: 'friend', r: 'comp', x: 1480, y: 172, n: 'Разбери заявки в друзья' },
+    { id: 'code', r: 'teach', x: 1900, y: 172, n: 'Защити вход по коду' },
+    { id: 'wifi', r: 'cafe', x: 270, y: 812, n: 'Выбери безопасный Wi-Fi' },
+    { id: 'report', r: 'lock', x: 1900, y: 812, n: 'Пожалуйся на обидчика' },
   ];
+  // Задания про безопасность: у каждого защитника из шести заданий минимум четыре такие
+  const SAFE = new Set(['board', 'site', 'update', 'msgs', 'privacy', 'card', 'files', 'friend', 'code', 'wifi', 'report']);
   ST.forEach((s) => { s.sx = s.sx || s.x; s.sy = s.sy || s.y + 28; });
   const STI = Object.fromEntries(ST.map((s) => [s.id, s]));
   const FIX = { lights: { x: 560, y: 1272, sx: 560, sy: 1300 }, critA: { x: 700, y: 1532, sx: 700, sy: 1560 }, critB: { x: 1520, y: 1552, sx: 1520, sy: 1580 } };
@@ -4498,7 +4539,12 @@ function relayJoin(topic, onMsg, onState) {
   const sightAt = (x, y) => cell(openG, x, y);
   function canStand(x, y, r) { r = r || 13; const q = r * 0.7; return !!(cell(walkG, x, y) && cell(walkG, x - r, y) && cell(walkG, x + r, y) && cell(walkG, x, y - r) && cell(walkG, x, y + r) && cell(walkG, x - q, y - q) && cell(walkG, x + q, y - q) && cell(walkG, x - q, y + q) && cell(walkG, x + q, y + q)); }
   function los(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 9); for (let i = 1; i < n; i++) if (!sightAt(x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n)) return false; return true; }
-  function clearWay(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 8); for (let i = 1; i <= n; i++) if (!canStand(x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n, 12)) return false; return true; }
+  function clearWay(x0, y0, x1, y1, av) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 8); for (let i = 1; i <= n; i++) { const px = x0 + (x1 - x0) * i / n, py = y0 + (y1 - y0) * i / n; if (!canStand(px, py, 12) || (av && lockHit(px, py, 14))) return false; } return true; }
+  // Запертые двери: глитч закрывает проём, пока не пройдёт время
+  const doorMid = (d) => [d[0] + d[2] / 2, d[1] + d[3] / 2];
+  function hasLocks() { if (!G || !G.locks) return false; for (const k in G.locks) if (G.locks[k] > G.c) return true; return false; }
+  function lockHit(x, y, m) { if (!G || !G.locks) return false; for (const k in G.locks) { if (G.locks[k] <= G.c) continue; const d = DOORS[k]; if (x > d[0] - m && x < d[0] + d[2] + m && y > d[1] - m && y < d[1] + d[3] + m) return true; } return false; }
+  function nearDoor(me) { let bi = -1, bd = LOCK_R; DOORS.forEach((d, i) => { if (G.locks[i] > G.c) return; const m = doorMid(d), dd = Math.hypot(m[0] - me.x, m[1] - me.y); if (dd < bd) { bd = dd; bi = i; } }); return bi; }
 
   // Поиск пути для ботов: волна по клеткам, потом спрямление
   const PS = 20, PGW = WW / PS, PGH = WH / PS, pathG = new Uint8Array(PGW * PGH), prevA = new Int32Array(PGW * PGH);
@@ -4512,8 +4558,8 @@ function relayJoin(topic, onMsg, onState) {
     }
     return -1;
   }
-  function findPath(x0, y0, x1, y1) {
-    const s = nearCell(x0, y0), g = nearCell(x1, y1);
+  function findPath(x0, y0, x1, y1, avoid) {
+    const av = !!avoid && hasLocks(), s = nearCell(x0, y0), g = nearCell(x1, y1);
     if (s < 0 || g < 0) return [];
     prevA.fill(-1); prevA[s] = s;
     const q = [s]; let qi = 0;
@@ -4525,6 +4571,7 @@ function relayJoin(topic, onMsg, onState) {
         if (nx < 0 || ny < 0 || nx >= PGW || ny >= PGH) continue;
         const nk = ny * PGW + nx;
         if (prevA[nk] >= 0 || !pathG[nk]) continue;
+        if (av && lockHit(nx * PS + 10, ny * PS + 10, 14)) continue;
         if (DX[d] && DY[d] && (!pathG[gy * PGW + nx] || !pathG[ny * PGW + gx])) continue;
         prevA[nk] = k; q.push(nk);
       }
@@ -4534,7 +4581,7 @@ function relayJoin(topic, onMsg, onState) {
     const pts = cells.map((k) => [(k % PGW) * PS + 10, (k / PGW | 0) * PS + 10]);
     if (canStand(x1, y1, 12)) pts.push([x1, y1]);
     const out = []; let ax = x0, ay = y0, i = 0;
-    while (i < pts.length) { let j = Math.min(pts.length - 1, i + 14); while (j > i && !clearWay(ax, ay, pts[j][0], pts[j][1])) j--; out.push(pts[j]); ax = pts[j][0]; ay = pts[j][1]; i = j + 1; }
+    while (i < pts.length) { let j = Math.min(pts.length - 1, i + 14); while (j > i && !clearWay(ax, ay, pts[j][0], pts[j][1], av)) j--; out.push(pts[j]); ax = pts[j][0]; ay = pts[j][1]; i = j + 1; }
     return out;
   }
 
@@ -4659,7 +4706,7 @@ function relayJoin(topic, onMsg, onState) {
     if (s.id === 'books') { c.fillStyle = 'rgba(0,0,0,.4)'; rrf(c, x - 11, y - 16, 26, 38, 4); c.fillStyle = '#5a3b26'; rrf(c, x - 13, y - 19, 26, 38, 4); ['#c9304a', '#3fa8ff', '#ffd24a', '#5fd58a'].forEach((col, i) => { c.fillStyle = col; c.fillRect(x - 10 + i * 5, y - 16, 4, 14); c.fillRect(x - 10 + i * 5, y + 1, 4, 14); }); c.fillStyle = '#20202c'; c.beginPath(); c.arc(x - 8, y + 21, 3, 0, 7); c.arc(x + 8, y + 21, 3, 0, 7); c.fill(); return; }
     if (s.id === 'ball') { c.fillStyle = 'rgba(0,0,0,.35)'; rrf(c, x - 21, y - 11, 44, 28, 5); c.fillStyle = '#6a6f80'; rrf(c, x - 22, y - 14, 44, 28, 5); [[-12, -3, '#ff8a3d'], [0, -5, '#3fa8ff'], [12, -3, '#ff8a3d'], [-6, 6, '#eef0f5'], [6, 6, '#ff8a3d']].forEach(([dx, dy, col]) => { c.fillStyle = col; c.beginPath(); c.arc(x + dx, y + dy, 7, 0, 7); c.fill(); }); return; }
     if (s.id === 'flowers') { c.fillStyle = '#4a3020'; c.beginPath(); c.ellipse(x, y, 44, 21, 0, 0, 7); c.fill(); c.strokeStyle = '#6b4a30'; c.lineWidth = 3; c.stroke(); [[-26, -3, '#ff5a6e'], [-9, -9, '#ffd24a'], [9, -5, '#ff8fd0'], [26, -1, '#b07be8'], [0, 8, '#ff5a6e']].forEach(([dx, dy, col]) => { c.fillStyle = '#3d8a55'; c.fillRect(x + dx - 1, y + dy, 2, 7); c.fillStyle = col; c.beginPath(); c.arc(x + dx, y + dy, 5, 0, 7); c.fill(); c.fillStyle = '#ffd24a'; c.beginPath(); c.arc(x + dx, y + dy, 1.8, 0, 7); c.fill(); }); return; }
-    const hue = { site: '#3fa8ff', wires: '#ffd24a', update: '#5fd58a', msgs: '#ff8fd0', dial: '#b07be8', privacy: '#2de2e6', fuse: '#ffd24a', server: '#2de2e6', cool: '#ff9a3d', files: '#ff8fd0' }[s.id];
+    const hue = { site: '#3fa8ff', wires: '#ffd24a', update: '#5fd58a', msgs: '#ff8fd0', dial: '#b07be8', privacy: '#2de2e6', fuse: '#ffd24a', server: '#2de2e6', cool: '#ff9a3d', files: '#ff8fd0', friend: '#3fa8ff', code: '#ffd24a', wifi: '#2de2e6', report: '#ff6fa0' }[s.id];
     c.fillStyle = 'rgba(0,0,0,.4)'; rrf(c, x - 18, y - 12, 38, 28, 5);
     c.fillStyle = s.id === 'fuse' ? '#5a5f6a' : '#1a1830'; rrf(c, x - 19, y - 16, 38, 28, 5);
     if (s.id === 'fuse') { for (let i = 0; i < 4; i++) { c.fillStyle = i % 2 ? '#20202c' : '#ffd24a'; c.fillRect(x - 15 + i * 8, y - 12, 6, 4); c.fillStyle = '#20202c'; c.fillRect(x - 14 + i * 8, y - 4, 4, 10); } return; }
@@ -4745,15 +4792,16 @@ function relayJoin(topic, onMsg, onState) {
 
   /* ── Кадр ── */
   let G = null, link = null, NET = null, myId = 'me', lobbyT = 0;
-  let VW = 0, VH = 0, SC = 1, DPR = 1, raf = 0, lastT = 0, active = false, paused = false;
+  let VW = 0, VH = 0, SC = 1, DPR = 1, FS = 0.5, QL = 0, slowT = 0, fdt = 0.016, raf = 0, lastT = 0, active = false, paused = false;
   const ME = () => G.ps.get(G.me);
   const P = (id) => G && G.ps.get(id);
   const flick = (T, i) => { const v = Math.sin(T * 13 + i * 7) * Math.sin(T * 3.1 + i); return v > 0.9 ? 0.4 : 0.88 + 0.12 * Math.sin(T * 40 + i); };
   function visR(p) { if (!p.alive) return 9999; return G.sab && G.sab.s === 'lights' && p.role === 'd' ? VIS_DARK : VIS; }
   function resize() {
     const r = stage.getBoundingClientRect(); if (!r.width) return;
-    VW = r.width; VH = r.height; DPR = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); fog.width = cv.width; fog.height = cv.height;
+    const coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+    VW = r.width; VH = r.height; DPR = Math.min(QL ? 1 : coarse ? 1.5 : 2, window.devicePixelRatio || 1); FS = QL ? 0.33 : 0.5;
+    cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); fog.width = Math.round(cv.width * FS); fog.height = Math.round(cv.height * FS);
     SC = clamp(Math.min(VW, VH * 0.75) / 520, 0.55, 1.15);
   }
   window.addEventListener('resize', () => { if (active) resize(); });
@@ -4802,6 +4850,23 @@ function relayJoin(topic, onMsg, onState) {
     });
   }
   function ring(x, y, r, col, w) { cx.strokeStyle = col; cx.lineWidth = w || 3; cx.beginPath(); cx.arc(x, y, r, 0, 7); cx.stroke(); }
+  function drawLocks(T) {
+    for (const k in G.locks) {
+      const u = G.locks[k] - G.c; if (u <= 0) continue;
+      const d = DOORS[k], m = doorMid(d), bl = u < 3 && Math.floor(T * 6) % 2 ? 0.45 : 1;
+      cx.save(); cx.globalAlpha = bl; cx.beginPath(); cx.rect(d[0], d[1], d[2], d[3]); cx.clip();
+      cx.fillStyle = '#2a0f1c'; cx.fillRect(d[0], d[1], d[2], d[3]);
+      cx.strokeStyle = 'rgba(255,61,127,.85)'; cx.lineWidth = 7;
+      for (let i = -d[3]; i < d[2] + d[3]; i += 20) { cx.beginPath(); cx.moveTo(d[0] + i, d[1] + d[3]); cx.lineTo(d[0] + i + d[3], d[1]); cx.stroke(); }
+      cx.restore();
+      cx.save(); cx.globalAlpha = bl;
+      cx.fillStyle = 'rgba(10,6,16,.8)'; cx.beginPath(); cx.arc(m[0], m[1], 22, 0, 7); cx.fill();
+      cx.strokeStyle = '#ffcb7a'; cx.lineWidth = 3.5; cx.beginPath(); cx.arc(m[0], m[1] - 5, 6.5, Math.PI, 0); cx.stroke();
+      cx.fillStyle = '#ffcb7a'; rrf(cx, m[0] - 10, m[1] - 5, 20, 15, 3); cx.fillStyle = '#3a2410'; cx.fillRect(m[0] - 2, m[1] + 0, 4, 6);
+      cx.strokeStyle = 'rgba(255,255,255,.85)'; cx.lineWidth = 3; cx.beginPath(); cx.arc(m[0], m[1], 22, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, u / LOCK_T)); cx.stroke();
+      cx.restore();
+    }
+  }
   function draw(T) {
     const W = cv.width, H = cv.height;
     cx.setTransform(1, 0, 0, 1, 0, 0); cx.globalAlpha = 1; cx.fillStyle = '#050409'; cx.fillRect(0, 0, W, H);
@@ -4822,6 +4887,7 @@ function relayJoin(topic, onMsg, onState) {
     cx.fillStyle = '#7a0f22'; cx.beginPath(); cx.arc(EMG.x, EMG.y + 2, 13, 0, 7); cx.fill(); cx.fillStyle = `rgb(${220 + pl * 35 | 0},50,80)`; cx.beginPath(); cx.arc(EMG.x, EMG.y, 12, 0, 7); cx.fill(); cx.fillStyle = 'rgba(255,255,255,.5)'; cx.beginPath(); cx.arc(EMG.x - 4, EMG.y - 4, 3, 0, 7); cx.fill();
     if (me.role === 'd') me.tasks.forEach((id) => { if (me.done.has(id)) return; const st = STI[id]; ring(st.x, st.y - 2, 26 + pl * 4, `rgba(255,211,77,${0.5 + pl * 0.4})`, 3); });
     if (G.sab) (G.sab.s === 'lights' ? ['lights'] : ['critA', 'critB'].filter((k) => !G.sab.parts[k])).forEach((k) => ring(FIX[k].x, FIX[k].y - 2, 28 + pl * 6, `rgba(255,61,90,${0.6 + pl * 0.4})`, 4));
+    drawLocks(T);
     // кого и что видно
     const seeAll = !me.alive, vr = me.alive ? visR(me) * (inBase(me) ? flick(T, 99) : 1) : 0;
     const vis = (q) => seeAll || (Math.hypot(q.x - me.x, q.y - me.y) < vr + 12 && los(me.x, me.y, q.x, q.y));
@@ -4839,12 +4905,12 @@ function relayJoin(topic, onMsg, onState) {
     });
     // туман: видно только то, куда дотягивается взгляд
     if (me.alive) {
-      fx.setTransform(1, 0, 0, 1, 0, 0); fx.globalCompositeOperation = 'source-over'; fx.clearRect(0, 0, W, H);
-      fx.fillStyle = 'rgba(3,2,10,.9)'; fx.fillRect(0, 0, W, H);
-      fx.setTransform(s, 0, 0, s, W / 2 - camX * s, H / 2 - camY * s); fx.globalCompositeOperation = 'destination-out';
+      fx.setTransform(1, 0, 0, 1, 0, 0); fx.globalCompositeOperation = 'source-over'; fx.clearRect(0, 0, fog.width, fog.height);
+      fx.fillStyle = 'rgba(3,2,10,.9)'; fx.fillRect(0, 0, fog.width, fog.height);
+      fx.setTransform(s * FS, 0, 0, s * FS, (W / 2 - camX * s) * FS, (H / 2 - camY * s) * FS); fx.globalCompositeOperation = 'destination-out';
       const g = fx.createRadialGradient(me.x, me.y, vr * 0.15, me.x, me.y, vr); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(0.72, 'rgba(0,0,0,.94)'); g.addColorStop(1, 'rgba(0,0,0,0)');
       fx.fillStyle = g; fx.beginPath(); lightPoly(me.x, me.y, vr).forEach(([px, py], i) => i ? fx.lineTo(px, py) : fx.moveTo(px, py)); fx.closePath(); fx.fill();
-      cx.setTransform(1, 0, 0, 1, 0, 0); cx.drawImage(fog, 0, 0);
+      cx.setTransform(1, 0, 0, 1, 0, 0); cx.drawImage(fog, 0, 0, W, H);
     } else { cx.setTransform(1, 0, 0, 1, 0, 0); cx.fillStyle = 'rgba(70,100,220,.10)'; cx.fillRect(0, 0, W, H); }
     world();
     drawLeds(T); if (me.alive) drawEyes(T, me);
@@ -4919,15 +4985,15 @@ function relayJoin(topic, onMsg, onState) {
     let order = shuffle(ps.map((_, i) => i));
     if (wish === 'g') order = [0].concat(order.filter((i) => i)); else if (wish === 'd') order = order.filter((i) => i).concat([0]);
     const gl = new Set(order.slice(0, ng));
-    ps.forEach((p, i) => { p.role = gl.has(i) ? 'g' : 'd'; p.tasks = shuffle(ST.map((s) => s.id)).slice(0, TASKN); });
-    return { t: 'start', ps };
+    ps.forEach((p, i) => { p.role = gl.has(i) ? 'g' : 'd'; const sf = shuffle(ST.filter((x) => SAFE.has(x.id)).map((x) => x.id)), ot = shuffle(ST.filter((x) => !SAFE.has(x.id)).map((x) => x.id)); p.tasks = shuffle(sf.slice(0, 4).concat(ot.slice(0, TASKN - 4))); });
+    return { t: 'start', v: GLV, ps };
   }
   function startGame(d) {
     stopGame();
-    G = { host: !NET || NET.host, solo: !NET, me: myId, c: 0, phase: 'intro', list: [], ps: new Map(), bodies: [], sab: null, sabReady: INTRO + 25, emgReady: INTRO + 20, tasksDone: 0, tasksTotal: 0, meet: null, fx: [], camX: 0, camY: 0, tick: { b: 0, s: 0, p: 0, hud: 0, n: 0 }, mood: '', hostSeen: 0, lastSent: '', lastRoom: 'hall', curRoom: 'hall', lastHack: -99, foot: 0, beep: 0, drip: 4, bigUntil: 0, endE: null, done: false };
+    G = { host: !NET || NET.host, solo: !NET, me: myId, c: 0, phase: 'intro', list: [], ps: new Map(), bodies: [], sab: null, sabReady: INTRO + 25, emgReady: INTRO + 20, tasksDone: 0, tasksTotal: 0, meet: null, fx: [], camX: 0, camY: 0, tick: { b: 0, s: 0, p: 0, hud: 0, n: 0 }, mood: '', hostSeen: 0, lastSent: '', lastRoom: 'hall', curRoom: 'hall', lastHack: -99, locks: {}, foot: 0, beep: 0, drip: 4, bigUntil: 0, endE: null, done: false };
     d.ps.forEach((q, i) => {
       const sp = spawnPos(i);
-      const p = { id: q.id, nick: q.nick, col: q.col, kind: q.kind, bot: !!q.bot, role: q.role, tasks: q.tasks, i, x: sp[0], y: sp[1], tx: sp[0], ty: sp[1], dir: 1, moving: false, alive: true, done: new Set(), vent: -1, cd: INTRO + 15, emg: 1, scanUntil: 0, seen: 0, ai: null };
+      const p = { id: q.id, nick: q.nick, col: q.col, kind: q.kind, bot: !!q.bot, role: q.role, tasks: (q.tasks || []).filter((t) => STI[t]), i, x: sp[0], y: sp[1], tx: sp[0], ty: sp[1], dir: 1, moving: false, alive: true, done: new Set(), vent: -1, lk: LOCK_N, cd: INTRO + 15, emg: 1, scanUntil: 0, seen: 0, ai: null };
       if (G.host && p.bot) p.ai = newAI();
       G.list.push(p); G.ps.set(p.id, p);
       if (p.role === 'd') G.tasksTotal += p.tasks.length;
@@ -4981,6 +5047,13 @@ function relayJoin(topic, onMsg, onState) {
         if (me.alive && Math.hypot(v[0] - me.x, v[1] - me.y) < 300) S.vent();
         if (G.host) G.list.forEach((q) => { if (q.ai && q !== p && q.alive && q.role === 'd' && Math.hypot(q.x - v[0], q.y - v[1]) < visR(q) && los(q.x, q.y, v[0], v[1])) { q.ai.sus[p.id] = (q.ai.sus[p.id] || 0) + 80; q.ai.sawVent = p.id; } });
         return; }
+      case 'lock': {
+        const p = P(e.by), d = DOORS[e.d]; if (!p || !d) return;
+        p.lk = Math.max(0, (p.lk || 0) - 1); G.locks[e.d] = G.c + LOCK_T;
+        const m = doorMid(d); G.fx.push({ k: 'puff', x: m[0], y: m[1], t: G.c, d: 0.6 });
+        if (me.alive && Math.hypot(m[0] - me.x, m[1] - me.y) < 420) S.clank();
+        if (G.host) G.list.forEach((q) => { if (!q.ai || !q.alive || q.role !== 'd' || q === p) return; if (dist(q, { x: m[0], y: m[1] }) < 700) { q.ai.path = []; q.ai.goal = null; q.ai.onArrive = null; } if (dist(q, p) < visR(q) && los(q.x, q.y, p.x, p.y)) q.ai.sus[p.id] = (q.ai.sus[p.id] || 0) + 50; });
+        return; }
       case 'sab': {
         if (G.sab) return;
         G.sab = { s: e.s, until: G.c + (e.dur || 0), parts: {} };
@@ -5005,7 +5078,7 @@ function relayJoin(topic, onMsg, onState) {
       case 'meet': {
         if (G.phase !== 'play' && G.phase !== 'intro') return;
         G.lastRoom = roomOf(me.x, me.y).id;
-        G.phase = 'meet'; G.bodies = []; G.sab = null; closePanel(); mapEl.hidden = true; joyStop(); me.vent = -1;
+        G.phase = 'meet'; G.bodies = []; G.locks = {}; G.sab = null; closePanel(); mapEl.hidden = true; joyStop(); me.vent = -1;
         G.meet = { why: e.why, by: e.by, broom: e.broom, uiAt: G.c + 2, end1: G.c + e.talk + 2, end2: G.c + e.talk + e.vote + 2, votes: {}, voted: new Set(), cnt: {}, log: [], sel: null, mine: null, said: 0, lastSay: -9, plan: [], ui: false, res: null, ej: false, revealed: false, resumeAt: 0 };
         S.alarm(); flash(); buzz([60, 40, 60]);
         const by = P(e.by);
@@ -5044,6 +5117,11 @@ function relayJoin(topic, onMsg, onState) {
       case 'hack': { const t = P(a.tg); if (G.phase !== 'play' || !p.alive || p.role !== 'g' || !t || !t.alive || t.role !== 'd' || p.vent >= 0 || G.c < p.cd - 2 || dist(p, t) > HACK_R + 70) return; emit({ k: 'hack', by: p.id, tg: t.id, x: Math.round(t.x), y: Math.round(t.y) }); return; }
       case 'task': if (p.role === 'd' && p.tasks.includes(a.st) && !p.done.has(a.st)) emit({ k: 'task', by: p.id, st: a.st }); return;
       case 'scan': emit({ k: 'scan', by: p.id }); return;
+      case 'lock': {
+        const d = DOORS[a.d]; if (G.phase !== 'play' || !d || !p.alive || p.role !== 'g' || p.vent >= 0 || !(p.lk > 0) || G.locks[a.d] > G.c) return;
+        const m = doorMid(d); if (Math.hypot(p.x - m[0], p.y - m[1]) > LOCK_R + 60) return;
+        if (G.list.some((q) => q.alive && q.role === 'd' && q.vent < 0 && q.x > d[0] - 36 && q.x < d[0] + d[2] + 36 && q.y > d[1] - 36 && q.y < d[1] + d[3] + 36)) { if (p.id === G.me) toast('В проёме кто-то стоит'); return; }
+        emit({ k: 'lock', by: p.id, d: a.d }); return; }
       case 'vent': if (p.role === 'g' && VENTS[a.v]) emit({ k: 'vent', by: p.id, v: a.v }); return;
       case 'rep': { const b = G.bodies.find((x) => x.id === a.body); if (G.phase === 'play' && p.alive && b) meetStart('rep', p, b); return; }
       case 'emg': if (G.phase === 'play' && p.alive && p.emg > 0 && G.c >= G.emgReady - 1 && !(G.sab && G.sab.s === 'crit')) { p.emg--; meetStart('emg', p, null); } return;
@@ -5134,7 +5212,7 @@ function relayJoin(topic, onMsg, onState) {
 
   /* ── Боты ── */
   const sameGoal = (g, x, y) => g && Math.abs(g[0] - x) < 30 && Math.abs(g[1] - y) < 30;
-  function goTo(p, x, y) { const ai = p.ai; ai.goal = [x, y]; ai.onArrive = null; ai.path = p.alive ? findPath(p.x, p.y, x, y) : [[x, y]]; }
+  function goTo(p, x, y) { const ai = p.ai; ai.goal = [x, y]; ai.onArrive = null; ai.path = p.alive ? findPath(p.x, p.y, x, y, p.role !== 'g') : [[x, y]]; }
   function wander(p) {
     const ai = p.ai, r = rnd(R.filter((q) => q.id !== 'yard')) || RN.hall, rm = Math.random() < 0.12 ? RN.yard : r;
     for (let i = 0; i < 12; i++) {
@@ -5190,6 +5268,7 @@ function relayJoin(topic, onMsg, onState) {
         else {
           if (dist(p, t) < HACK_R - 15 && los(p.x, p.y, t.x, t.y)) {
             ai.prey = null; ai.hunt = 20 + Math.random() * 25; hostAct({ k: 'hack', by: p.id, tg: t.id });
+            if (p.lk > 0 && Math.random() < 0.5) { const di = nearDoor(p); if (di >= 0) hostAct({ k: 'lock', by: p.id, d: di }); }
             let bi = -1, bd = 280; VENTS.forEach(([x, y], i) => { const dd = Math.hypot(p.x - x, p.y - y); if (dd < bd) { bd = dd; bi = i; } });
             ai.wait = 0; ai.onWait = null; ai.path = [];
             if (bi >= 0 && Math.random() < 0.75) { goTo(p, VENTS[bi][0], VENTS[bi][1]); ai.onArrive = () => { if (!G || G.phase !== 'play' || !p.alive) return; p.vent = bi; emit({ k: 'vent', by: p.id, v: bi }); ai.ventT = 0.9 + Math.random(); ai.ventTo = rnd(vlinks(bi)); }; }
@@ -5225,6 +5304,7 @@ function relayJoin(topic, onMsg, onState) {
     if (p.role === 'g') glitchBrain(p, dt); else defBrain(p, dt);
     if (!ai.path.length) { p.moving = false; if (ai.onArrive) { const f = ai.onArrive; ai.onArrive = null; f(); } return; }
     const pt = ai.path[0], dx = pt[0] - p.x, dy = pt[1] - p.y, d = Math.hypot(dx, dy), sp = (p.alive ? SPEED : GSPEED) * 0.9 * dt;
+    if (p.alive && p.role !== 'g' && hasLocks() && d > 0 && lockHit(p.x + dx / d * sp, p.y + dy / d * sp, 10) && !lockHit(p.x, p.y, 10)) { ai.path = []; ai.goal = null; ai.onArrive = null; ai.wait = 0.5 + Math.random(); p.moving = false; return; }
     if (d <= sp) { p.x = pt[0]; p.y = pt[1]; ai.path.shift(); } else { p.x += dx / d * sp; p.y += dy / d * sp; }
     if (Math.abs(dx) > 1) p.dir = dx < 0 ? -1 : 1;
     p.moving = true;
@@ -5272,7 +5352,7 @@ function relayJoin(topic, onMsg, onState) {
     if (current !== 'glitch' || !G || e.target.tagName === 'INPUT') return;
     keys.add(e.code);
     if (e.code.startsWith('Arrow')) e.preventDefault();
-    const b = { KeyE: B.use, Space: B.use, KeyQ: B.kill, KeyR: B.rep, KeyV: B.vent, KeyM: B.map, KeyF: B.sab }[e.code];
+    const prim = B.kill.hidden ? B.use : B.kill, b = { KeyE: prim, Space: prim, KeyQ: B.kill, KeyR: B.rep, KeyV: B.vent, KeyG: B.lock, KeyM: B.map, KeyF: B.sab }[e.code];
     if (b && !e.repeat && !b.disabled && !b.hidden) { e.preventDefault(); b.click(); }
   });
   document.addEventListener('keyup', (e) => keys.delete(e.code));
@@ -5287,8 +5367,9 @@ function relayJoin(topic, onMsg, onState) {
     if (Math.abs(x) > 0.1) me.dir = x < 0 ? -1 : 1;
     const sp = (me.alive ? SPEED : GSPEED) * dt, nx = me.x + x * sp, ny = me.y + y * sp;
     if (!me.alive) { me.x = clamp(nx, 30, WW - 30); me.y = clamp(ny, 30, WH - 30); return; }
-    if (canStand(nx, me.y)) me.x = nx;
-    if (canStand(me.x, ny)) me.y = ny;
+    const lk = me.role !== 'g' && hasLocks(), inL = lk && lockHit(me.x, me.y, 12);
+    if (canStand(nx, me.y) && !(lk && !inL && lockHit(nx, me.y, 12))) me.x = nx; else if (lk && !inL && lockHit(nx, me.y, 12) && G.c - (G.lkT || -9) > 2) { G.lkT = G.c; toast('Дверь заперта. Обойди или подожди'); }
+    if (canStand(me.x, ny) && !(lk && !inL && lockHit(me.x, ny, 12))) me.y = ny; else if (lk && !inL && lockHit(me.x, ny, 12) && G.c - (G.lkT || -9) > 2) { G.lkT = G.c; toast('Дверь заперта. Обойди или подожди'); }
     G.foot -= dt; if (G.foot <= 0) { G.foot = 0.34; stepSnd(me); }
   }
   function step(dt) {
@@ -5308,7 +5389,8 @@ function relayJoin(topic, onMsg, onState) {
   function frame(t) {
     if (!active) return;
     raf = requestAnimationFrame(frame);
-    const dt = clamp((t - lastT) / 1000, 0, 0.05); lastT = t;
+    const raw = (t - lastT) / 1000, dt = clamp(raw, 0, 0.05); lastT = t;
+    if (G && raw < 0.3) { fdt += (raw - fdt) * 0.05; if (fdt > 0.036) slowT += raw; else slowT = Math.max(0, slowT - raw); if (slowT > 3 && !QL) { QL = 1; slowT = 0; resize(); } }
     if (G && G.phase !== 'end' && !(paused && G.solo)) step(dt);
     draw(t / 1000);
   }
@@ -5344,9 +5426,11 @@ function relayJoin(topic, onMsg, onState) {
     if (G.sab && G.sab.s === 'crit' && G.phase === 'play') { G.beep -= 0.1; if (G.beep <= 0) { G.beep = 1; S.beep(); } }
     if (G.phase === 'play' && me.alive && inBase(me)) { G.drip -= 0.1; if (G.drip <= 0) { G.drip = 3 + Math.random() * 5; S.drip(); } }
     const play = G.phase === 'play' && me.vent < 0, isG = me.role === 'g';
-    B.kill.hidden = !(isG && me.alive); B.sab.hidden = !isG; B.rep.hidden = !me.alive;
+    const kt = isG && me.alive && play ? killTarget(me) : null, showKill = isG && me.alive && (!!kt || !useTarget(me));
+    B.kill.hidden = !showKill; B.use.hidden = showKill; B.sab.hidden = !isG; B.rep.hidden = !me.alive;
+    const ld = isG && me.alive && play && me.lk > 0 ? nearDoor(me) : -1; B.lock.hidden = ld < 0; if (ld >= 0) { B.lock.dataset.d = ld; const em = B.lock.querySelector('em'); if (em.textContent !== String(me.lk)) em.textContent = me.lk; }
     B.vent.hidden = !(isG && me.alive && G.phase === 'play' && (me.vent >= 0 || nearVent(me) >= 0));
-    const cd = Math.max(0, Math.ceil(me.cd - G.c)); B.kill.disabled = !(play && cd <= 0 && killTarget(me)); setI(B.kill, cd > 0 ? cd : '');
+    const cd = Math.max(0, Math.ceil(me.cd - G.c)); B.kill.disabled = !(play && cd <= 0 && kt); setI(B.kill, cd > 0 ? cd : '');
     const scd = G.sab ? 0 : Math.max(0, Math.ceil(G.sabReady - G.c)); B.sab.disabled = !(G.phase === 'play' && !G.sab && scd <= 0); setI(B.sab, scd > 0 ? scd : '');
     B.rep.disabled = !(play && me.alive && (nearBody(me) || canEmg(me)));
     B.use.disabled = !(play && useTarget(me));
@@ -5357,6 +5441,7 @@ function relayJoin(topic, onMsg, onState) {
   B.use.addEventListener('click', () => { if (!G || G.phase !== 'play') return; const u = useTarget(ME()); if (!u) return; if (u.fix) openFix(u.fix); else openTask(u.st); });
   B.kill.addEventListener('click', () => { if (!G || G.phase !== 'play') return; const me = ME(), t = killTarget(me); if (t && me.cd <= G.c) { me.cd = G.c + 1.5; act({ k: 'hack', tg: t.id }); } });
   B.rep.addEventListener('click', () => { if (!G || G.phase !== 'play') return; const me = ME(), b = nearBody(me); if (b) act({ k: 'rep', body: b.id }); else if (canEmg(me)) act({ k: 'emg' }); });
+  B.lock.addEventListener('click', () => { if (!G || G.phase !== 'play') return; const me = ME(), d = nearDoor(me); if (d < 0 || !(me.lk > 0)) return; act({ k: 'lock', d }); });
   B.map.addEventListener('click', showMap);
   mapEl.addEventListener('click', () => { mapEl.hidden = true; });
   B.sab.addEventListener('click', () => {
@@ -5437,11 +5522,17 @@ function relayJoin(topic, onMsg, onState) {
     books: 'Кто-то перепутал книги. Нажми на две, чтобы поменять их местами, и расставь по номерам.',
     ball: 'Мяч сдулся. Качай насос, пока стрелка не дойдёт до зелёного.',
     flowers: 'Зажми палец и води лейкой над цветами, пока каждый не распустится.',
+    friend: 'Принимай только тех, кого знаешь в жизни. Незнакомцы, которые просят фото, адрес или пароль, не друзья.',
+    code: 'Код из СМС нужен только тебе. Никому его не говори, даже тем, кто представляется службой безопасности.',
+    wifi: 'В открытой сети без пароля чужие могут подсмотреть, что ты делаешь. Подключайся только к своей защищённой.',
+    report: 'Обидные сообщения не терпят молча. Отметь их, пожалуйся и расскажи взрослому.',
   };
   const SITES = [['ВКонтакте', 'vk.com', 'vk.c0m', 'vk-podarki.com', 'vk.com.login-top.ru', '#2787f5', 'VK'], ['Госуслуги', 'gosuslugi.ru', 'g0suslugi.ru', 'gosuslugi-vhod.ru', 'gosuslugi.ru.kabinet-top.com', '#0d4cd3', 'ГУ'], ['Roblox', 'roblox.com', 'r0blox.com', 'roblox-bonus.com', 'roblox.com.gift-top.ru', '#30333b', 'R'], ['YouTube', 'youtube.com', 'y0utube.com', 'youtube-priz.com', 'youtube.com.video-top.ru', '#ff0033', '▶'], ['Minecraft', 'minecraft.net', 'minecraf1.net', 'minecraft-skins-free.net', 'minecraft.net.bonus-top.ru', '#5a9e3c', 'M'], ['Озон', 'ozon.ru', '0zon.ru', 'ozon-skidki.ru', 'ozon.ru.zakaz-top.com', '#005bff', 'O']];
   const MSGS = [['Неизвестный номер', 'Скинь код из СМС, я случайно указал твой номер', 1], ['Розыгрыш призов', 'Ты выиграл телефон! Оплати доставку 200 рублей', 1], ['Поддержка игры', 'Назови пароль, иначе аккаунт удалят через 5 минут', 1], ['Новый знакомый', 'Давай дружить, только родителям про меня не говори', 1], ['Магазин скинов', 'Скидка сгорит через час! Переведи 150 рублей', 1], ['Мама', 'Я задержусь, ужин в холодильнике', 0], ['Классный чат', 'Завтра контрольная, повторите дроби', 0], ['Друг', 'Пойдём завтра на каток?', 0], ['Бабушка', 'Позвони, когда будешь дома', 0], ['Тренер', 'Тренировка в четыре, не опаздывай', 0]];
   const PRIV = [['Кто видит профиль', 'Все', 'Только друзья', '👤'], ['Геолокация', 'Включена', 'Выключена', '📍'], ['Сообщения от незнакомых', 'Разрешены', 'Запрещены', '✉️'], ['Номер телефона', 'Виден всем', 'Скрыт', '📞'], ['Отметки на фото', 'Кто угодно', 'Только я', '🏷️']];
   const PHOTOS = [['Котик на диване', 0, 'cat'], ['Закат над рекой', 0, 'sun'], ['Мой рисунок', 0, 'art'], ['Торт', 0, 'cake'], ['Замок из кубиков', 0, 'lego'], ['Билет с QR-кодом', 1, 'ticket'], ['Дом и номер подъезда', 1, 'house'], ['Бейдж с названием школы', 1, 'school'], ['Скрин с паролем', 1, 'pass'], ['Ключи от квартиры', 1, 'keys']];
+  const FRQ = [['Маша 5Б', 'Привет! Я из параллельного класса, мы вместе на кружке рисования', 1], ['Дима из секции', 'Это Дима с футбола. Добавь меня, будем договариваться о тренировках', 1], ['Саша сосед', 'Это Саша из соседнего подъезда. Гоняем вместе на самокатах', 1], ['user83741', 'Привет! Скинь свою фотку и скажи, где живёшь, я рядом', 0], ['Секрет', 'У меня для тебя секрет. Добавь меня и никому не говори', 0], ['Макс 14', 'Давай дружить! В какой ты школе и во сколько остаёшься один дома?', 0], ['Подарки_бот', 'Добавь меня, и я пришлю бесплатные скины. Нужен только твой пароль', 0]];
+  const CHAT = [['Лёша', 'Кто идёт после уроков на площадку?', 0], ['Катя', 'Скиньте домашку по математике', 0], ['Артём', 'Классный матч вчера!', 0], ['Аноним', 'Ты никому не нужен, уходи из чата', 1], ['Аноним', 'Мы все смеёмся над твоей фоткой. Мы её разослали', 1], ['Незнакомец', 'Хватит сюда писать. Тебя тут никто не ждёт', 1]];
   const PIC = {
     cat: '<rect width="60" height="40" fill="#3a3558"/><rect y="28" width="60" height="12" fill="#6b4a8a"/><circle cx="30" cy="22" r="10" fill="#ffb86b"/><path d="M21 16l2-9 6 6zM39 16l-2-9-6 6z" fill="#ffb86b"/><circle cx="26" cy="21" r="1.6" fill="#1a1424"/><circle cx="34" cy="21" r="1.6" fill="#1a1424"/>',
     sun: '<rect width="60" height="40" fill="#ff9a5a"/><circle cx="30" cy="24" r="10" fill="#ffe27a"/><rect y="24" width="60" height="16" fill="#3a5a9a"/><rect x="18" y="29" width="24" height="2" fill="#ffe27a" opacity=".6"/>',
@@ -5536,6 +5627,51 @@ function relayJoin(topic, onMsg, onState) {
         if (Object.keys(ans).length < set.length) return;
         const wrong = set.map((m, i) => m[2] !== ans[i] ? i : -1).filter((i) => i >= 0);
         if (!wrong.length) ok(); else { bad(k); wrong.forEach((i) => delete ans[i]); setTimeout(() => { if (k.alive()) paint(); }, 350); }
+      };
+    },
+    friend(k, ok) {
+      const set = shuffle(shuffle(FRQ.filter((m) => m[2])).slice(0, 2).concat(shuffle(FRQ.filter((m) => !m[2])).slice(0, 2))), ans = {};
+      const paint = () => { k.b.innerHTML = `<div class="gx-phone"><div class="gx-notch"></div><div class="gx-ph-h">Заявки в друзья</div>${set.map((m, i) => `<div class="gx-bub"><span class="gx-ava" style="background:${avaCol(m[0])}">${esc(m[0][0])}</span><div><b>${esc(m[0])}</b><p>${esc(m[1])}</p><div class="gx-ch"><button data-i="${i}" data-v="1" class="${ans[i] === 1 ? 'on' : ''}">Принять</button><button data-i="${i}" data-v="0" class="bad ${ans[i] === 0 ? 'on' : ''}">Отклонить</button></div></div></div>`).join('')}</div>`; };
+      paint();
+      k.b.onclick = (e) => {
+        const x = e.target.closest('[data-i]'); if (!x) return;
+        ans[x.dataset.i] = +x.dataset.v; snd.tap(); paint();
+        if (Object.keys(ans).length < set.length) return;
+        const wrong = set.map((m, i) => m[2] !== ans[i] ? i : -1).filter((i) => i >= 0);
+        if (!wrong.length) ok(); else { bad(k); wrong.forEach((i) => delete ans[i]); setTimeout(() => { if (k.alive()) paint(); }, 350); }
+      };
+    },
+    code(k, ok) {
+      const code = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4).join(''); let typed = '', step = 0;
+      const call = (note) => { step = 0; k.b.innerHTML = `<div class="gx-phone"><div class="gx-notch"></div><div class="gx-ph-h">Входящий звонок</div><div class="gx-bub"><span class="gx-ava" style="background:#ff6fa0">?</span><div><b>«Служба безопасности»</b><p>Срочно! Ваш аккаунт взломан. Назовите код из СМС, и мы его спасём.</p></div></div>${note ? `<p class="gx-cap bad">${note}</p>` : ''}<div class="gx-ch gx-call"><button data-c="say" class="bad">Назвать код</button><button data-c="off">Положить трубку</button></div></div>`; };
+      const sms = (note) => { step = 1; typed = ''; k.b.innerHTML = `<div class="gx-sms"><b>СМС от школьного сервера</b><p>Код для входа:</p><em>${code}</em><small>${note || 'Запомни его и никому не говори'}</small><div class="gx-bar"><i></i></div></div>`; setTimeout(() => { if (k.alive() && step === 1) pad(); }, 3300); };
+      const pad = () => { step = 2; k.b.innerHTML = `<div class="gx-code">${[0, 1, 2, 3].map((i) => `<span>${typed[i] || ''}</span>`).join('')}</div><p class="gx-cap">Введи код из СМС</p><div class="gl-grid3">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `<button class="gl-key" data-d="${n}">${n}</button>`).join('')}</div>`; };
+      call();
+      k.b.onclick = (e) => {
+        const c = e.target.closest('[data-c]'), d = e.target.closest('[data-d]');
+        if (c) { if (c.dataset.c === 'say') { bad(k); call('Код из СМС никому не говорят, даже «службе безопасности»'); } else { snd.tap(); sms(); } return; }
+        if (d && step === 2) {
+          typed += d.dataset.d; snd.tap();
+          if (typed.length === 4) { if (typed === code) { pad(); ok(); } else { bad(k); sms('Не тот код. Посмотри ещё раз'); } return; }
+          pad();
+        }
+      };
+    },
+    wifi(k, ok) {
+      const nets = shuffle([['Школа_Wi-Fi', 1], ['Free_WiFi', 0], ['Кафе_Бесплатно', 0], ['Shkola_Wi-Fi', 0]]);
+      k.b.innerHTML = nets.map((n, i) => `<button class="gl-opt" data-i="${i}"><b>${esc(n[0])}</b><br><small>${n[1] ? '🔒 нужен пароль' : 'открытая сеть, без пароля'}</small></button>`).join('');
+      k.b.onclick = (e) => { const x = e.target.closest('[data-i]'); if (!x) return; snd.tap(); if (nets[+x.dataset.i][1]) { x.classList.add('on'); ok(); } else bad(k); };
+    },
+    report(k, ok) {
+      const set = shuffle(shuffle(CHAT.filter((m) => m[2])).slice(0, 2).concat(shuffle(CHAT.filter((m) => !m[2])).slice(0, 2))), sel = new Set();
+      const paint = () => { k.b.innerHTML = `<div class="gx-phone gx-rep"><div class="gx-notch"></div><div class="gx-ph-h">Чат класса</div>${set.map((m, i) => `<button class="gl-msg ${sel.has(i) ? 'on' : ''}" data-m="${i}"><b>${esc(m[0])}</b>${esc(m[1])}</button>`).join('')}<button class="gl-opt gx-go" data-go="1">Пожаловаться на выбранные</button></div>`; };
+      const next = () => { k.b.innerHTML = '<p class="gx-cap">Жалоба отправлена. Что ты сделаешь дальше?</p><button class="gl-opt" data-n="0">Отвечу обидчику тем же</button><button class="gl-opt" data-n="1">Расскажу взрослому, которому доверяю</button><button class="gl-opt" data-n="0">Промолчу и никому не скажу</button>'; };
+      paint();
+      k.b.onclick = (e) => {
+        const m = e.target.closest('[data-m]'), g = e.target.closest('[data-go]'), n = e.target.closest('[data-n]');
+        if (m) { const i = +m.dataset.m; sel.has(i) ? sel.delete(i) : sel.add(i); snd.tap(); paint(); return; }
+        if (g) { const right = set.every((x, i) => (x[2] === 1) === sel.has(i)); if (right) { snd.tap(); next(); } else bad(k); return; }
+        if (n) { if (n.dataset.n === '1') { n.classList.add('on'); ok(); } else bad(k); }
       };
     },
     card(k, ok) {
@@ -5827,6 +5963,7 @@ function relayJoin(topic, onMsg, onState) {
     if (!d || !d.t || !NET) return;
     if (d.t === 'hi') {
       if (!NET.host || G) return;
+      if (d.v !== GLV) { if (performance.now() - (NET.vT || 0) > 5000) { NET.vT = performance.now(); toast('Кто-то зашёл со старой версией игры. Пусть обновит страницу'); } return; }
       const id = String(d.id || '').slice(0, 12); if (!id || id === myId) return;
       let m = NET.members.get(id);
       if (!m) { if (NET.members.size >= 10) return; m = { id, col: null }; NET.members.set(id, m); snd.tap(); }
@@ -5837,8 +5974,8 @@ function relayJoin(topic, onMsg, onState) {
       if (NET.total < NET.members.size) NET.total = NET.members.size;
       paintLobby(); return;
     }
-    if (d.t === 'lobby') { if (NET.host || G) return; NET.list = Array.isArray(d.list) ? d.list : []; NET.total = d.total; NET.seenL = performance.now(); paintLobby(); return; }
-    if (d.t === 'start') { if (NET.host || G || !Array.isArray(d.ps) || !d.ps.some((p) => p.id === myId)) return; clearInterval(lobbyT); startGame(d); return; }
+    if (d.t === 'lobby') { if (NET.host || G) return; if (d.v !== GLV) { if (performance.now() - (NET.vT || 0) > 5000) { NET.vT = performance.now(); toast('У создателя комнаты другая версия игры. Обнови страницу и зайди снова'); } return; } NET.list = Array.isArray(d.list) ? d.list : []; NET.total = d.total; NET.seenL = performance.now(); paintLobby(); return; }
+    if (d.t === 'start') { if (NET.host || G || d.v !== GLV || !Array.isArray(d.ps) || !d.ps.some((p) => p.id === myId)) return; clearInterval(lobbyT); startGame(d); return; }
     if (d.t === 'relobby') { if (NET.host) return; stopGame(); scrWait(); return; }
     if (!G) return;
     if (d.t === 'p') { const p = P(d.id); if (!p || p.id === G.me) return; if (p.gone) { p.gone = false; p.bot = false; p.ai = null; } if (p.bot) return; p.tx = d.x; p.ty = d.y; p.dir = d.d; p.vent = d.v; p.seen = G.c; return; }
@@ -5869,8 +6006,8 @@ function relayJoin(topic, onMsg, onState) {
     clearInterval(lobbyT);
     const tick = () => {
       if (!NET || !link || G) return;
-      if (NET.host) { NET.members.forEach((m, id) => { if (id !== myId && performance.now() - m.seen > 7000) NET.members.delete(id); }); link.send({ t: 'lobby', total: NET.total, list: [...NET.members.values()].map((m) => ({ id: m.id, nick: m.nick, col: m.col, kind: m.kind })) }); }
-      else link.send({ t: 'hi', id: myId, nick: opts.nick, col: opts.col, kind: opts.kind });
+      if (NET.host) { NET.members.forEach((m, id) => { if (id !== myId && performance.now() - m.seen > 7000) NET.members.delete(id); }); link.send({ t: 'lobby', v: GLV, total: NET.total, list: [...NET.members.values()].map((m) => ({ id: m.id, nick: m.nick, col: m.col, kind: m.kind })) }); }
+      else link.send({ t: 'hi', v: GLV, id: myId, nick: opts.nick, col: opts.col, kind: opts.kind });
       paintLobby(); paintNet();
     };
     lobbyT = setInterval(tick, 1300); tick();
