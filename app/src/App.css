@@ -2467,6 +2467,12 @@ h2[tabindex='-1']:focus {
 }
 
 /* О чём приложение: одна строка под логотипом */
+.home2__age {
+  margin: 6px 2px 0;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+
 .home2__lead {
   margin: 2px 2px 0;
   font-size: 15px;
@@ -3103,3 +3109,40 @@ html[data-theme='day'] .toggle[aria-checked='true'] {
   border-radius: 16px;
   background: #fff;
 }
+
+/* Код прогресса */
+.panel--code { display: flex; flex-direction: column; gap: 10px; padding-bottom: 14px; }
+.panel--code > :not(.panel__row) { margin-left: 14px; margin-right: 14px; }
+.code-hint { margin: 0 2px; font-size: 13.5px; line-height: 1.4; color: var(--ink-muted); }
+.code-hint--small { font-size: 12px; }
+.code-actions, .code-restore { display: flex; gap: 8px; align-items: stretch; }
+.code-box { display: flex; flex-direction: column; gap: 8px; }
+.code-value {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1.5px dashed var(--ink-muted);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  word-break: break-word;
+  user-select: all;
+  -webkit-user-select: all;
+}
+.code-input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--ink-muted);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+.code-input::placeholder { text-transform: none; font-size: 14px; }
+.code-note { margin: 0 2px; font-size: 13px; font-weight: 700; color: var(--ink); }

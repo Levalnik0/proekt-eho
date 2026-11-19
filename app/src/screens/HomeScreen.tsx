@@ -131,6 +131,8 @@ export function HomeScreen({ onOpen }: { onOpen: (route: string) => void }) {
         Оставить отзыв
       </button>
       <p className="home2__trust">Ответы тестов хранятся только в этом телефоне. Мы лишь считаем анонимную статистику посещений.</p>
+      {/* Знак информационной продукции */}
+      <p className="home2__age">12+</p>
     </div>
   );
 }
