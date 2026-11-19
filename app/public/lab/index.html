@@ -712,6 +712,19 @@ canvas { display: block; width: 100%; height: 100%; }
 .gl-cols { display: flex; flex-wrap: wrap; gap: 8px; }
 .gl-col { width: 34px; height: 34px; border-radius: 50%; background: var(--c); border: 3px solid transparent; box-shadow: 0 0 0 1.5px rgba(255,255,255,.18); }
 .gl-col.on { border-color: #fff; }
+.gl-lhud { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+.gl-lhud[hidden] { display: none; }
+.gl-lt { position: absolute; left: 10px; right: 10px; top: 10px; pointer-events: auto; background: rgba(12,10,26,.86); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 10px 12px; color: #f1edff; display: flex; flex-direction: column; gap: 6px; }
+.gl-lth { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 900; font-size: 15px; }
+.gl-lth button { min-height: 34px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; font-weight: 800; font-size: 13px; }
+.gl-lcode { font-size: 22px; letter-spacing: .14em; color: #2de2e6; text-shadow: 0 0 12px rgba(45,226,230,.45); }
+.gl-lt small { display: block; color: #b8b0d8; font-size: 12px; line-height: 1.35; }
+.gl-lt .sf-net { margin: 0; }
+.gl-ltot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: #b8b0d8; }
+.gl-ltot .gl-seg { gap: 4px; } .gl-ltot .gl-seg button { min-width: 32px; min-height: 30px; padding: 0 6px; font-size: 13px; border-radius: 9px; }
+.gl-b b { font: inherit; }
+.gl-col:disabled { opacity: .3; position: relative; }
+.gl-col:disabled::after { content: "\2715"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 15px; font-weight: 900; text-shadow: 0 0 3px #000; }
 .gl-seg { display: flex; gap: 6px; flex-wrap: wrap; }
 .gl-seg button { min-width: 44px; min-height: 40px; padding: 0 10px; border-radius: 12px; background: #1d1833; font-weight: 800; border: 1.5px solid transparent; color: var(--ink); }
 .gl-seg button.on { border-color: #2de2e6; color: #2de2e6; }
@@ -1282,6 +1295,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <button class="gl-b lock" id="gl-block" hidden><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3M12 15v2"/></svg>Замок</span><em></em></button>
         <button class="gl-b use" id="gl-buse" disabled><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11V5a2 2 0 0 1 4 0v6M13 10a2 2 0 0 1 4 0v4a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-4a2 2 0 0 1 3-2l2 2"/></svg>Действие</span></button>
       </div>
+      <div class="gl-lhud" id="gl-lhud" hidden></div>
       <div class="gl-toast" id="gl-toast" hidden></div>
       <div class="gl-panel" id="gl-panel" hidden></div>
       <div class="gl-map" id="gl-map" hidden></div>
@@ -1473,7 +1487,7 @@ const HOWTO = {
   safe: ['<b>Вас двое</b>, у каждого свой телефон. Экран друга подсматривать нельзя.', 'Один видит <b>замки</b>, но не знает, как их открыть. У второго <b>шпаргалка</b> с ответами, но сейф он не видит.', '<b>Говорите вслух:</b> один рассказывает, что видит, второй подсказывает, что нажать. Можно сидеть рядом или созвониться.', 'Введите <b>один код</b>, и телефоны найдут друг друга: старт, таймер и ошибки будут общими.', 'Нет напарника? Нажми <b>«Попробовать одному»</b>: и сейф, и шпаргалка будут у тебя.'],
   imp: ['В чате класса четыре друга. Один аккаунт <b>взломали</b>: от имени друга пишет чужой.', 'Читай сообщения. Самозванец <b>торопит, просит код или деньги, зовёт по ссылке</b>.', 'Сомневаешься? Нажми на человека и <b>задай проверочный вопрос</b>. Уверен? Жми «Это самозванец».'],
   windows: ['Во двор приходят гости. <b>Друзья</b> с тёплым фонариком, <b>незнакомцы</b> без него.', '<b>Потяни штору</b> в сторону или нажми на окно: открыто всем, друзьям или закрыто.', 'Друзьям нужны фото и личка. Незнакомцам <b>ничего</b> не нужно. «Где я» лучше закрыть.', 'Гость с подписью <b>«0 общих»</b> не друг. Нажми на него, и его заблокируют.', 'Ветер сам приоткрывает шторы - успей закрыть. <b>Фонарь</b> показывает подписи гостей.'],
-  glitch: ['Вечер в школе. Ты <b>защитник</b>: ходи по карте и выполняй <b>задания</b> из списка. Чтобы идти, нажми на экран и веди пальцем.', 'Среди вас прячутся <b>глитчи</b>. Они выглядят как все, но тайком <b>взламывают</b> защитников и устраивают сбои: гасят свет и перегревают сервер. Ещё они умеют быстро перебегать по <b>кабелям</b> под школой: из любого люка в любой другой. А ещё глитч может <b>запереть дверь</b> на 18 секунд, но только два раза за игру.', 'Нашёл взломанного? Жми <b>«Тревога»</b>. На собрании <b>пиши в чат</b> или выбирай готовые фразы, потом выбери игрока и голосуй, кого выгнать. Имя, адрес, телефон и ссылки не пиши: игра такие сообщения не пропустит.', 'Защитники побеждают, когда сделаны все задания или выгнаны все глитчи. Глитчи - когда их стало столько же, сколько защитников.', 'Играй с ботами или <b>с друзьями по коду комнаты</b>. Придумай себе ник, но настоящее имя, фамилию и школу не пиши. Роль выпадает случайно.'],
+  glitch: ['Вечер в школе. Ты <b>защитник</b>: ходи по карте и выполняй <b>задания</b> из списка. Чтобы идти, нажми на экран и веди пальцем.', 'Среди вас прячутся <b>глитчи</b>. Они выглядят как все, но тайком <b>взламывают</b> защитников и устраивают сбои: гасят свет и перегревают сервер. Ещё они умеют быстро перебегать по <b>кабелям</b> под школой: из любого люка в любой другой. А ещё глитч может <b>запереть дверь</b> на 18 секунд, но только два раза за игру.', 'Нашёл взломанного? Жми <b>«Тревога»</b>. На собрании <b>пиши в чат</b> или выбирай готовые фразы, потом выбери игрока и голосуй, кого выгнать. Имя, адрес, телефон и ссылки не пиши: игра такие сообщения не пропустит.', 'Защитники побеждают, когда сделаны все задания или выгнаны все глитчи. Глитчи - когда их стало столько же, сколько защитников.', 'Играй с ботами или <b>с друзьями по коду комнаты</b>. Перед игрой все собираются в <b>раздевалке</b>: шкафчик даёт цвет, зеркало меняет зверька, а создатель комнаты звонит в звонок. Придумай себе ник, но настоящее имя, фамилию и школу не пиши. Роль выпадает случайно.'],
 };
 // Правила показываются по одному шагу на карточке: «Дальше», «Дальше», «Приступить»
 const START = { imp: '#i-go', filter: '#f-go', detective: '#d-go', net: '#n-go', windows: '#w-go', race: '#r-go' };
@@ -4419,13 +4433,13 @@ function relayJoin(topic, onMsg, onState) {
   // (взлом, собрание, победа). Остальные шлют свои шаги и просьбы о действиях.
   // В игре с ботами ведущий и игрок - один и тот же телефон.
   const stage = $('#gl-stage'), cv = $('#gl-cv'), cx = cv.getContext('2d');
-  const hud = $('#gl-hud'), btnBox = $('#gl-btns'), joyEl = $('#gl-joy'), toastEl = $('#gl-toast');
+  const hud = $('#gl-hud'), btnBox = $('#gl-btns'), joyEl = $('#gl-joy'), toastEl = $('#gl-toast'), lhud = $('#gl-lhud');
   const panel = $('#gl-panel'), mapEl = $('#gl-map'), meetEl = $('#gl-meet'), bigEl = $('#gl-big'), startEl = $('#gl-start');
   const B = { use: $('#gl-buse'), kill: $('#gl-bkill'), rep: $('#gl-brep'), sab: $('#gl-bsab'), vent: $('#gl-bvent'), lock: $('#gl-block'), map: $('#gl-bmap') };
   const fog = document.createElement('canvas'), fx = fog.getContext('2d');
   const FONT = '"Nunito Variable", sans-serif';
 
-  const SPEED = 165, GSPEED = 205, HACK_R = 80, HACK_CD = 30, SAB_CD = 35, CRIT_T = 45, USE_R = 72, REP_R = 100, VIS = 260, VIS_DARK = 105, TALK = 20, VOTE = 35, TASKN = 6, INTRO = 3.5, LOCK_N = 2, LOCK_T = 18, LOCK_R = 150, GLV = 4;
+  const SPEED = 165, GSPEED = 205, HACK_R = 80, HACK_CD = 30, SAB_CD = 35, CRIT_T = 45, USE_R = 72, REP_R = 100, VIS = 260, VIS_DARK = 105, TALK = 20, VOTE = 35, TASKN = 6, INTRO = 3.5, LOCK_N = 2, LOCK_T = 18, LOCK_R = 150, GLV = 5;
   const COLS = [['#ff5a6e', 'Красный'], ['#3fa8ff', 'Синий'], ['#5fd58a', 'Зелёный'], ['#ffd24a', 'Жёлтый'], ['#ff9a3d', 'Оранжевый'], ['#b07be8', 'Фиолетовый'], ['#2de2e6', 'Бирюзовый'], ['#ff8fd0', 'Розовый'], ['#eef0f5', 'Белый'], ['#b08560', 'Коричневый']];
   const KINDS = ['cat', 'bunny', 'bear', 'fox'], KINDN = ['Котик', 'Зайка', 'Мишка', 'Лис'];
   // Ник собирается из готовых слов: настоящее имя и чужие слова в игру не попадают
@@ -4791,7 +4805,7 @@ function relayJoin(topic, onMsg, onState) {
   }
 
   /* ── Кадр ── */
-  let G = null, link = null, NET = null, myId = 'me', lobbyT = 0;
+  let G = null, link = null, NET = null, myId = 'me', lobbyT = 0, L = null;
   let VW = 0, VH = 0, SC = 1, DPR = 1, FS = 0.5, QL = 0, slowT = 0, fdt = 0.016, raf = 0, lastT = 0, active = false, paused = false;
   const ME = () => G.ps.get(G.me);
   const P = (id) => G && G.ps.get(id);
@@ -4871,6 +4885,7 @@ function relayJoin(topic, onMsg, onState) {
     const W = cv.width, H = cv.height;
     cx.setTransform(1, 0, 0, 1, 0, 0); cx.globalAlpha = 1; cx.fillStyle = '#050409'; cx.fillRect(0, 0, W, H);
     if (!mapCv || !W) return;
+    if (!G && L) { drawLobby(T); return; }
     if (!G) { // за меню медленно плывёт школа
       const s = SC * DPR * 0.9, px = 1150 + Math.sin(T * 0.06) * 800, py = 620 + Math.sin(T * 0.043) * 420;
       cx.setTransform(s, 0, 0, s, W / 2 - px * s, H / 2 - py * s);
@@ -5005,7 +5020,7 @@ function relayJoin(topic, onMsg, onState) {
     roleScreen(); renderTasks(); hudStep(0, true);
   }
   function stopGame() {
-    G = null; closePanel(); hud.hidden = true; btnBox.hidden = true; mapEl.hidden = true; meetEl.hidden = true; bigEl.hidden = true;
+    G = null; L = null; lhud.hidden = true; closePanel(); hud.hidden = true; btnBox.hidden = true; mapEl.hidden = true; meetEl.hidden = true; bigEl.hidden = true;
     joyStop(); keys.clear(); snd.ambientEnd(); $('#gl-code').hidden = true; toastEl.hidden = true;
   }
   const seatAll = () => G.list.forEach((p) => { const s = SEATS[p.i % 10]; p.x = p.tx = s[0]; p.y = p.ty = s[1]; p.vent = -1; p.moving = false; });
@@ -5334,7 +5349,7 @@ function relayJoin(topic, onMsg, onState) {
   const keys = new Set(); let joy = null, fixOpen = false;
   function joyStop() { joy = null; joyEl.hidden = true; }
   cv.addEventListener('pointerdown', (e) => {
-    if (!G || G.phase !== 'play' || joy) return;
+    if (!((G && G.phase === 'play') || (!G && L)) || joy) return;
     const r = stage.getBoundingClientRect();
     joy = { id: e.pointerId, x0: e.clientX, y0: e.clientY, dx: 0, dy: 0 };
     joyEl.style.left = (e.clientX - r.left) + 'px'; joyEl.style.top = (e.clientY - r.top) + 'px'; joyEl.firstElementChild.style.transform = ''; joyEl.hidden = false;
@@ -5349,9 +5364,10 @@ function relayJoin(topic, onMsg, onState) {
   const joyUp = (e) => { if (joy && e.pointerId === joy.id) joyStop(); };
   cv.addEventListener('pointerup', joyUp); cv.addEventListener('pointercancel', joyUp);
   document.addEventListener('keydown', (e) => {
-    if (current !== 'glitch' || !G || e.target.tagName === 'INPUT') return;
+    if (current !== 'glitch' || !(G || L) || e.target.tagName === 'INPUT') return;
     keys.add(e.code);
     if (e.code.startsWith('Arrow')) e.preventDefault();
+    if (!G) { if ((e.code === 'KeyE' || e.code === 'Space') && !e.repeat) { e.preventDefault(); lobbyAct(); } return; }
     const prim = B.kill.hidden ? B.use : B.kill, b = { KeyE: prim, Space: prim, KeyQ: B.kill, KeyR: B.rep, KeyV: B.vent, KeyG: B.lock, KeyM: B.map, KeyF: B.sab }[e.code];
     if (b && !e.repeat && !b.disabled && !b.hidden) { e.preventDefault(); b.click(); }
   });
@@ -5391,7 +5407,7 @@ function relayJoin(topic, onMsg, onState) {
     raf = requestAnimationFrame(frame);
     const raw = (t - lastT) / 1000, dt = clamp(raw, 0, 0.05); lastT = t;
     if (G && raw < 0.3) { fdt += (raw - fdt) * 0.05; if (fdt > 0.036) slowT += raw; else slowT = Math.max(0, slowT - raw); if (slowT > 3 && !QL) { QL = 1; slowT = 0; resize(); } }
-    if (G && G.phase !== 'end' && !(paused && G.solo)) step(dt);
+    if (G && G.phase !== 'end' && !(paused && G.solo)) step(dt); else if (!G && L) lobbyStep(dt);
     draw(t / 1000);
   }
 
@@ -5977,6 +5993,7 @@ function relayJoin(topic, onMsg, onState) {
     if (d.t === 'lobby') { if (NET.host || G) return; if (d.v !== GLV) { if (performance.now() - (NET.vT || 0) > 5000) { NET.vT = performance.now(); toast('У создателя комнаты другая версия игры. Обнови страницу и зайди снова'); } return; } NET.list = Array.isArray(d.list) ? d.list : []; NET.total = d.total; NET.seenL = performance.now(); paintLobby(); return; }
     if (d.t === 'start') { if (NET.host || G || d.v !== GLV || !Array.isArray(d.ps) || !d.ps.some((p) => p.id === myId)) return; clearInterval(lobbyT); startGame(d); return; }
     if (d.t === 'relobby') { if (NET.host) return; stopGame(); scrWait(); return; }
+    if (d.t === 'lp') { if (G || !L || d.v !== GLV || d.id === myId) return; const x = clamp(+d.x || 0, 0, LW), y = clamp(+d.y || 0, 0, LH); const q = L.pos[d.id] || (L.pos[d.id] = { x, y }); q.tx = x; q.ty = y; q.dir = d.d < 0 ? -1 : 1; return; }
     if (!G) return;
     if (d.t === 'p') { const p = P(d.id); if (!p || p.id === G.me) return; if (p.gone) { p.gone = false; p.bot = false; p.ai = null; } if (p.bot) return; p.tx = d.x; p.ty = d.y; p.dir = d.d; p.vent = d.v; p.seen = G.c; return; }
     if (G.host) { if (d.t === 'a' && d.a) hostAct(d.a); return; }
@@ -6019,13 +6036,147 @@ function relayJoin(topic, onMsg, onState) {
     el.textContent = !NET.up ? 'Ищем связь… Нужен интернет' : NET.host ? 'Связь есть. Друзья могут входить' : inRoom ? 'Ты в комнате. Ждём, когда ведущий начнёт' : 'Ищем комнату с таким кодом…';
   }
   function paintLobby() {
-    const box = $('#gl-lob'); if (!box || !NET) return;
-    const list = NET.host ? [...NET.members.values()] : NET.list;
-    box.innerHTML = '';
-    list.forEach((m) => { const d = document.createElement('div'); d.appendChild(avatar(m.col | 0, KINDS.includes(m.kind) ? m.kind : 'cat')); const s = document.createElement('span'); s.textContent = (okNick(m.nick) ? m.nick : 'Игрок') + (m.id === myId ? ' (ты)' : ''); d.appendChild(s); box.appendChild(d); });
-    const tot = $('#gl-tot'); if (tot) { tot.querySelectorAll('[data-total]').forEach((b) => { b.classList.toggle('on', +b.dataset.total === NET.total); b.disabled = +b.dataset.total < list.length; }); }
-    const info = $('#gl-linfo'); if (info) { const n = Math.max(NET.total || 5, list.length, 5); info.textContent = `Людей: ${list.length} · ботов: ${Math.max(0, n - list.length)} · глитчей: ${n >= 10 ? 3 : n >= 8 ? 2 : 1}`; }
+    const list = lobbyList(), total = NET ? NET.total : opts.total;
+    const tot = $('#gl-tot'); if (tot) tot.querySelectorAll('[data-total]').forEach((b) => { b.classList.toggle('on', +b.dataset.total === total); b.disabled = +b.dataset.total < list.length; });
+    const info = $('#gl-linfo'); if (info) { const n = Math.max(total || 5, list.length, 5), ng = n >= 10 ? 3 : n >= 8 ? 2 : 1; info.textContent = NET ? `Людей: ${list.length} · ботов: ${Math.max(0, n - list.length)} · глитчей: ${ng}` : `Ты и ${n - 1} ботов · глитчей: ${ng}`; }
   }
+
+  /* ── Раздевалка: все собираются, выбирают шкафчик (цвет) и зверька, создатель звонит в звонок ── */
+  const LW = 560, LH = 420, LBENCH = [[150, 200, 120, 22], [300, 290, 120, 22]], LMIR = { x: 62, y: 214 }, LBELL = { x: 498, y: 214 };
+  const lockerAt = (i) => ({ x: 62 + i * 48, y: 122 });
+  const HAND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11V5a2 2 0 0 1 4 0v6M13 10a2 2 0 0 1 4 0v4a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-4a2 2 0 0 1 3-2l2 2"/></svg>';
+  function lobbyList() { return NET ? (NET.host ? [...NET.members.values()] : NET.list) : [{ id: myId, nick: opts.nick, col: opts.col, kind: opts.kind }]; }
+  function lobbyMe() { const m = lobbyList().find((q) => q.id === myId); return { col: m && m.col != null ? m.col | 0 : opts.col, kind: m && KINDS.includes(m.kind) ? m.kind : opts.kind, nick: m && okNick(m.nick) ? m.nick : opts.nick }; }
+  const lockOwner = (i) => lobbyList().find((m) => m.id !== myId && m.col != null && (m.col | 0) === i);
+  function enterLobby() {
+    startEl.hidden = true; bigEl.hidden = true;
+    if (!L) L = { me: { x: 220 + Math.random() * 120, y: 360, dir: 1, moving: false }, pos: {}, sendT: 0, last: '', near: null, uiT: 0, fx: null };
+    const host = !NET || NET.host;
+    lhud.innerHTML = `<div class="gl-lt"><div class="gl-lth">${NET ? `<span>Комната <b class="gl-lcode">${NET.code}</b></span>` : '<span>Раздевалка</span>'}<button data-lb="exit">Выйти</button></div>`
+      + (NET ? '<div class="sf-net" id="gl-net">Ищем связь…</div>' : '')
+      + (host ? `<div class="gl-ltot"><span>Всего игроков</span><div id="gl-tot">${seg('total', totals, NET ? NET.total : opts.total)}</div></div>` : '')
+      + `<small id="gl-linfo"></small><small>${host ? 'Шкафчик - твой цвет, зеркало - зверёк. Когда все готовы, подойди к звонку' : 'Шкафчик - твой цвет, зеркало - зверёк. Игру начнёт создатель комнаты у звонка'}</small></div>`
+      + `<button class="gl-b use" id="gl-lact" disabled><span>${HAND}<b id="gl-lactx">Действие</b></span></button>`;
+    lhud.hidden = false; paintLobby(); if (NET) paintNet();
+  }
+  function lobbyFree(x, y) {
+    if (x < 44 || x > LW - 44 || y < 114 || y > LH - 34) return false;
+    return !LBENCH.some(([bx, by, bw, bh]) => x > bx - 14 && x < bx + bw + 14 && y > by - 8 && y < by + bh + 16);
+  }
+  function lobbyNear() {
+    const me = L.me; let best = null, bd = 40;
+    for (let i = 0; i < 10; i++) { const p = lockerAt(i), d = Math.hypot(p.x - me.x, p.y - me.y); if (d < bd) { bd = d; best = { k: 'lock', i }; } }
+    if (Math.hypot(LMIR.x - me.x, LMIR.y - me.y) < 54) best = { k: 'mir' };
+    if (Math.hypot(LBELL.x - me.x, LBELL.y - me.y) < 54) best = { k: 'bell' };
+    return best;
+  }
+  function paintLobbyAct() {
+    const b = $('#gl-lact'), t = $('#gl-lactx'); if (!b || !t) return;
+    const n = L.near, host = !NET || NET.host; let txt = 'Действие', dis = true;
+    if (n && n.k === 'lock') { if (lockOwner(n.i)) txt = 'Занято'; else if (lobbyMe().col === n.i) txt = 'Твой цвет'; else { txt = 'Взять цвет'; dis = false; } }
+    else if (n && n.k === 'mir') { txt = 'Зверёк'; dis = false; }
+    else if (n && n.k === 'bell') { txt = host ? 'Начать игру' : 'Ждём'; dis = !host; }
+    if (t.textContent !== txt) t.textContent = txt; b.disabled = dis;
+  }
+  function lobbySet(ch) {
+    if (ch.col != null) opts.col = ch.col; if (ch.kind) opts.kind = ch.kind; saveOpts();
+    if (NET && NET.host) { const me = NET.members.get(myId); if (me) Object.assign(me, ch); }
+    else if (NET) { const mine = NET.list.find((m) => m.id === myId); if (mine) Object.assign(mine, ch); if (link) link.send({ t: 'hi', v: GLV, id: myId, nick: opts.nick, col: opts.col, kind: opts.kind }); }
+    paintLobby();
+  }
+  function lobbyAct() {
+    if (!L || G) return; const n = L.near; if (!n) return; const host = !NET || NET.host;
+    if (n.k === 'lock') {
+      const o = lockOwner(n.i); if (o) { toast('Этот шкафчик уже занял ' + (okNick(o.nick) ? o.nick : 'другой игрок')); return; }
+      if (lobbyMe().col === n.i) return;
+      lobbySet({ col: n.i }); snd.good(); buzz(15); L.fx = { x: lockerAt(n.i).x, t: performance.now() };
+    } else if (n.k === 'mir') { lobbySet({ kind: KINDS[(KINDS.indexOf(lobbyMe().kind) + 1) % KINDS.length] }); snd.tap(); }
+    else if (n.k === 'bell') {
+      if (!host) { toast('Начать игру может только создатель комнаты'); return; }
+      snd.good(); if (NET) hostStart(); else startGame(makeStart([{ id: myId, nick: opts.nick, col: opts.col, kind: opts.kind }], opts.total, 'any'));
+      return;
+    }
+    paintLobbyAct();
+  }
+  function hostStart() {
+    if (!NET || !NET.host) return;
+    const list = [...NET.members.values()].map((m) => ({ id: m.id, nick: m.nick, col: m.col, kind: m.kind })), msg = makeStart(list, Math.max(5, NET.total, list.length), 'any');
+    NET.started = true; clearInterval(lobbyT);
+    [0, 700, 1600].forEach((ms) => setTimeout(() => { if (link && NET && NET.started) link.send(msg); }, ms));
+    startGame(msg);
+  }
+  function lobbyStep(dt) {
+    const me = L.me; let x = 0, y = 0;
+    if (joy) { x = joy.dx / 46; y = joy.dy / 46; }
+    if (keys.has('ArrowLeft') || keys.has('KeyA')) x -= 1; if (keys.has('ArrowRight') || keys.has('KeyD')) x += 1;
+    if (keys.has('ArrowUp') || keys.has('KeyW')) y -= 1; if (keys.has('ArrowDown') || keys.has('KeyS')) y += 1;
+    const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; }
+    me.moving = l > 0.15;
+    if (me.moving) { if (Math.abs(x) > 0.1) me.dir = x < 0 ? -1 : 1; const sp = 150 * dt, nx = me.x + x * sp, ny = me.y + y * sp; if (lobbyFree(nx, me.y)) me.x = nx; if (lobbyFree(me.x, ny)) me.y = ny; }
+    for (const id in L.pos) { const q = L.pos[id]; if (q.tx == null) continue; const dx = q.tx - q.x, dy = q.ty - q.y; const k = Math.min(1, dt * 9); q.x += dx * k; q.y += dy * k; q.moving = Math.hypot(dx, dy) > 2.5; }
+    if (NET && link) { L.sendT -= dt; const st = Math.round(me.x) + ',' + Math.round(me.y) + ',' + me.dir; if (L.sendT <= 0 && (st !== L.last || L.sendT < -1)) { L.sendT = 0.15; L.last = st; link.send({ t: 'lp', v: GLV, id: myId, x: Math.round(me.x), y: Math.round(me.y), d: me.dir }); } }
+    L.uiT -= dt; if (L.uiT <= 0) { L.uiT = 0.1; L.near = lobbyNear(); paintLobbyAct(); }
+  }
+  function drawLobby(T) {
+    const W = cv.width, H = cv.height;
+    cx.setTransform(1, 0, 0, 1, 0, 0); cx.globalAlpha = 1; cx.fillStyle = '#07060f'; cx.fillRect(0, 0, W, H);
+    const lt = lhud.querySelector('.gl-lt'), top = lt ? lt.offsetTop + lt.offsetHeight + 10 : 20, avail = Math.max(160, VH - top - 118);
+    // Комната крупно: если по ширине не влезает, камера едет за игроком
+    const s = clamp(Math.min(avail / LH, (VW - 16) / LW * 1.9, 1.3), 0.5, 1.3), rw = LW * s;
+    L.camX = L.camX == null ? L.me.x : L.camX + (L.me.x - L.camX) * 0.15;
+    const ox = rw <= VW - 16 ? (VW - rw) / 2 : clamp(VW / 2 - L.camX * s, VW - 8 - rw, 8), oy = top + Math.max(0, (avail - LH * s) / 2);
+    cx.setTransform(s * DPR, 0, 0, s * DPR, ox * DPR, oy * DPR);
+    // стены и пол
+    cx.fillStyle = '#3a3550'; rrf(cx, 0, 0, LW, LH, 16);
+    cx.fillStyle = '#262a36'; cx.fillRect(20, 20, LW - 40, LH - 40);
+    for (let yy = 100; yy < LH - 20; yy += 40) for (let xx = 20, n = 0; xx < LW - 20; xx += 40, n++) { cx.fillStyle = ((xx + yy) / 40) % 2 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.06)'; cx.fillRect(xx, yy, 40, 40); }
+    const lamp = cx.createRadialGradient(LW / 2, LH / 2, 20, LW / 2, LH / 2, LW * 0.6); lamp.addColorStop(0, 'rgba(255,190,120,.14)'); lamp.addColorStop(1, 'rgba(255,190,120,0)'); cx.fillStyle = lamp; cx.fillRect(20, 20, LW - 40, LH - 40);
+    // дверь в школу
+    cx.fillStyle = '#5a3f2a'; cx.fillRect(LW - 20, 300, 20, 74); cx.fillStyle = '#8a6a45'; cx.fillRect(LW - 20, 300, 4, 74);
+    cx.font = '800 10px ' + FONT; cx.textAlign = 'center'; cx.fillStyle = 'rgba(255,255,255,.35)'; cx.save(); cx.translate(LW - 32, 337); cx.rotate(-Math.PI / 2); cx.fillText('В ШКОЛУ', 0, 0); cx.restore();
+    // шкафчики
+    const mine = lobbyMe(), pl = 0.5 + 0.5 * Math.sin(T * 4);
+    for (let i = 0; i < 10; i++) {
+      const lx = 40 + i * 48, ly = 22, lw = 44, lh = 70, col = COLS[i][0], own = lockOwner(i), my = mine.col === i;
+      cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillRect(lx + 2, ly + 5, lw, lh);
+      cx.fillStyle = shade(col, -0.35); rrf(cx, lx, ly, lw, lh, 5);
+      cx.fillStyle = col; rrf(cx, lx + 3, ly + 3, lw - 6, lh - 6, 4);
+      cx.fillStyle = 'rgba(0,0,0,.25)'; for (let k = 0; k < 4; k++) cx.fillRect(lx + 10, ly + 10 + k * 6, lw - 20, 2.5);
+      cx.fillStyle = 'rgba(255,255,255,.75)'; cx.fillRect(lx + lw - 11, ly + 38, 3, 12);
+      if (own) {
+        cx.fillStyle = 'rgba(8,6,16,.6)'; rrf(cx, lx, ly, lw, lh, 5);
+        const mx = lx + lw / 2, my2 = ly + 44; cx.strokeStyle = '#e8e4f8'; cx.lineWidth = 2.5; cx.beginPath(); cx.arc(mx, my2 - 5, 5, Math.PI, 0); cx.stroke(); cx.fillStyle = '#e8e4f8'; rrf(cx, mx - 7, my2 - 5, 14, 11, 2);
+        cx.font = '800 8.5px ' + FONT; cx.fillStyle = '#d8d0f5'; const nk = (okNick(own.nick) ? own.nick : 'Игрок'); cx.fillText(nk.length > 8 ? nk.slice(0, 7) + '…' : nk, lx + lw / 2, ly + lh + 11);
+      }
+      if (my) { cx.strokeStyle = `rgba(255,255,255,${0.6 + pl * 0.4})`; cx.lineWidth = 3; rr(cx, lx - 2, ly - 2, lw + 4, lh + 4, 6); cx.stroke(); cx.font = '900 11px ' + FONT; cx.fillStyle = '#fff'; cx.fillText('✓ твой', lx + lw / 2, ly + lh + 12); }
+      if (L.fx && L.fx.x === lockerAt(i).x) { const k = (performance.now() - L.fx.t) / 600; if (k < 1) { cx.strokeStyle = `rgba(255,255,255,${1 - k})`; cx.lineWidth = 3; cx.beginPath(); cx.arc(lx + lw / 2, ly + lh / 2, 20 + k * 30, 0, 7); cx.stroke(); } else L.fx = null; }
+    }
+    // зеркало и звонок
+    const mg = cx.createLinearGradient(22, 170, 36, 260); mg.addColorStop(0, '#cfe8ff'); mg.addColorStop(0.5, '#7fa8d8'); mg.addColorStop(1, '#bcd8f5');
+    cx.fillStyle = '#8a6a45'; cx.fillRect(18, 166, 20, 98); cx.fillStyle = mg; cx.fillRect(21, 170, 14, 90); cx.fillStyle = 'rgba(255,255,255,.6)'; cx.fillRect(24, 176, 3, 30);
+    cx.fillStyle = '#5a5f6a'; cx.fillRect(LW - 34, 190, 14, 30); cx.fillStyle = `rgb(${210 + pl * 40 | 0},60,70)`; cx.beginPath(); cx.arc(LW - 27, 200, 10, 0, 7); cx.fill(); cx.fillStyle = 'rgba(255,255,255,.55)'; cx.beginPath(); cx.arc(LW - 30, 197, 3, 0, 7); cx.fill();
+    cx.font = '900 10px ' + FONT; cx.fillStyle = 'rgba(255,255,255,.5)'; cx.fillText('ЗЕРКАЛО', 70, 280); cx.fillText('ЗВОНОК', LW - 70, 248);
+    // скамейки
+    LBENCH.forEach(([bx, by, bw, bh]) => { cx.fillStyle = 'rgba(0,0,0,.35)'; cx.fillRect(bx + 3, by + 6, bw, bh); cx.fillStyle = '#6b4a30'; rrf(cx, bx, by, bw, bh, 4); cx.fillStyle = '#8a6a45'; cx.fillRect(bx + 4, by + 4, bw - 8, 5); });
+    // куда можно нажать
+    if (L.near) { const t = L.near.k === 'lock' ? lockerAt(L.near.i) : L.near.k === 'mir' ? LMIR : LBELL; cx.strokeStyle = `rgba(255,211,77,${0.5 + pl * 0.5})`; cx.lineWidth = 3; cx.beginPath(); cx.ellipse(t.x, t.y + 14, 22, 9, 0, 0, 7); cx.stroke(); }
+    // игроки
+    const list = lobbyList(), ps = [];
+    list.forEach((m, idx) => {
+      if (m.id === myId) { ps.push({ x: L.me.x, y: L.me.y, dir: L.me.dir, moving: L.me.moving, col: mine.col, kind: mine.kind, nick: mine.nick, i: idx, me: true }); return; }
+      let q = L.pos[m.id]; if (!q) q = L.pos[m.id] = { x: 120 + (idx % 6) * 60, y: 370 - (idx / 6 | 0) * 40 };
+      ps.push({ x: q.x, y: q.y, dir: q.dir || 1, moving: q.moving, col: m.col | 0, kind: KINDS.includes(m.kind) ? m.kind : 'cat', nick: okNick(m.nick) ? m.nick : 'Игрок', i: idx });
+    });
+    ps.sort((a, b) => a.y - b.y).forEach((p) => critter(cx, p.x, p.y, p.col, p.kind, { dir: p.dir, t: T + p.i * 1.7, moving: p.moving }));
+    cx.font = '800 11px ' + FONT; cx.lineWidth = 3; cx.strokeStyle = 'rgba(0,0,0,.75)'; cx.lineJoin = 'round';
+    ps.forEach((p) => { const y = p.y - (p.kind === 'bunny' ? 52 : p.kind === 'fox' ? 42 : 38); cx.strokeText(p.nick, p.x, y); cx.fillStyle = p.me ? '#ffd34d' : '#fff'; cx.fillText(p.nick, p.x, y); });
+  }
+  lhud.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'gl-lact') { lobbyAct(); return; }
+    if (b.dataset.lb === 'exit') { scrHome(); return; }
+    if (b.dataset.total) { opts.total = +b.dataset.total; saveOpts(); if (NET) NET.total = Math.max(opts.total, NET.members.size); paintLobby(); }
+  });
 
   /* ── Меню игры ── */
   const opts = { nick: genNick(), col: Math.random() * 10 | 0, kind: rnd(KINDS), total: 8, role: 'any' };
@@ -6044,30 +6195,16 @@ function relayJoin(topic, onMsg, onState) {
       <div class="row gl-row" style="margin-top:10px"><button class="btn" data-gl="host">Создать комнату</button><button class="btn" data-gl="join">Войти по коду</button></div>`;
     $('#gl-ava').appendChild(avatar(opts.col, opts.kind));
   }
-  function scrSolo() {
-    const ng = opts.total >= 10 ? 3 : opts.total >= 8 ? 2 : 1;
-    startEl.innerHTML = `<h2>Игра с ботами</h2><p>Все места займут боты. Глитчей в такой партии: ${ng}. Роль выпадает случайно, как в настоящей игре. Партия идёт около десяти минут.</p>
-      <div class="gl-field">Сколько игроков${seg('total', totals, opts.total)}</div>
-      <button class="btn btn--main btn--wide" data-gl="go">Начать</button><button class="btn btn--wide" data-gl="home" style="margin-top:10px">Назад</button>`;
-  }
+  function scrSolo() { enterLobby(); }
   function scrHost(keep) {
     if (!keep) netOpen(String(10000 + Math.random() * 90000 | 0), true); else lobbyStart();
-    startEl.hidden = false;
-    startEl.innerHTML = `<h2>Твоя комната</h2><p>Скажи друзьям этот код. Они нажмут «Войти по коду» у себя.</p><div class="gl-codebig">${NET.code}</div>
-      <div class="sf-net" id="gl-net">Ищем связь…</div><div class="gl-lobby" id="gl-lob"></div>
-      <div class="gl-field">Всего игроков. Свободные места займут боты<div id="gl-tot">${seg('total', totals, NET.total)}</div><small id="gl-linfo"></small></div>
-      <button class="btn btn--main btn--wide" data-gl="hstart">Начать игру</button><button class="btn btn--wide" data-gl="home" style="margin-top:10px">Закрыть комнату</button>`;
-    paintLobby(); paintNet();
+    enterLobby();
   }
   function scrJoin(msg) {
     startEl.innerHTML = `<h2>Войти по коду</h2><p>${msg || 'Пять цифр покажет тот, кто создал комнату.'}</p><div class="gl-field"><input id="gl-cin" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="12345" aria-label="Код комнаты"></div>
       <button class="btn btn--main btn--wide" data-gl="jgo">Войти</button><button class="btn btn--wide" data-gl="home" style="margin-top:10px">Назад</button>`;
   }
-  function scrWait() {
-    lobbyStart(); startEl.hidden = false;
-    startEl.innerHTML = `<h2>Комната ${NET.code}</h2><div class="sf-net" id="gl-net">Ищем комнату…</div><div class="gl-lobby" id="gl-lob"></div><small id="gl-linfo" class="gl-sub"></small><button class="btn btn--wide" data-gl="home" style="margin-top:14px">Выйти</button>`;
-    paintLobby(); paintNet();
-  }
+  function scrWait() { lobbyStart(); enterLobby(); }
   startEl.addEventListener('input', (e) => {
     if (e.target.id !== 'gl-nickin') return;
     const v = fixNick(e.target.value), hn = $('#gl-nickhint'), ok = okNick(v);
@@ -6088,12 +6225,7 @@ function relayJoin(topic, onMsg, onState) {
     else if (d.gl === 'host') scrHost();
     else if (d.gl === 'join') scrJoin();
     else if (d.gl === 'jgo') { const code = ($('#gl-cin').value || '').trim(); if (!/^\d{5}$/.test(code)) { scrJoin('В коде ровно пять цифр. Проверь и введи ещё раз.'); return; } netOpen(code, false); scrWait(); }
-    else if (d.gl === 'hstart' && NET && NET.host) {
-      const list = [...NET.members.values()].map((m) => ({ id: m.id, nick: m.nick, col: m.col, kind: m.kind })), msg = makeStart(list, Math.max(5, NET.total, list.length), 'any');
-      NET.started = true; clearInterval(lobbyT);
-      [0, 700, 1600].forEach((ms) => setTimeout(() => { if (link && NET && NET.started) link.send(msg); }, ms));
-      startGame(msg);
-    }
+    else if (d.gl === 'hstart') hostStart();
   });
 
   games.glitch = {
